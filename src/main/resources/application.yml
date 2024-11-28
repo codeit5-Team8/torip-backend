@@ -1,9 +1,0 @@
-spring:
-  application:
-    name: torip
-
-jwt:
-  expiredAccessTokenMs: 600000
-  expiredRefreshTokenMs: 86400000
-  secretKey: SECRETARYSHIP
-

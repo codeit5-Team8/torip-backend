@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: torip
+
+  datasource:
+    url: jdbc:mysql://${DB_IP}:3306/${DB_NAME}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+
+jwt:
+  expiredAccessTokenMs: 600000
+  expiredRefreshTokenMs: 86400000
+  secretKey: SECRETARYSHIP
+
