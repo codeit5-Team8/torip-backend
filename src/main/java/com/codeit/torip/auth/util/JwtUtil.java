@@ -1,6 +1,5 @@
 package com.codeit.torip.auth.util;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,19 +27,12 @@ public class JwtUtil {
     }
 
     public String getLoginId(String token) {
-        return Jwts.parser().verifyWith(secretKey).build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .get("loginId", String.class);
+        return getClaim(token, "loginId");
     }
 
     public Boolean isExpired(String token) {
         try {
-            return Jwts.parser().verifyWith(secretKey).build()
-                    .parseSignedClaims(token)
-                    .getPayload()
-                    .getExpiration()
-                    .before(new Date());
+            return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
         } catch (ExpiredJwtException e) {
             return true;
         }
@@ -71,10 +63,7 @@ public class JwtUtil {
             throw new ExpiredJwtException(null, null, "만료된 토큰 값입니다.");
         }
 
-        String tokenType = Jwts.parser().verifyWith(secretKey).build()
-                .parseSignedClaims(refreshToken)
-                .getPayload()
-                .get("type", String.class);
+        String tokenType = getClaim(refreshToken, "type");
 
         if (!"refresh".equals(tokenType)) {
             throw new RuntimeException("토큰값이 다릅니다.");
@@ -82,11 +71,14 @@ public class JwtUtil {
 
         String loginId = getLoginId(refreshToken);
 
-        return createAccessToken(loginId); // 1일 유효 (밀리초)
+        return createAccessToken(loginId);
     }
 
-    public Claims extractClaims(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
+    private String getClaim(String token, String name) {
+        return Jwts.parser().verifyWith(secretKey).build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get(name, String.class);
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
