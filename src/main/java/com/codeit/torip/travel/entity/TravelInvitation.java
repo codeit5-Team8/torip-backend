@@ -4,6 +4,8 @@ import com.codeit.torip.common.entity.BaseEntity;
 import com.codeit.torip.user.entity.User;
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "travel_invitation")
 public class TravelInvitation extends BaseEntity {
@@ -26,4 +28,11 @@ public class TravelInvitation extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TravelInvitationStatus status; // 여행 수락 / 거부
+
+    public TravelInvitation(Travel travel, User inviter, User invitee) {
+        this.travel = Objects.requireNonNull(travel);
+        this.inviter = Objects.requireNonNull(inviter);
+        this.invitee = Objects.requireNonNull(invitee);
+        this.status = TravelInvitationStatus.Pending;
+    }
 }
