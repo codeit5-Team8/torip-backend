@@ -4,14 +4,18 @@ import com.codeit.torip.common.entity.BaseEntity;
 import com.codeit.torip.task.entity.Task;
 import com.codeit.torip.user.entity.User;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Setter
 @Getter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "travel")
 public class Travel extends BaseEntity {
     @Id

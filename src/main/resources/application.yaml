@@ -1,6 +1,8 @@
 spring:
   application:
     name: torip
+  lifecycle:
+    timeout-per-shutdown-phase: 120
 
   datasource:
     url: jdbc:mysql://${DB_IP}:3306/${DB_NAME}
@@ -20,3 +22,10 @@ jwt:
   expiredRefreshTokenMs: 86400000
   secretKey: SECRETARYSHIPSECRETARYSHIPSECRETARYSHIPSECRETARYSHIPSECRETARYSHIPSECRETARYSHIPSECRETARYSHIP
 
+## Jasypt
+jasypt:
+  encryptor:
+    key: ${jasypt_key}
+
+server:
+  shutdown: graceful

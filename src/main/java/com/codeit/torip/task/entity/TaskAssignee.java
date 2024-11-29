@@ -3,8 +3,14 @@ package com.codeit.torip.task.entity;
 import com.codeit.torip.common.entity.BaseUserEntity;
 import com.codeit.torip.user.entity.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "task_assignee")
 public class TaskAssignee extends BaseUserEntity {
     @Id
