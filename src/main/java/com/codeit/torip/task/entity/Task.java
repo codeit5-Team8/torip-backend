@@ -1,5 +1,6 @@
 package com.codeit.torip.task.entity;
 
+import com.codeit.torip.common.entity.BaseEntity;
 import com.codeit.torip.note.entity.Note;
 import com.codeit.torip.travel.entity.Travel;
 import jakarta.persistence.*;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "task")
-public class Task {
+public class Task extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
