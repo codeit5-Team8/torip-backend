@@ -1,4 +1,4 @@
-package com.codeit.torip.config.filter;
+package com.codeit.torip.auth.config.filter;
 
 import com.codeit.torip.auth.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;

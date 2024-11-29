@@ -1,4 +1,4 @@
-package com.codeit.torip.config.common;
+package com.codeit.torip.common.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
