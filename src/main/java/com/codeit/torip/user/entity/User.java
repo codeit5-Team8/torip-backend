@@ -1,5 +1,7 @@
 package com.codeit.torip.user.entity;
 
+import com.codeit.torip.common.entity.BaseEntity;
+import com.codeit.torip.user.dto.UserResponse;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +13,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter
 @Entity
-public class User {
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,5 +34,11 @@ public class User {
         this.oauthPlatform = Objects.requireNonNullElse(oauthPlatform, OauthPlatform.NONE);
     }
 
+    public UserResponse toResponse() {
+        return UserResponse.builder()
+                .email(email)
+                .username(username)
+                .build();
+    }
 
 }

@@ -11,8 +11,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class BaseUserEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "last_updated_user_id", nullable = false)
-    private User lastUpdatedUser;
+    protected User lastUpdatedUser;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "last_created_user_id", nullable = false)
-    private User lastcreatedUser;
+    protected User lastcreatedUser;
 }
