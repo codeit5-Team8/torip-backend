@@ -16,9 +16,9 @@ public class BaseUserEntity extends BaseEntity {
     @LastModifiedBy
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "last_updated_user_id")
-    private User lastUpdatedUser;
+    protected User lastUpdatedUser;
     @CreatedBy
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "last_created_user_id")
-    private User lastcreatedUser;
+    protected User lastcreatedUser;
 }

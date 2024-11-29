@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 
-@Schema(description = "로그인 요청")
 @Getter
 public class LoginRequest {
     @NotEmpty
