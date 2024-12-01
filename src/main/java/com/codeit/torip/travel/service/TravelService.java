@@ -2,10 +2,12 @@ package com.codeit.torip.travel.service;
 
 import com.codeit.torip.auth.util.AuthenticationFacade;
 import com.codeit.torip.travel.dto.CreateTravelRequest;
+import com.codeit.torip.travel.dto.TravelInvitationResponse;
 import com.codeit.torip.travel.dto.TravelResponse;
 import com.codeit.torip.travel.dto.UpdateTravelRequest;
 import com.codeit.torip.travel.entity.Travel;
 import com.codeit.torip.travel.entity.TravelInvitation;
+import com.codeit.torip.travel.entity.TravelInvitationStatus;
 import com.codeit.torip.travel.entity.TravelMember;
 import com.codeit.torip.travel.repository.TravelInvitationRepository;
 import com.codeit.torip.travel.repository.TravelRepository;
@@ -52,6 +54,8 @@ public class TravelService {
         Travel travel = travelRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("여행이 존재하지 않습니다."));
         travel.checkOwner(userInfo);
 
+        travelInvitationRepository.deleteAllByTravelId(id);
+
         travelRepository.delete(travel);
     }
 
@@ -86,7 +90,7 @@ public class TravelService {
         return travel.toResponse();
     }
 
-    public void requestTravelParticipation(Long id, Long inviterId) {
+    public TravelInvitationResponse requestTravelParticipation(Long id, Long inviterId) {
         User userInfo = authenticationFacade.getUserInfo();
 
         User inviter = userRepository.findUserById(inviterId).orElseThrow(() -> new IllegalArgumentException("초대자가 존재하지 않습니다."));
@@ -96,5 +100,32 @@ public class TravelService {
 
         TravelInvitation travelInvitation = new TravelInvitation(travel, inviter, userInfo);
         travelInvitationRepository.save(travelInvitation);
+
+        return travelInvitation.toResponse();
+    }
+
+    public TravelInvitationResponse acceptTravelParticipation(Long id) {
+        User userInfo = authenticationFacade.getUserInfo();
+
+        TravelInvitation travelInvitation = travelInvitationRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("초대가 존재하지 않습니다."));
+        travelInvitation.getTravel().checkOwner(userInfo);
+        travelInvitation.getTravel().checkMemberNotExists(travelInvitation.getInvitee());
+
+        travelInvitation.accept();
+
+        return travelInvitation.toResponse();
+    }
+
+    public List<TravelInvitationResponse> getTravelInvitations(Long id) {
+        User userInfo = authenticationFacade.getUserInfo();
+
+        Travel travel = travelRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("여행이 존재하지 않습니다."));
+        travel.checkOwner(userInfo);
+
+        List<TravelInvitation> travelInvitations = travelInvitationRepository.findAllByTravelIdAndStatusOrderByCreatedAt(id, TravelInvitationStatus.Pending);
+
+        return travelInvitations.stream()
+                .map(TravelInvitation::toResponse)
+                .toList();
     }
 }

@@ -4,9 +4,11 @@ import com.codeit.torip.common.entity.BaseEntity;
 import com.codeit.torip.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
+@NoArgsConstructor
 @Entity
 @Getter
 @Table(name = "travel_member")

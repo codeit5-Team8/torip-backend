@@ -1,6 +1,7 @@
 package com.codeit.torip.travel.controller;
 
 import com.codeit.torip.travel.dto.CreateTravelRequest;
+import com.codeit.torip.travel.dto.TravelInvitationResponse;
 import com.codeit.torip.travel.dto.TravelResponse;
 import com.codeit.torip.travel.dto.UpdateTravelRequest;
 import com.codeit.torip.travel.service.TravelService;
@@ -60,9 +61,24 @@ public class TravelController {
     }
 
     @PostMapping("/{id}/request")
-    public void requestTravelParticipation(@PathVariable Long id, @RequestBody Long inviterId) {
+    public ResponseEntity<TravelInvitationResponse> requestTravelParticipation(@PathVariable Long id, @RequestBody Long inviterId) {
         // 여행 참가 로직
-        travelService.requestTravelParticipation(id, inviterId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(travelService.requestTravelParticipation(id, inviterId));
+    }
+
+    @PostMapping("request/{id}/accept")
+    public ResponseEntity<TravelInvitationResponse> acceptTravelParticipation(@PathVariable Long id) {
+        // 여행 참가 수락 로직
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(travelService.acceptTravelParticipation(id));
+    }
+
+    @GetMapping("/{id}/request")
+    public ResponseEntity<List<TravelInvitationResponse>> getTravelInvitations(@PathVariable Long id) {
+        // 여행 참가 요청 조회 로직
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(travelService.getTravelInvitations(id));
     }
 
     @GetMapping("/{id}/members")

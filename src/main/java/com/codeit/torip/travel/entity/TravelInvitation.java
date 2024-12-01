@@ -1,11 +1,16 @@
 package com.codeit.torip.travel.entity;
 
 import com.codeit.torip.common.entity.BaseEntity;
+import com.codeit.torip.travel.dto.TravelInvitationResponse;
 import com.codeit.torip.user.entity.User;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Objects;
 
+@NoArgsConstructor
+@Getter
 @Entity
 @Table(name = "travel_invitation")
 public class TravelInvitation extends BaseEntity {
@@ -34,5 +39,21 @@ public class TravelInvitation extends BaseEntity {
         this.inviter = Objects.requireNonNull(inviter);
         this.invitee = Objects.requireNonNull(invitee);
         this.status = TravelInvitationStatus.Pending;
+    }
+
+    public TravelInvitationResponse toResponse() {
+        return TravelInvitationResponse.builder()
+                .travelName(travel.getName())
+                .inviter(inviter.toResponse())
+                .invitee(invitee.toResponse())
+                .createdAt(createdAt)
+                .updatedAt(updatedAt)
+                .status(status)
+                .build();
+    }
+
+    public void accept() {
+        travel.addMember(invitee);
+        this.status = TravelInvitationStatus.Accepted;
     }
 }
