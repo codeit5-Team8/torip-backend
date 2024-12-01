@@ -54,19 +54,19 @@ public class Travel extends BaseUserEntity {
     }
 
     public void checkOwner(User user) {
-        if (!owner.equals(user)) {
+        if (!owner.getId().equals(user.getId())) {
             throw new IllegalArgumentException("여행 오너가 아닙니다.");
         }
     }
 
     public void checkMemberExists(User user) {
-        if (members.stream().noneMatch(member -> member.getUser().equals(user))) {
+        if (members.stream().noneMatch(member -> member.getUser().getId().equals(user.getId()))) {
             throw new IllegalArgumentException("여행에 참가하지 않은 사용자입니다.");
         }
     }
 
     public void checkMemberNotExists(User newUser) {
-        if (members.stream().anyMatch(member -> member.getUser().equals(newUser))) {
+        if (members.stream().anyMatch(member -> member.getUser().getId().equals(newUser.getId()))) {
             throw new IllegalArgumentException("이미 여행에 참가한 사용자입니다.");
         }
     }
