@@ -1,10 +1,7 @@
 package com.codeit.torip.travel.service;
 
 import com.codeit.torip.auth.util.AuthenticationFacade;
-import com.codeit.torip.travel.dto.CreateTravelRequest;
-import com.codeit.torip.travel.dto.TravelInvitationResponse;
-import com.codeit.torip.travel.dto.TravelResponse;
-import com.codeit.torip.travel.dto.UpdateTravelRequest;
+import com.codeit.torip.travel.dto.*;
 import com.codeit.torip.travel.entity.Travel;
 import com.codeit.torip.travel.entity.TravelInvitation;
 import com.codeit.torip.travel.entity.TravelInvitationStatus;
@@ -15,6 +12,7 @@ import com.codeit.torip.user.dto.UserResponse;
 import com.codeit.torip.user.entity.User;
 import com.codeit.torip.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +27,7 @@ public class TravelService {
     private final AuthenticationFacade authenticationFacade;
     private final UserRepository userRepository;
     private final TravelInvitationRepository travelInvitationRepository;
+    private final int PAGE_SIZE = 3;
 
     public TravelResponse createTravel(CreateTravelRequest createTravelRequest) {
         User userInfo = authenticationFacade.getUserInfo();
@@ -71,12 +70,16 @@ public class TravelService {
 
     }
 
-    public List<TravelResponse> getTravelList() {
+    public PageCollectionResponse<TravelResponse> getTravelList(Long lastSeenId) {
         User userInfo = authenticationFacade.getUserInfo();
 
-        List<Travel> travels = travelRepository.findAllByMembersUserIdOrderByCreatedAtDesc(userInfo.getId());
+        List<Travel> travels = travelRepository.findAllByMembersUserIdAndIdGreaterThanOrderByIdAsc(userInfo.getId(), lastSeenId, PageRequest.of(0, PAGE_SIZE));
 
-        return travels.stream().map(Travel::toResponse).toList();
+
+        return PageCollectionResponse.<TravelResponse>builder()
+                .lastSeenId(lastSeenId + travels.size())
+                .content(travels.stream().map(Travel::toResponse).toList())
+                .build();
     }
 
     public TravelResponse updateTravel(Long id, UpdateTravelRequest updateTravelRequest) {
