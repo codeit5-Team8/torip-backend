@@ -53,18 +53,21 @@ public class Travel extends BaseUserEntity {
         this.members.add(new TravelMember(this, owner, TravelMemberRole.OWNER));
     }
 
+    // 오너 확인 함수
     public void checkOwner(User user) {
         if (!owner.getId().equals(user.getId())) {
             throw new IllegalArgumentException("여행 오너가 아닙니다.");
         }
     }
 
+    // 멤버인지 확인 함수
     public void checkMemberExists(User user) {
         if (members.stream().noneMatch(member -> member.getUser().getId().equals(user.getId()))) {
             throw new IllegalArgumentException("여행에 참가하지 않은 사용자입니다.");
         }
     }
 
+    // 멤버 중복 확인 함수
     public void checkMemberNotExists(User newUser) {
         if (members.stream().anyMatch(member -> member.getUser().getId().equals(newUser.getId()))) {
             throw new IllegalArgumentException("이미 여행에 참가한 사용자입니다.");
@@ -89,6 +92,7 @@ public class Travel extends BaseUserEntity {
     }
 
 
+    // Task 추가 함수
     public void addTask(Task newTask) {
 
         Objects.requireNonNull(newTask);

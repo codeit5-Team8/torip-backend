@@ -1,9 +1,6 @@
 package com.codeit.torip.travel.controller;
 
-import com.codeit.torip.travel.dto.CreateTravelRequest;
-import com.codeit.torip.travel.dto.TravelInvitationResponse;
-import com.codeit.torip.travel.dto.TravelResponse;
-import com.codeit.torip.travel.dto.UpdateTravelRequest;
+import com.codeit.torip.travel.dto.*;
 import com.codeit.torip.travel.service.TravelService;
 import com.codeit.torip.user.dto.UserResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,11 +34,10 @@ public class TravelController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<TravelResponse>> getTravelList(@RequestParam Long lastSeenId) {
+    public ResponseEntity<PageCollectionResponse<TravelResponse>> getTravelList(@RequestParam Long lastSeenId) {
         // 여행 목록 조회 로직
-        // TODO 임시로 전체 여행 조회로 해놓음
         return ResponseEntity.status(HttpStatus.OK)
-                .body(travelService.getTravelList());
+                .body(travelService.getTravelList(lastSeenId));
     }
 
     @PatchMapping("/{id}")
