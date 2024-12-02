@@ -16,8 +16,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuditorConfig {
 
-    private final UserRepository userRepository;
-
     @Bean
     public AuditorAwareImpl auditorAware() {
         return new AuditorAwareImpl();

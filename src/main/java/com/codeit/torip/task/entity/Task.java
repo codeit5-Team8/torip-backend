@@ -58,6 +58,19 @@ public class Task extends BaseEntity {
 
     private LocalDateTime completionDate;
 
+    public static Task from(TaskDto taskDto) {
+        return Task.builder()
+                .taskDDay(taskDto.getTaskDDay())
+                .title(taskDto.getTaskTitle())
+                .filePath(taskDto.getFilePath())
+                .taskDDay(taskDto.getTaskDDay())
+                .status(taskDto.getTravelStatus())
+                .scope(taskDto.getScope())
+                .travel(Travel.builder().id(taskDto.getTravelId()).build())
+                .seq(taskDto.getNoteSeq())
+                .build();
+    }
+
     public void modifyTo(TaskDto taskDto) {
         this.title = taskDto.getTaskTitle();
         this.filePath = taskDto.getFilePath();
