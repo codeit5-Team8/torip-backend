@@ -1,6 +1,7 @@
 package com.codeit.torip.task.service;
 
 import com.codeit.torip.auth.util.AuthUtil;
+import com.codeit.torip.task.dto.TaskAssigneeDto;
 import com.codeit.torip.task.dto.TaskDetailDto;
 import com.codeit.torip.task.dto.TaskDto;
 import com.codeit.torip.task.dto.TaskProceedStatusDto;
@@ -72,46 +73,90 @@ public class TaskService {
     }
 
     public List<TaskDetailDto> getTaskList(long travelId, long seq) {
+
+        // TODO 내 여행인지 로직 추가
         var email = AuthUtil.getEmail();
+
         QUser createBy = new QUser("createBy");
         QUser modifiedBy = new QUser("modifiedBy");
-        var result = factory.select(
+        // 할일 정보 불러오기
+        var taskDetailDtoList = factory.select(
                         Projections.constructor(
                                 TaskDetailDto.class,
                                 task.id, task.seq, travel.name, task.title, task.filePath, task.status,
                                 task.taskDDay, task.scope, task.completionDate, task.createBy.email,
                                 task.createdAt, task.modifiedBy.email, task.updatedAt
                         ))
-                .from(taskAssignee)
-                .join(taskAssignee.task, task)
+                .from(task)
                 .join(task.travel, travel)
                 .join(task.createBy, createBy)
                 .join(task.modifiedBy, modifiedBy)
                 .where(
-                        travel.id.eq(travelId).and(task.seq.between(seq, seq + PAGE_OFFSET)).and(user.email.eq(email))
+                        travel.id.eq(travelId).and(task.seq.between(seq, seq + PAGE_OFFSET))
                 ).fetch();
-        return result;
+        // 담당자 정보 불러오기
+        List<TaskAssigneeDto> assigneeDtoList = factory.select(
+                        Projections.constructor(
+                                TaskAssigneeDto.class,
+                                task.id, user.id, user.email, user.username
+                        )
+                )
+                .from(task)
+                .join(task.travel, travel)
+                .join(task.assignees, taskAssignee)
+                .join(taskAssignee.assignee, user)
+                .where(
+                        travel.id.eq(travelId).and(task.seq.between(seq, seq + PAGE_OFFSET))
+                ).fetch();
+        for (TaskDetailDto taskDetail : taskDetailDtoList) {
+            var taskId = taskDetail.getTaskId();
+            for (TaskAssigneeDto assigneeDto : assigneeDtoList) {
+                if (taskId.equals(assigneeDto.getTaskId())) {
+                    taskDetail.getAssignees().add(assigneeDto);
+                }
+            }
+        }
+        return taskDetailDtoList;
     }
 
     public TaskDetailDto getTaskDetail(long taskId) {
+
+        // TODO 내 여행인지 로직 추가
         var email = AuthUtil.getEmail();
+        
         QUser createBy = new QUser("createBy");
         QUser modifiedBy = new QUser("modifiedBy");
-        return factory.select(
+        // 할일 정보 불러오기
+        TaskDetailDto taskDetailDto = factory.select(
                         Projections.constructor(
                                 TaskDetailDto.class,
                                 task.id, task.seq, travel.name, task.title, task.filePath, task.status,
                                 task.taskDDay, task.scope, task.completionDate, task.createBy.email,
                                 task.createdAt, task.modifiedBy.email, task.updatedAt
                         ))
-                .from(taskAssignee)
-                .join(taskAssignee.task, task)
+                .from(task)
                 .join(task.travel, travel)
                 .join(task.createBy, createBy)
                 .join(task.modifiedBy, modifiedBy)
                 .where(
-                        task.id.eq(taskId).and(user.email.eq(email))
+                        task.id.eq(taskId)
                 ).fetchOne();
+        // 담당자 정보 불러오기
+        List<TaskAssigneeDto> assigneeDtoList = factory.select(
+                        Projections.constructor(
+                                TaskAssigneeDto.class,
+                                task.id, user.id, user.email, user.username
+                        )
+                )
+                .from(task)
+                .join(task.travel, travel)
+                .join(task.assignees, taskAssignee)
+                .join(taskAssignee.assignee, user)
+                .where(
+                        task.id.eq(taskId)
+                ).fetch();
+        if (taskDetailDto != null) taskDetailDto.getAssignees().addAll(assigneeDtoList);
+        return taskDetailDto;
     }
 
     @Transactional
@@ -170,6 +215,7 @@ public class TaskService {
                 .where(user.email.eq(email))
                 .fetch();
 
+        // 통계 산정
         var proceedStatus = new TaskProceedStatusDto();
         for (TaskDetailDto taskDetail : taskDetailList) {
             var scope = taskDetail.getTaskScope();

@@ -45,8 +45,8 @@ public class TaskDetailDto {
     @Schema(description = "할일 수정일", example = "2024-10-11 15:21:00")
     private LocalDateTime taskUpdatedAt;
 
-    // TODO 담당자 목록 추가 개발 필요
-    private List<String> assignees = new ArrayList<>();
+    @Schema(description = "할일 담당자 목록", example = "[demo@gmail.com]")
+    private List<TaskAssigneeDto> assignees = new ArrayList<>();
 
     public TaskDetailDto(Long taskId, Long taskSeq, String travelName, String taskTitle, String taskFilePath, TravelStatus taskStatus, LocalDateTime taskDDay, TaskScope taskScope, LocalDateTime taskCompletionDate, String taskCreatedBy, LocalDateTime taskCreatedAt, String taskModifiedBy, LocalDateTime taskUpdatedAt) {
         this.taskId = taskId;
