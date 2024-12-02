@@ -19,6 +19,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository{
 
     private final JPAQueryFactory factory;
 
+    @Override
     public List<TaskDetailDto> selectTaskDetailList(long travelId, long seq){
         QUser createBy = new QUser("createBy");
         QUser modifiedBy = new QUser("modifiedBy");
@@ -42,6 +43,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository{
                 .fetch();
     }
 
+    @Override
     public TaskDetailDto selectTaskDetail(long taskId){
         QUser createBy = new QUser("createBy");
         QUser modifiedBy = new QUser("modifiedBy");
