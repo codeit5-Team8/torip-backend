@@ -19,12 +19,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "task")
+@Table(name = "task", indexes = {@Index(name = "idx_task_id_seq", columnList = "id, seq")})
 public class Task extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private Long seq;
 
     @ManyToOne(fetch = FetchType.LAZY)

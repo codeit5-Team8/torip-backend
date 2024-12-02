@@ -56,6 +56,7 @@ public class TaskService {
                 .status(taskDto.getTravelStatus())
                 .scope(taskDto.getScope())
                 .travel(Travel.builder().id(taskDto.getTravelId()).build())
+                .seq(taskDto.getNoteSeq())
                 .build();
 
         List<TaskAssignee> assignees = new ArrayList<>();
@@ -92,8 +93,11 @@ public class TaskService {
                 .join(task.createBy, createBy)
                 .join(task.modifiedBy, modifiedBy)
                 .where(
-                        travel.id.eq(travelId).and(task.seq.between(seq, seq + PAGE_OFFSET))
-                ).fetch();
+                        // TODO 사용자가 동시에 할일을 등록하게 되면 SEQ값이 중복될 가능성이 있고, 같은 SEQ로 조회되는 글이 20개가 넘을 가능성 있음
+                        travel.id.eq(travelId).and(task.seq.lt(seq))
+                ).orderBy(task.seq.desc())
+                .limit(PAGE_OFFSET)
+                .fetch();
         // 담당자 정보 불러오기
         List<TaskAssigneeDto> assigneeDtoList = factory.select(
                         Projections.constructor(
@@ -106,8 +110,10 @@ public class TaskService {
                 .join(task.assignees, taskAssignee)
                 .join(taskAssignee.assignee, user)
                 .where(
-                        travel.id.eq(travelId).and(task.seq.between(seq, seq + PAGE_OFFSET))
-                ).fetch();
+                        travel.id.eq(travelId).and(task.seq.lt(seq))
+                ).orderBy(task.seq.desc())
+                .limit(PAGE_OFFSET)
+                .fetch();
         for (TaskDetailDto taskDetail : taskDetailDtoList) {
             var taskId = taskDetail.getTaskId();
             for (TaskAssigneeDto assigneeDto : assigneeDtoList) {
@@ -123,7 +129,7 @@ public class TaskService {
 
         // TODO 내 여행인지 로직 추가
         var email = AuthUtil.getEmail();
-        
+
         QUser createBy = new QUser("createBy");
         QUser modifiedBy = new QUser("modifiedBy");
         // 할일 정보 불러오기

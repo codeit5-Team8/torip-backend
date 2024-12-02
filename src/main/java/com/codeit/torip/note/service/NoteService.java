@@ -38,6 +38,26 @@ public class NoteService {
         noteRepository.save(noteEntity);
     }
 
+    public List<NoteDetailDto> getNoteList(String key, long id, long seq) {
+        QUser createBy = new QUser("createBy");
+        QUser modifiedBy = new QUser("modifiedBy");
+        return factory.select(
+                        Projections.constructor(NoteDetailDto.class,
+                                note.id, note.seq, travel.name, task.status, note.title, note.content,
+                                note.link, note.createBy.email, note.createdAt, note.modifiedBy.email, note.updatedAt
+                        )
+                ).from(travel).join(travel.tasks, task)
+                .join(task.notes, note)
+                .join(note.createBy, createBy)
+                .join(note.modifiedBy, modifiedBy)
+                .where(
+                        // TODO 사용자가 동시에 할일을 등록하게 되면 SEQ값이 중복될 가능성이 있고, 같은 SEQ로 조회되는 글이 20개가 넘을 가능성 있음
+                        (key.equals("TRAVEL") ? task.id.eq(id) : travel.id.eq(id)).and(note.seq.lt(seq)))
+                .orderBy(note.seq.desc())
+                .limit(PAGE_OFFSET)
+                .fetch();
+    }
+
     public NoteDetailDto getNoteDetail(long noteId) {
         QUser createBy = new QUser("createBy");
         QUser modifiedBy = new QUser("modifiedBy");
@@ -52,21 +72,6 @@ public class NoteService {
                 .join(note.createBy, createBy)
                 .join(note.modifiedBy, modifiedBy)
                 .where(note.id.eq(noteId)).fetchOne();
-    }
-
-    public List<NoteDetailDto> getNoteList(long taskId, long seq) {
-        QUser createBy = new QUser("createBy");
-        QUser modifiedBy = new QUser("modifiedBy");
-        return factory.select(
-                        Projections.constructor(NoteDetailDto.class,
-                                note.id, note.seq, travel.name, task.status, note.title, note.content,
-                                note.link, note.createBy.email, note.createdAt, note.modifiedBy.email, note.updatedAt
-                        )
-                ).from(travel).join(travel.tasks, task)
-                .join(task.notes, note)
-                .join(note.createBy, createBy)
-                .join(note.modifiedBy, modifiedBy)
-                .where(task.id.eq(taskId).and(note.seq.between(seq, seq + PAGE_OFFSET))).fetch();
     }
 
     @Transactional

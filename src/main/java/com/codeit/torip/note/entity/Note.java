@@ -14,13 +14,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "note")
+@Table(name = "note", indexes = {@Index(name = "idx_task_id_seq", columnList = "id, seq")})
 public class Note extends BaseEntity {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private Long seq;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,6 +42,7 @@ public class Note extends BaseEntity {
                 .title(noteDto.getTitle())
                 .content(noteDto.getContent())
                 .link(noteDto.getLink())
+                .seq(noteDto.getNoteSeq() + 1)
                 .build();
     }
 
