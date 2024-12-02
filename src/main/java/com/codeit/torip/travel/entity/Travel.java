@@ -7,8 +7,6 @@ import com.codeit.torip.travel.dto.TravelResponse;
 import com.codeit.torip.travel.dto.UpdateTravelRequest;
 import com.codeit.torip.user.entity.User;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -24,10 +22,6 @@ import java.util.Objects;
 @AllArgsConstructor
 @Table(name = "travel")
 public class Travel extends BaseUserEntity {
-    @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<TravelMember> members = new ArrayList<>();
-    @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Task> tasks = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

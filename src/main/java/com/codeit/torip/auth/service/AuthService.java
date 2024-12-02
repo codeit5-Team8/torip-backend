@@ -40,11 +40,11 @@ public class AuthService {
 
     public TokenResponse register(RegisterRequest registerRequest) {
         if (userRepository.existsUserByEmail(registerRequest.getEmail())) {
-            throw new DuplicateEmailException();
+            throw new RuntimeException("이미 존재하는 이메일입니다.");
         }
 
         if (userRepository.existsUserByUsername(registerRequest.getUsername())) {
-            throw new DuplicateUsernameException();
+            throw new RuntimeException("이미 존재하는 유저네임입니다.");
         }
 
         User user = User.builder()
