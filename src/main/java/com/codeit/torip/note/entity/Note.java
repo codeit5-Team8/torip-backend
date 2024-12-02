@@ -1,15 +1,27 @@
 package com.codeit.torip.note.entity;
 
-import com.codeit.torip.common.entity.BaseUserEntity;
+import com.codeit.torip.common.entity.BaseEntity;
+import com.codeit.torip.note.dto.NoteDto;
 import com.codeit.torip.task.entity.Task;
 import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@Getter
+@Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "note")
-public class Note extends BaseUserEntity {
+public class Note extends BaseEntity {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private Long seq;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id", nullable = false)
@@ -20,4 +32,21 @@ public class Note extends BaseUserEntity {
 
     @Column(nullable = false, length = 500)
     private String content;
+
+    @Column(nullable = false, length = 30)
+    private String link;
+
+    public static Note from(NoteDto noteDto) {
+        return Note.builder()
+                .title(noteDto.getTitle())
+                .content(noteDto.getContent())
+                .link(noteDto.getLink())
+                .build();
+    }
+
+    public void modifyTo(NoteDto noteDto) {
+        this.title = noteDto.getTitle();
+        this.content = noteDto.getContent();
+        this.link = noteDto.getLink();
+    }
 }

@@ -18,6 +18,10 @@ public class CustomUserDetail implements UserDetails {
         this.user = user;
     }
 
+    public Long getId() {
+        return user.getId();
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
@@ -32,4 +36,5 @@ public class CustomUserDetail implements UserDetails {
     public String getUsername() {
         return user.getEmail();
     }
+
 }
