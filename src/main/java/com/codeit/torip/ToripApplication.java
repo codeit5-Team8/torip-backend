@@ -14,7 +14,6 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-@EnableJpaAuditing
 @SpringBootApplication
 @RequiredArgsConstructor
 public class ToripApplication {

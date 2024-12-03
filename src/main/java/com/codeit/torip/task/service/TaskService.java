@@ -1,42 +1,26 @@
 package com.codeit.torip.task.service;
 
 import com.codeit.torip.auth.util.AuthUtil;
-import com.codeit.torip.task.dto.TaskAssigneeDto;
-import com.codeit.torip.task.dto.TaskDetailDto;
-import com.codeit.torip.task.dto.TaskDto;
-import com.codeit.torip.task.dto.TaskProceedStatusDto;
+import com.codeit.torip.task.dto.*;
 import com.codeit.torip.task.entity.Task;
 import com.codeit.torip.task.entity.TaskAssignee;
-import com.codeit.torip.task.repository.TaskAssigneeRepository;
-import com.codeit.torip.task.repository.TaskRepository;
-import com.codeit.torip.travel.entity.Travel;
-import com.codeit.torip.user.entity.QUser;
+import com.codeit.torip.task.repository.assignee.TaskAssigneeRepository;
+import com.codeit.torip.task.repository.task.TaskRepository;
 import com.codeit.torip.user.repository.UserRepository;
-import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static com.codeit.torip.common.contant.ToripConstants.Task.PAGE_OFFSET;
-import static com.codeit.torip.task.entity.QTask.task;
-import static com.codeit.torip.task.entity.QTaskAssignee.taskAssignee;
 import static com.codeit.torip.task.entity.TaskScope.PUBLIC;
-import static com.codeit.torip.travel.entity.QTravel.travel;
-import static com.codeit.torip.user.entity.QUser.user;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class TaskService {
-
-    private final JPAQueryFactory factory;
 
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
@@ -44,76 +28,27 @@ public class TaskService {
 
     @Transactional
     public void registerTask(TaskDto taskDto) {
-
         // TODO 내 여행인지 로직 추가
         var email = AuthUtil.getEmail();
-
-        var taskEntity = Task.builder()
-                .taskDDay(taskDto.getTaskDDay())
-                .title(taskDto.getTaskTitle())
-                .filePath(taskDto.getFilePath())
-                .taskDDay(taskDto.getTaskDDay())
-                .status(taskDto.getTravelStatus())
-                .scope(taskDto.getScope())
-                .travel(Travel.builder().id(taskDto.getTravelId()).build())
-                .seq(taskDto.getNoteSeq())
-                .build();
-
-        List<TaskAssignee> assignees = new ArrayList<>();
+        var taskEntity = Task.from(taskDto);
+        List<TaskAssignee> assignees = taskEntity.getAssignees();
+        // 담당자 추가
         for (String assignee : taskDto.getAssignees()) {
             var userEntity = userRepository.findByEmail(assignee).orElseThrow();
-            var taskAssigneeEntity = TaskAssignee.builder()
-                    .task(taskEntity)
-                    .assignee(userEntity)
-                    .build();
+            var taskAssigneeEntity = TaskAssignee.builder().task(taskEntity).assignee(userEntity).build();
             assignees.add(taskAssigneeEntity);
         }
-
-        taskEntity.setAssignees(assignees);
+        // 할일 등록
         taskRepository.save(taskEntity);
     }
 
     public List<TaskDetailDto> getTaskList(long travelId, long seq) {
-
         // TODO 내 여행인지 로직 추가
         var email = AuthUtil.getEmail();
-
-        QUser createBy = new QUser("createBy");
-        QUser modifiedBy = new QUser("modifiedBy");
         // 할일 정보 불러오기
-        var taskDetailDtoList = factory.select(
-                        Projections.constructor(
-                                TaskDetailDto.class,
-                                task.id, task.seq, travel.name, task.title, task.filePath, task.status,
-                                task.taskDDay, task.scope, task.completionDate, task.createBy.email,
-                                task.createdAt, task.modifiedBy.email, task.updatedAt
-                        ))
-                .from(task)
-                .join(task.travel, travel)
-                .join(task.createBy, createBy)
-                .join(task.modifiedBy, modifiedBy)
-                .where(
-                        // TODO 사용자가 동시에 할일을 등록하게 되면 SEQ값이 중복될 가능성이 있고, 같은 SEQ로 조회되는 글이 20개가 넘을 가능성 있음
-                        travel.id.eq(travelId).and(task.seq.lt(seq))
-                ).orderBy(task.seq.desc())
-                .limit(PAGE_OFFSET)
-                .fetch();
+        var taskDetailDtoList = taskRepository.selectTaskDetailList(travelId,seq);
         // 담당자 정보 불러오기
-        List<TaskAssigneeDto> assigneeDtoList = factory.select(
-                        Projections.constructor(
-                                TaskAssigneeDto.class,
-                                task.id, user.id, user.email, user.username
-                        )
-                )
-                .from(task)
-                .join(task.travel, travel)
-                .join(task.assignees, taskAssignee)
-                .join(taskAssignee.assignee, user)
-                .where(
-                        travel.id.eq(travelId).and(task.seq.lt(seq))
-                ).orderBy(task.seq.desc())
-                .limit(PAGE_OFFSET)
-                .fetch();
+        List<TaskAssigneeDto> assigneeDtoList = taskAssigneeRepository.selectTaskAssigneeList(travelId,seq);
         for (TaskDetailDto taskDetail : taskDetailDtoList) {
             var taskId = taskDetail.getTaskId();
             for (TaskAssigneeDto assigneeDto : assigneeDtoList) {
@@ -126,72 +61,33 @@ public class TaskService {
     }
 
     public TaskDetailDto getTaskDetail(long taskId) {
-
         // TODO 내 여행인지 로직 추가
         var email = AuthUtil.getEmail();
-
-        QUser createBy = new QUser("createBy");
-        QUser modifiedBy = new QUser("modifiedBy");
         // 할일 정보 불러오기
-        TaskDetailDto taskDetailDto = factory.select(
-                        Projections.constructor(
-                                TaskDetailDto.class,
-                                task.id, task.seq, travel.name, task.title, task.filePath, task.status,
-                                task.taskDDay, task.scope, task.completionDate, task.createBy.email,
-                                task.createdAt, task.modifiedBy.email, task.updatedAt
-                        ))
-                .from(task)
-                .join(task.travel, travel)
-                .join(task.createBy, createBy)
-                .join(task.modifiedBy, modifiedBy)
-                .where(
-                        task.id.eq(taskId)
-                ).fetchOne();
+        TaskDetailDto taskDetailDto = taskRepository.selectTaskDetail(taskId);
         // 담당자 정보 불러오기
-        List<TaskAssigneeDto> assigneeDtoList = factory.select(
-                        Projections.constructor(
-                                TaskAssigneeDto.class,
-                                task.id, user.id, user.email, user.username
-                        )
-                )
-                .from(task)
-                .join(task.travel, travel)
-                .join(task.assignees, taskAssignee)
-                .join(taskAssignee.assignee, user)
-                .where(
-                        task.id.eq(taskId)
-                ).fetch();
+        List<TaskAssigneeDto> assigneeDtoList = taskAssigneeRepository.selectTaskAssignee(taskId);
         if (taskDetailDto != null) taskDetailDto.getAssignees().addAll(assigneeDtoList);
         return taskDetailDto;
     }
 
     @Transactional
     public void modifyTask(TaskDto taskDto) {
-        List<Tuple> tuples = factory.select(
-                        taskAssignee.id,
-                        user.email
-                ).from(taskAssignee)
-                .join(taskAssignee.assignee, user)
-                .join(taskAssignee.task, task)
-                .where(
-                        task.id.eq(taskDto.getTaskId())
-                ).fetch();
-
+        // 할일 수정
         Set<String> assignees = taskDto.getAssignees();
         Task taskEntity = taskRepository.findById(taskDto.getTaskId()).get();
-
-        // 할일 정보 수정
         taskEntity.modifyTo(taskDto);
         taskRepository.save(taskEntity);
-
+        // 담당자 조회
+        List<TaskModifyAssigneeDto> assigneeModifyDtoList =
+                taskAssigneeRepository.selectTaskModifyAssignee(taskDto.getTaskId());
         // 기존 담당자 제거
-        for (Tuple tuple : tuples) {
-            String email = tuple.get(user.email);
-            Long id = tuple.get(taskAssignee.id);
+        for (TaskModifyAssigneeDto assigneeModifyDto : assigneeModifyDtoList) {
+            String email = assigneeModifyDto.getEmail();
+            Long id = assigneeModifyDto.getTaskAssigneeId();
             if (!assignees.contains(email)) taskAssigneeRepository.deleteById(id);
             else assignees.remove(email);
         }
-
         // 신규 담당자 추가
         for (String email : assignees) {
             var userEntity = userRepository.findByEmail(email).get();
@@ -202,25 +98,8 @@ public class TaskService {
 
     public TaskProceedStatusDto getProgressStatus() {
         var email = AuthUtil.getEmail();
-        QUser createBy = new QUser("createBy");
-        QUser modifiedBy = new QUser("modifiedBy");
-
         // TODO 나중에 효율적인 쿼리로 리펙토링 하자
-        List<TaskDetailDto> taskDetailList = factory.select(
-                        Projections.constructor(
-                                TaskDetailDto.class,
-                                task.id, task.seq, travel.name, task.title, task.filePath, task.status,
-                                task.taskDDay, task.scope, task.completionDate, task.createBy.email, task.createdAt,
-                                task.modifiedBy.email, task.updatedAt
-                        ))
-                .from(taskAssignee)
-                .join(taskAssignee.task, task)
-                .join(task.travel, travel)
-                .join(task.createBy, createBy)
-                .join(task.modifiedBy, modifiedBy)
-                .where(user.email.eq(email))
-                .fetch();
-
+        List<TaskDetailDto> taskDetailList = taskRepository.selectAllTaskDetailList(email);
         // 통계 산정
         var proceedStatus = new TaskProceedStatusDto();
         for (TaskDetailDto taskDetail : taskDetailList) {
@@ -233,6 +112,7 @@ public class TaskService {
 
     @Transactional
     public void deleteTask(long taskId) {
+        // 할일 삭제
         taskRepository.deleteById(taskId);
     }
 
