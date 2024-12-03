@@ -22,7 +22,7 @@ public class QTask extends EntityPathBase<Task> {
 
     public static final QTask task = new QTask("task");
 
-    public final com.codeit.torip.common.entity.QBaseEntity _super;
+    public final com.codeit.torip.common.entity.QBaseUserEntity _super;
 
     public final ListPath<TaskAssignee, QTaskAssignee> assignees = this.<TaskAssignee, QTaskAssignee>createList("assignees", TaskAssignee.class, QTaskAssignee.class, PathInits.DIRECT2);
 
@@ -37,6 +37,12 @@ public class QTask extends EntityPathBase<Task> {
     public final StringPath filePath = createString("filePath");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    // inherited
+    public final com.codeit.torip.user.entity.QUser lastcreatedUser;
+
+    // inherited
+    public final com.codeit.torip.user.entity.QUser lastUpdatedUser;
 
     // inherited
     public final com.codeit.torip.user.entity.QUser modifiedBy;
@@ -76,9 +82,11 @@ public class QTask extends EntityPathBase<Task> {
 
     public QTask(Class<? extends Task> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this._super = new com.codeit.torip.common.entity.QBaseEntity(type, metadata, inits);
+        this._super = new com.codeit.torip.common.entity.QBaseUserEntity(type, metadata, inits);
         this.createBy = _super.createBy;
         this.createdAt = _super.createdAt;
+        this.lastcreatedUser = _super.lastcreatedUser;
+        this.lastUpdatedUser = _super.lastUpdatedUser;
         this.modifiedBy = _super.modifiedBy;
         this.travel = inits.isInitialized("travel") ? new com.codeit.torip.travel.entity.QTravel(forProperty("travel"), inits.get("travel")) : null;
         this.updatedAt = _super.updatedAt;

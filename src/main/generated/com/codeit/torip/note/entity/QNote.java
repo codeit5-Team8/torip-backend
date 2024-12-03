@@ -22,7 +22,7 @@ public class QNote extends EntityPathBase<Note> {
 
     public static final QNote note = new QNote("note");
 
-    public final com.codeit.torip.common.entity.QBaseEntity _super;
+    public final com.codeit.torip.common.entity.QBaseUserEntity _super;
 
     public final StringPath content = createString("content");
 
@@ -33,6 +33,12 @@ public class QNote extends EntityPathBase<Note> {
     public final DateTimePath<java.time.LocalDateTime> createdAt;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    // inherited
+    public final com.codeit.torip.user.entity.QUser lastcreatedUser;
+
+    // inherited
+    public final com.codeit.torip.user.entity.QUser lastUpdatedUser;
 
     public final StringPath link = createString("link");
 
@@ -66,9 +72,11 @@ public class QNote extends EntityPathBase<Note> {
 
     public QNote(Class<? extends Note> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this._super = new com.codeit.torip.common.entity.QBaseEntity(type, metadata, inits);
+        this._super = new com.codeit.torip.common.entity.QBaseUserEntity(type, metadata, inits);
         this.createBy = _super.createBy;
         this.createdAt = _super.createdAt;
+        this.lastcreatedUser = _super.lastcreatedUser;
+        this.lastUpdatedUser = _super.lastUpdatedUser;
         this.modifiedBy = _super.modifiedBy;
         this.task = inits.isInitialized("task") ? new com.codeit.torip.task.entity.QTask(forProperty("task"), inits.get("task")) : null;
         this.updatedAt = _super.updatedAt;

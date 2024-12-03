@@ -1,6 +1,6 @@
 package com.codeit.torip.note.entity;
 
-import com.codeit.torip.common.entity.BaseEntity;
+import com.codeit.torip.common.entity.BaseUserEntity;
 import com.codeit.torip.note.dto.NoteDto;
 import com.codeit.torip.task.entity.Task;
 import jakarta.persistence.*;
@@ -15,7 +15,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "note", indexes = {@Index(name = "idx_task_id_seq", columnList = "id, seq")})
-public class Note extends BaseEntity {
+public class Note extends BaseUserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

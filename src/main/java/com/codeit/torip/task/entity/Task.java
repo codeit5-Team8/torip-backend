@@ -1,6 +1,6 @@
 package com.codeit.torip.task.entity;
 
-import com.codeit.torip.common.entity.BaseEntity;
+import com.codeit.torip.common.entity.BaseUserEntity;
 import com.codeit.torip.note.entity.Note;
 import com.codeit.torip.task.dto.TaskDto;
 import com.codeit.torip.travel.entity.Travel;
@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "task", indexes = {@Index(name = "idx_task_id_seq", columnList = "id, seq")})
-public class Task extends BaseEntity {
+public class Task extends BaseUserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
