@@ -13,7 +13,7 @@ public class AsyncConfig {
 
     @Bean
     public ThreadPoolTaskExecutor messageThreadPoolTaskExecutor() {
-        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+        var taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setThreadNamePrefix("async-task-");
         taskExecutor.setCorePoolSize(200);
         taskExecutor.setMaxPoolSize(400);

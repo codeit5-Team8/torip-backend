@@ -14,14 +14,14 @@ import static com.codeit.torip.task.entity.QTask.task;
 import static com.codeit.torip.travel.entity.QTravel.travel;
 
 @RequiredArgsConstructor
-public class CustomNoteRepositoryImpl implements CustomNoteRepository{
+public class CustomNoteRepositoryImpl implements CustomNoteRepository {
 
     private final JPAQueryFactory factory;
 
     @Override
-    public List<NoteDetailDto> selectNoteDetailList(String key, long id, long seq){
-        QUser createBy = new QUser("createBy");
-        QUser modifiedBy = new QUser("modifiedBy");
+    public List<NoteDetailDto> selectNoteDetailList(String key, long id, long seq) {
+        var createBy = new QUser("createBy");
+        var modifiedBy = new QUser("modifiedBy");
         return factory.select(
                         Projections.constructor(NoteDetailDto.class,
                                 note.id, note.seq, travel.name, task.status, note.title, note.content,
@@ -40,9 +40,9 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository{
     }
 
     @Override
-    public NoteDetailDto selectNoteDetail(long noteId){
-        QUser createBy = new QUser("createBy");
-        QUser modifiedBy = new QUser("modifiedBy");
+    public NoteDetailDto selectNoteDetail(long noteId) {
+        var createBy = new QUser("createBy");
+        var modifiedBy = new QUser("modifiedBy");
         return factory.select(
                         Projections.constructor(NoteDetailDto.class,
                                 note.id, note.seq, travel.name, task.status, note.title, note.content,

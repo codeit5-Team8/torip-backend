@@ -15,14 +15,14 @@ import static com.codeit.torip.travel.entity.QTravel.travel;
 import static com.codeit.torip.user.entity.QUser.user;
 
 @RequiredArgsConstructor
-public class CustomTaskRepositoryImpl implements CustomTaskRepository{
+public class CustomTaskRepositoryImpl implements CustomTaskRepository {
 
     private final JPAQueryFactory factory;
 
     @Override
-    public List<TaskDetailDto> selectTaskDetailList(long travelId, long seq){
-        QUser createBy = new QUser("createBy");
-        QUser modifiedBy = new QUser("modifiedBy");
+    public List<TaskDetailDto> selectTaskDetailList(long travelId, long seq) {
+        var createBy = new QUser("createBy");
+        var modifiedBy = new QUser("modifiedBy");
         // 할일 정보 불러오기
         return factory.select(
                         Projections.constructor(
@@ -44,9 +44,9 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository{
     }
 
     @Override
-    public TaskDetailDto selectTaskDetail(long taskId){
-        QUser createBy = new QUser("createBy");
-        QUser modifiedBy = new QUser("modifiedBy");
+    public TaskDetailDto selectTaskDetail(long taskId) {
+        var createBy = new QUser("createBy");
+        var modifiedBy = new QUser("modifiedBy");
         // 할일 정보 불러오기
         return factory.select(
                         Projections.constructor(
@@ -65,9 +65,9 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository{
     }
 
     @Override
-    public List<TaskDetailDto> selectAllTaskDetailList(String email){
-        QUser createBy = new QUser("createBy");
-        QUser modifiedBy = new QUser("modifiedBy");
+    public List<TaskDetailDto> selectAllTaskDetailList(String email) {
+        var createBy = new QUser("createBy");
+        var modifiedBy = new QUser("modifiedBy");
         return factory.select(
                         Projections.constructor(
                                 TaskDetailDto.class,

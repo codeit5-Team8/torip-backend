@@ -33,7 +33,7 @@ public class NoteService {
 
     public List<NoteDetailDto> getNoteList(String key, long id, long seq) {
         // 노트 목록 조회
-        return noteRepository.selectNoteDetailList(key,id,seq);
+        return noteRepository.selectNoteDetailList(key, id, seq);
     }
 
     public NoteDetailDto getNoteDetail(long noteId) {
@@ -44,7 +44,7 @@ public class NoteService {
     @Transactional
     public void modifyNote(NoteDto noteDto) {
         // 노트 조회
-        Note noteEntity = noteRepository.findById(noteDto.getNoteId())
+        var noteEntity = noteRepository.findById(noteDto.getNoteId())
                 .orElseThrow(() -> new RuntimeException("노트 정보가 존재하지 않습니다"));
         // 노트 수정
         noteEntity.modifyTo(noteDto);

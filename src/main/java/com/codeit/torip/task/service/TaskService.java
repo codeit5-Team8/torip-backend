@@ -1,7 +1,9 @@
 package com.codeit.torip.task.service;
 
 import com.codeit.torip.auth.util.AuthUtil;
-import com.codeit.torip.task.dto.*;
+import com.codeit.torip.task.dto.TaskDetailDto;
+import com.codeit.torip.task.dto.TaskDto;
+import com.codeit.torip.task.dto.TaskProceedStatusDto;
 import com.codeit.torip.task.entity.Task;
 import com.codeit.torip.task.entity.TaskAssignee;
 import com.codeit.torip.task.repository.assignee.TaskAssigneeRepository;
@@ -13,7 +15,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Set;
 
 import static com.codeit.torip.task.entity.TaskScope.PUBLIC;
 
@@ -31,9 +32,9 @@ public class TaskService {
         // TODO 내 여행인지 로직 추가
         var email = AuthUtil.getEmail();
         var taskEntity = Task.from(taskDto);
-        List<TaskAssignee> assignees = taskEntity.getAssignees();
+        var assignees = taskEntity.getAssignees();
         // 담당자 추가
-        for (String assignee : taskDto.getAssignees()) {
+        for (var assignee : taskDto.getAssignees()) {
             var userEntity = userRepository.findByEmail(assignee).orElseThrow();
             var taskAssigneeEntity = TaskAssignee.builder().task(taskEntity).assignee(userEntity).build();
             assignees.add(taskAssigneeEntity);
@@ -46,12 +47,12 @@ public class TaskService {
         // TODO 내 여행인지 로직 추가
         var email = AuthUtil.getEmail();
         // 할일 정보 불러오기
-        var taskDetailDtoList = taskRepository.selectTaskDetailList(travelId,seq);
+        var taskDetailDtoList = taskRepository.selectTaskDetailList(travelId, seq);
         // 담당자 정보 불러오기
-        List<TaskAssigneeDto> assigneeDtoList = taskAssigneeRepository.selectTaskAssigneeList(travelId,seq);
-        for (TaskDetailDto taskDetail : taskDetailDtoList) {
+        var assigneeDtoList = taskAssigneeRepository.selectTaskAssigneeList(travelId, seq);
+        for (var taskDetail : taskDetailDtoList) {
             var taskId = taskDetail.getTaskId();
-            for (TaskAssigneeDto assigneeDto : assigneeDtoList) {
+            for (var assigneeDto : assigneeDtoList) {
                 if (taskId.equals(assigneeDto.getTaskId())) {
                     taskDetail.getAssignees().add(assigneeDto);
                 }
@@ -64,9 +65,9 @@ public class TaskService {
         // TODO 내 여행인지 로직 추가
         var email = AuthUtil.getEmail();
         // 할일 정보 불러오기
-        TaskDetailDto taskDetailDto = taskRepository.selectTaskDetail(taskId);
+        var taskDetailDto = taskRepository.selectTaskDetail(taskId);
         // 담당자 정보 불러오기
-        List<TaskAssigneeDto> assigneeDtoList = taskAssigneeRepository.selectTaskAssignee(taskId);
+        var assigneeDtoList = taskAssigneeRepository.selectTaskAssignee(taskId);
         if (taskDetailDto != null) taskDetailDto.getAssignees().addAll(assigneeDtoList);
         return taskDetailDto;
     }
@@ -74,24 +75,23 @@ public class TaskService {
     @Transactional
     public void modifyTask(TaskDto taskDto) {
         // 할일 수정
-        Set<String> assignees = taskDto.getAssignees();
-        Task taskEntity = taskRepository.findById(taskDto.getTaskId()).get();
+        var assignees = taskDto.getAssignees();
+        var taskEntity = taskRepository.findById(taskDto.getTaskId()).get();
         taskEntity.modifyTo(taskDto);
         taskRepository.save(taskEntity);
         // 담당자 조회
-        List<TaskModifyAssigneeDto> assigneeModifyDtoList =
-                taskAssigneeRepository.selectTaskModifyAssignee(taskDto.getTaskId());
+        var assigneeModifyDtoList = taskAssigneeRepository.selectTaskModifyAssignee(taskDto.getTaskId());
         // 기존 담당자 제거
-        for (TaskModifyAssigneeDto assigneeModifyDto : assigneeModifyDtoList) {
-            String email = assigneeModifyDto.getEmail();
-            Long id = assigneeModifyDto.getTaskAssigneeId();
+        for (var assigneeModifyDto : assigneeModifyDtoList) {
+            var email = assigneeModifyDto.getEmail();
+            var id = assigneeModifyDto.getTaskAssigneeId();
             if (!assignees.contains(email)) taskAssigneeRepository.deleteById(id);
             else assignees.remove(email);
         }
         // 신규 담당자 추가
         for (String email : assignees) {
             var userEntity = userRepository.findByEmail(email).get();
-            TaskAssignee assigneeEntity = TaskAssignee.builder().task(taskEntity).assignee(userEntity).build();
+            var assigneeEntity = TaskAssignee.builder().task(taskEntity).assignee(userEntity).build();
             taskAssigneeRepository.save(assigneeEntity);
         }
     }
@@ -99,10 +99,10 @@ public class TaskService {
     public TaskProceedStatusDto getProgressStatus() {
         var email = AuthUtil.getEmail();
         // TODO 나중에 효율적인 쿼리로 리펙토링 하자
-        List<TaskDetailDto> taskDetailList = taskRepository.selectAllTaskDetailList(email);
+        var taskDetailList = taskRepository.selectAllTaskDetailList(email);
         // 통계 산정
         var proceedStatus = new TaskProceedStatusDto();
-        for (TaskDetailDto taskDetail : taskDetailList) {
+        for (var taskDetail : taskDetailList) {
             var scope = taskDetail.getTaskScope();
             if (scope.equals(PUBLIC)) proceedStatus.setCommonTask(taskDetail.getTaskCompletionDate());
             else proceedStatus.setPersonalTask(taskDetail.getTaskCompletionDate());
