@@ -23,10 +23,6 @@ public class TravelInvitation extends BaseEntity {
     private Travel travel;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "inviter_id", nullable = false)
-    private User inviter;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "invitee_id", nullable = false)
     private User invitee; // 여행 신청자 PK (FK)
 
@@ -34,9 +30,8 @@ public class TravelInvitation extends BaseEntity {
     @Column(nullable = false)
     private TravelInvitationStatus status; // 여행 수락 / 거부
 
-    public TravelInvitation(Travel travel, User inviter, User invitee) {
+    public TravelInvitation(Travel travel, User invitee) {
         this.travel = Objects.requireNonNull(travel);
-        this.inviter = Objects.requireNonNull(inviter);
         this.invitee = Objects.requireNonNull(invitee);
         this.status = TravelInvitationStatus.Pending;
     }
@@ -44,7 +39,6 @@ public class TravelInvitation extends BaseEntity {
     public TravelInvitationResponse toResponse() {
         return TravelInvitationResponse.builder()
                 .travelName(travel.getName())
-                .inviter(inviter.toResponse())
                 .invitee(invitee.toResponse())
                 .createdAt(createdAt)
                 .updatedAt(updatedAt)

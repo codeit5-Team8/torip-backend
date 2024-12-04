@@ -96,12 +96,10 @@ public class TravelService {
     public TravelInvitationResponse requestTravelParticipation(Long id, Long inviterId) {
         User userInfo = authenticationFacade.getUserInfo();
 
-        User inviter = userRepository.findUserById(inviterId).orElseThrow(() -> new IllegalArgumentException("초대자가 존재하지 않습니다."));
         Travel travel = travelRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("여행이 존재하지 않습니다."));
         travel.checkMemberNotExists(userInfo);
-        travel.checkMemberExists(inviter);
 
-        TravelInvitation travelInvitation = new TravelInvitation(travel, inviter, userInfo);
+        TravelInvitation travelInvitation = new TravelInvitation(travel, userInfo);
         travelInvitationRepository.save(travelInvitation);
 
         return travelInvitation.toResponse();

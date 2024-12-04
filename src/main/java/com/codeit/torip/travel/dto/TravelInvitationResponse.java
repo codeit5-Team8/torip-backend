@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Getter
 public class TravelInvitationResponse {
     private String travelName;
-    private UserResponse inviter;
     private UserResponse invitee;
     private TravelInvitationStatus status;
     private LocalDateTime createdAt;
