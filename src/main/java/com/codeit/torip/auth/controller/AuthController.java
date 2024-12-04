@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Auth", description = "인증 관련 API")
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/torip/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -29,8 +29,7 @@ public class AuthController {
             }
     )
     public TokenResponse login(@RequestBody LoginRequest loginRequest) {
-        var tokenResponse = authService.login(loginRequest);
-        return tokenResponse;
+        return authService.login(loginRequest);
     }
 
     @PostMapping("/register")

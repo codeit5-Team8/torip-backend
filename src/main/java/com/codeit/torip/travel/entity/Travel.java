@@ -7,14 +7,16 @@ import com.codeit.torip.travel.dto.TravelResponse;
 import com.codeit.torip.travel.dto.UpdateTravelRequest;
 import com.codeit.torip.user.entity.User;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Setter
 @Getter
 @Entity
 @Builder
