@@ -35,7 +35,7 @@ public class TaskService {
         var assignees = taskEntity.getAssignees();
         // 담당자 추가
         for (var assignee : taskDto.getAssignees()) {
-            var userEntity = userRepository.findByEmail(assignee).orElseThrow();
+            var userEntity = userRepository.findUserByEmail(assignee).orElseThrow();
             var taskAssigneeEntity = TaskAssignee.builder().task(taskEntity).assignee(userEntity).build();
             assignees.add(taskAssigneeEntity);
         }
@@ -90,7 +90,7 @@ public class TaskService {
         }
         // 신규 담당자 추가
         for (String email : assignees) {
-            var userEntity = userRepository.findByEmail(email).get();
+            var userEntity = userRepository.findUserByEmail(email).get();
             var assigneeEntity = TaskAssignee.builder().task(taskEntity).assignee(userEntity).build();
             taskAssigneeRepository.save(assigneeEntity);
         }

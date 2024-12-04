@@ -1,6 +1,6 @@
 package com.codeit.torip.travel.entity;
 
-import com.codeit.torip.common.entity.BaseEntity;
+import com.codeit.torip.common.entity.BaseUserEntity;
 import com.codeit.torip.task.entity.Task;
 import com.codeit.torip.travel.dto.CreateTravelRequest;
 import com.codeit.torip.travel.dto.TravelResponse;
@@ -22,10 +22,6 @@ import java.util.Objects;
 @AllArgsConstructor
 @Table(name = "travel")
 public class Travel extends BaseUserEntity {
-    @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<TravelMember> members = new ArrayList<>();
-    @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Task> tasks = new ArrayList<>();
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,7 +35,6 @@ public class Travel extends BaseUserEntity {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
-    @Builder.Default
     @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TravelMember> members = new ArrayList<>();
 
