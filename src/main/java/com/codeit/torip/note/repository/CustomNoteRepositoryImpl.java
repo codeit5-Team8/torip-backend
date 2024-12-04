@@ -20,17 +20,17 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository {
 
     @Override
     public List<NoteDetailDto> selectNoteDetailList(String key, long travelOrTaskId, long seq) {
-        var createBy = new QUser("createBy");
+        var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
         return factory.select(
                         Projections.constructor(NoteDetailDto.class,
-                                note.id, travel.name, task.status, note.title, note.content,
-                                note.link, note.createBy.email, note.createdAt, note.modifiedBy.email, note.updatedAt
+                                note.id, travel.name, task.status, note.title, note.content, note.link,
+                                note.lastcreatedUser.email, note.createdAt, note.lastUpdatedUser.email, note.updatedAt
                         )
                 ).from(travel).join(travel.tasks, task)
                 .join(task.notes, note)
-                .join(note.createBy, createBy)
-                .join(note.modifiedBy, modifiedBy)
+                .join(note.lastcreatedUser, createdBy)
+                .join(note.lastUpdatedUser, modifiedBy)
                 .where(
                         (key.equals("TRAVEL") ? task.id.eq(travelOrTaskId) : travel.id.eq(travelOrTaskId)).and(note.id.lt(seq)))
                 .orderBy(note.id.desc())
@@ -40,18 +40,18 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository {
 
     @Override
     public NoteDetailDto selectNoteDetail(long noteId) {
-        var createBy = new QUser("createBy");
+        var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
         return factory.select(
                         Projections.constructor(NoteDetailDto.class,
-                                note.id, travel.name, task.status, note.title, note.content,
-                                note.link, note.createBy.email, note.createdAt, note.modifiedBy.email, note.updatedAt
+                                note.id, travel.name, task.status, note.title, note.content, note.link,
+                                note.lastcreatedUser.email, note.createdAt, note.lastUpdatedUser.email, note.updatedAt
                         )
                 ).from(travel)
                 .join(travel.tasks, task)
                 .join(task.notes, note)
-                .join(note.createBy, createBy)
-                .join(note.modifiedBy, modifiedBy)
+                .join(note.lastcreatedUser, createdBy)
+                .join(note.lastUpdatedUser, modifiedBy)
                 .where(note.id.eq(noteId)).fetchOne();
     }
 

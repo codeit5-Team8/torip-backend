@@ -21,20 +21,20 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
 
     @Override
     public List<TaskDetailDto> selectTaskDetailList(long travelId, long seq) {
-        var createBy = new QUser("createBy");
+        var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
         // 할일 정보 불러오기
         return factory.select(
                         Projections.constructor(
                                 TaskDetailDto.class,
                                 task.id, travel.name, task.title, task.filePath, task.status,
-                                task.taskDDay, task.scope, task.completionDate, task.createBy.email,
-                                task.createdAt, task.modifiedBy.email, task.updatedAt
+                                task.taskDDay, task.scope, task.completionDate,
+                                task.lastcreatedUser.email, task.createdAt, task.lastUpdatedUser.email, task.updatedAt
                         ))
                 .from(task)
                 .join(task.travel, travel)
-                .join(task.createBy, createBy)
-                .join(task.modifiedBy, modifiedBy)
+                .join(task.lastcreatedUser, createdBy)
+                .join(task.lastUpdatedUser, modifiedBy)
                 .where(
                         travel.id.eq(travelId).and(task.id.lt(seq))
                 ).orderBy(task.id.desc())
@@ -44,20 +44,20 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
 
     @Override
     public TaskDetailDto selectTaskDetail(long taskId) {
-        var createBy = new QUser("createBy");
+        var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
         // 할일 정보 불러오기
         return factory.select(
                         Projections.constructor(
                                 TaskDetailDto.class,
                                 task.id, travel.name, task.title, task.filePath, task.status,
-                                task.taskDDay, task.scope, task.completionDate, task.createBy.email,
-                                task.createdAt, task.modifiedBy.email, task.updatedAt
+                                task.taskDDay, task.scope, task.completionDate,
+                                task.lastcreatedUser.email, task.createdAt, task.lastUpdatedUser.email, task.updatedAt
                         ))
                 .from(task)
                 .join(task.travel, travel)
-                .join(task.createBy, createBy)
-                .join(task.modifiedBy, modifiedBy)
+                .join(task.lastcreatedUser, createdBy)
+                .join(task.lastUpdatedUser, modifiedBy)
                 .where(
                         task.id.eq(taskId)
                 ).fetchOne();
@@ -65,20 +65,20 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
 
     @Override
     public List<TaskDetailDto> selectAllTaskDetailList(String email) {
-        var createBy = new QUser("createBy");
+        var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
         return factory.select(
                         Projections.constructor(
                                 TaskDetailDto.class,
                                 task.id, travel.name, task.title, task.filePath, task.status,
-                                task.taskDDay, task.scope, task.completionDate, task.createBy.email, task.createdAt,
-                                task.modifiedBy.email, task.updatedAt
+                                task.taskDDay, task.scope, task.completionDate,
+                                task.lastcreatedUser.email, task.createdAt, task.lastUpdatedUser.email, task.updatedAt
                         ))
                 .from(taskAssignee)
                 .join(taskAssignee.task, task)
                 .join(task.travel, travel)
-                .join(task.createBy, createBy)
-                .join(task.modifiedBy, modifiedBy)
+                .join(task.lastcreatedUser, createdBy)
+                .join(task.lastUpdatedUser, modifiedBy)
                 .where(user.email.eq(email))
                 .fetch();
     }
