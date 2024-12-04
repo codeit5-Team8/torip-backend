@@ -3,6 +3,7 @@ package com.codeit.torip.task.repository.assignee;
 import com.codeit.torip.task.dto.TaskAssigneeDto;
 import com.codeit.torip.task.dto.TaskModifyAssigneeDto;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +22,9 @@ public class CustomTaskAssigneeRepositoryImpl implements CustomTaskAssigneeRepos
 
     @Override
     public List<TaskAssigneeDto> selectTaskAssigneeList(long travelId, long seq) {
+        // 쿼리 조건 생성
+        BooleanExpression condition = travel.id.eq(travelId);
+        if (seq != 0) condition = condition.and(task.id.lt(seq));
         return factory.select(
                         Projections.constructor(
                                 TaskAssigneeDto.class,
@@ -31,9 +35,8 @@ public class CustomTaskAssigneeRepositoryImpl implements CustomTaskAssigneeRepos
                 .join(task.travel, travel)
                 .join(task.assignees, taskAssignee)
                 .join(taskAssignee.assignee, user)
-                .where(
-                        travel.id.eq(travelId).and(task.id.lt(seq))
-                ).orderBy(task.id.desc())
+                .where(condition)
+                .orderBy(task.id.desc())
                 .limit(PAGE_OFFSET)
                 .fetch();
     }
@@ -50,9 +53,8 @@ public class CustomTaskAssigneeRepositoryImpl implements CustomTaskAssigneeRepos
                 .join(task.travel, travel)
                 .join(task.assignees, taskAssignee)
                 .join(taskAssignee.assignee, user)
-                .where(
-                        task.id.eq(taskId)
-                ).fetch();
+                .where(task.id.eq(taskId))
+                .fetch();
     }
 
     @Override
@@ -67,8 +69,7 @@ public class CustomTaskAssigneeRepositoryImpl implements CustomTaskAssigneeRepos
                 .from(taskAssignee)
                 .join(taskAssignee.assignee, user)
                 .join(taskAssignee.task, task)
-                .where(
-                        task.id.eq(taskId)
-                ).fetch();
+                .where(task.id.eq(taskId))
+                .fetch();
     }
 }

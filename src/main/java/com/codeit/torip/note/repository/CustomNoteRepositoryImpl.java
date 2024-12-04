@@ -3,6 +3,7 @@ package com.codeit.torip.note.repository;
 import com.codeit.torip.note.dto.NoteDetailDto;
 import com.codeit.torip.user.entity.QUser;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +23,9 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository {
     public List<NoteDetailDto> selectNoteDetailList(String key, long travelOrTaskId, long seq) {
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
+        // 쿼리 조건 생성
+        BooleanExpression condition = key.equals("TRAVEL") ? task.id.eq(travelOrTaskId) : travel.id.eq(travelOrTaskId);
+        if (seq != 0) condition = condition.and(note.id.lt(seq));
         return factory.select(
                         Projections.constructor(NoteDetailDto.class,
                                 note.id, travel.name, task.status, note.title, note.content, note.link,
@@ -31,8 +35,7 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository {
                 .join(task.notes, note)
                 .join(note.lastcreatedUser, createdBy)
                 .join(note.lastUpdatedUser, modifiedBy)
-                .where(
-                        (key.equals("TRAVEL") ? task.id.eq(travelOrTaskId) : travel.id.eq(travelOrTaskId)).and(note.id.lt(seq)))
+                .where(condition)
                 .orderBy(note.id.desc())
                 .limit(PAGE_OFFSET)
                 .fetch();
@@ -52,7 +55,8 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository {
                 .join(task.notes, note)
                 .join(note.lastcreatedUser, createdBy)
                 .join(note.lastUpdatedUser, modifiedBy)
-                .where(note.id.eq(noteId)).fetchOne();
+                .where(note.id.eq(noteId))
+                .fetchOne();
     }
 
 }

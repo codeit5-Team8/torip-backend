@@ -3,6 +3,7 @@ package com.codeit.torip.task.repository.task;
 import com.codeit.torip.task.dto.TaskDetailDto;
 import com.codeit.torip.user.entity.QUser;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +24,9 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
     public List<TaskDetailDto> selectTaskDetailList(long travelId, long seq) {
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
+        // 쿼리 조건 생성
+        BooleanExpression condition = travel.id.eq(travelId);
+        if (seq != 0) condition = condition.and(task.id.lt(seq));
         // 할일 정보 불러오기
         return factory.select(
                         Projections.constructor(
@@ -35,9 +39,8 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
                 .join(task.travel, travel)
                 .join(task.lastcreatedUser, createdBy)
                 .join(task.lastUpdatedUser, modifiedBy)
-                .where(
-                        travel.id.eq(travelId).and(task.id.lt(seq))
-                ).orderBy(task.id.desc())
+                .where(condition)
+                .orderBy(task.id.desc())
                 .limit(PAGE_OFFSET)
                 .fetch();
     }
