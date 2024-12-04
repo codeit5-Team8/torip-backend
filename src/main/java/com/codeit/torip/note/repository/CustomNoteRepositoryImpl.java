@@ -24,7 +24,7 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository {
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
         // 쿼리 조건 생성
-        BooleanExpression condition = key.equals("TRAVEL") ? task.id.eq(travelOrTaskId) : travel.id.eq(travelOrTaskId);
+        BooleanExpression condition = key.equals("TRAVEL") ? travel.id.eq(travelOrTaskId) : task.id.eq(travelOrTaskId);
         if (seq != 0) condition = condition.and(note.id.lt(seq));
         return factory.select(
                         Projections.constructor(NoteDetailDto.class,
