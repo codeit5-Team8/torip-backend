@@ -1,8 +1,11 @@
 package com.codeit.torip.auth.service;
 
+import com.codeit.torip.auth.dto.EmailCheckResponse;
 import com.codeit.torip.auth.dto.LoginRequest;
 import com.codeit.torip.auth.dto.RegisterRequest;
 import com.codeit.torip.auth.dto.TokenResponse;
+import com.codeit.torip.auth.exception.DuplicateEmailException;
+import com.codeit.torip.auth.exception.DuplicateUsernameException;
 import com.codeit.torip.auth.util.JwtUtil;
 import com.codeit.torip.user.entity.User;
 import com.codeit.torip.user.repository.UserRepository;
@@ -25,7 +28,7 @@ public class AuthService {
 
     @Transactional(readOnly = true)
     public TokenResponse login(LoginRequest loginRequest) {
-        User user = userRepository.findByEmail(loginRequest.getEmail())
+        User user = userRepository.findUserByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("유저를 찾지 못했습니다. : " + loginRequest.getEmail()));
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword()))
@@ -38,11 +41,20 @@ public class AuthService {
     }
 
     public TokenResponse register(RegisterRequest registerRequest) {
+        if (userRepository.existsUserByEmail(registerRequest.getEmail())) {
+            throw new DuplicateEmailException();
+        }
+
+        if (userRepository.existsUserByUsername(registerRequest.getUsername())) {
+            throw new DuplicateUsernameException();
+        }
+
         User user = User.builder()
                 .username(registerRequest.getUsername())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .email(registerRequest.getEmail())
                 .build();
+
         userRepository.save(user);
 
         return TokenResponse.builder()
@@ -51,6 +63,7 @@ public class AuthService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public TokenResponse refresh(String refreshToken) {
         String accessToken = jwtUtil.refreshAccessToken(refreshToken);
 
@@ -58,5 +71,10 @@ public class AuthService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    public EmailCheckResponse checkEmailExists(String username) {
+        return new EmailCheckResponse(userRepository.existsUserByEmail(username));
     }
 }
