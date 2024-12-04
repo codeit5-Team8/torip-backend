@@ -4,13 +4,15 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Objects;
 
-@Table(name = "users")
-@NoArgsConstructor
+@Setter
 @Getter
 @Entity
+@NoArgsConstructor
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +33,5 @@ public class User {
         this.username = Objects.requireNonNull(username);
         this.oauthPlatform = Objects.requireNonNullElse(oauthPlatform, OauthPlatform.NONE);
     }
-
 
 }
