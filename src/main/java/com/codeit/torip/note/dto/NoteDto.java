@@ -20,8 +20,6 @@ public class NoteDto {
     private long taskId;
     @Schema(description = "노트 고유키", example = "1")
     private long noteId;
-    @Schema(description = "마지막 노트 시퀀스", example = "1", defaultValue = "1")
-    private Long noteSeq = 1L;
     @NotBlank
     @Max(value = 30, message = "노트 제목은 30자를 초과하실 수 없습니다")
     @Schema(description = "노트 제목", example = "노트 제목", nullable = false)

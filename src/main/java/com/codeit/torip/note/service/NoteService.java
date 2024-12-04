@@ -31,9 +31,9 @@ public class NoteService {
         noteRepository.save(noteEntity);
     }
 
-    public List<NoteDetailDto> getNoteList(String key, long id, long seq) {
+    public List<NoteDetailDto> getNoteList(String key, long travelOrTaskId, long seq) {
         // 노트 목록 조회
-        return noteRepository.selectNoteDetailList(key, id, seq);
+        return noteRepository.selectNoteDetailList(key, travelOrTaskId, seq);
     }
 
     public NoteDetailDto getNoteDetail(long noteId) {

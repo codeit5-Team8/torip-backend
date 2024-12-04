@@ -39,7 +39,7 @@ public class TaskController {
                     ),
                     @Parameter(
                             name = "seq",
-                            description = "현재 페이지에서 할일의 가장 작은 순번 [ 최초 조회시 0으로 요청 ]",
+                            description = "현재 페이지에서 가장 작은 할일 고유키 [ 최초 조회시 0으로 요청 ]",
                             required = true,
                             example = "0"
                     )
@@ -77,7 +77,7 @@ public class TaskController {
     }
 
     @DeleteMapping("/{taskId}")
-    @Operation(summary = "할일 수정 API", description = "여행에 대한 할일을 삭제합니다",
+    @Operation(summary = "할일 삭제 API", description = "여행에 대한 할일을 삭제합니다",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공"),
                     @ApiResponse(responseCode = "400", description = "실패")
@@ -89,6 +89,12 @@ public class TaskController {
     }
 
     @GetMapping("/progress")
+    @Operation(summary = "할일 완료도 조회 API", description = "여행에 대한 할일 완료도를 조회",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공"),
+                    @ApiResponse(responseCode = "400", description = "실패")
+            }
+    )
     public ResponseDto getProgressStatus() {
         return ResponseDto.success(taskService.getProgressStatus());
     }

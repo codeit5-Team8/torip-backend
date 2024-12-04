@@ -20,8 +20,6 @@ public class TaskDetailDto {
 
     @Schema(description = "할일 고유키", example = "1")
     private Long taskId;
-    @Schema(description = "할일 시퀀스", example = "1")
-    private Long taskSeq;
     @Schema(description = "여행 제목", example = "여행 제목")
     private String travelName;
     @Schema(description = "할일 제목", example = "할일 제목")
@@ -48,9 +46,8 @@ public class TaskDetailDto {
     @Schema(description = "할일 담당자 목록", example = "[demo@gmail.com]")
     private List<TaskAssigneeDto> assignees = new ArrayList<>();
 
-    public TaskDetailDto(Long taskId, Long taskSeq, String travelName, String taskTitle, String taskFilePath, TravelStatus taskStatus, LocalDateTime taskDDay, TaskScope taskScope, LocalDateTime taskCompletionDate, String taskCreatedBy, LocalDateTime taskCreatedAt, String taskModifiedBy, LocalDateTime taskUpdatedAt) {
+    public TaskDetailDto(Long taskId, String travelName, String taskTitle, String taskFilePath, TravelStatus taskStatus, LocalDateTime taskDDay, TaskScope taskScope, LocalDateTime taskCompletionDate, String taskCreatedBy, LocalDateTime taskCreatedAt, String taskModifiedBy, LocalDateTime taskUpdatedAt) {
         this.taskId = taskId;
-        this.taskSeq = taskSeq;
         this.travelName = travelName;
         this.taskTitle = taskTitle;
         this.taskFilePath = taskFilePath;

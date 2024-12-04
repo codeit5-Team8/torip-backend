@@ -19,12 +19,12 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository {
     private final JPAQueryFactory factory;
 
     @Override
-    public List<NoteDetailDto> selectNoteDetailList(String key, long id, long seq) {
+    public List<NoteDetailDto> selectNoteDetailList(String key, long travelOrTaskId, long seq) {
         var createBy = new QUser("createBy");
         var modifiedBy = new QUser("modifiedBy");
         return factory.select(
                         Projections.constructor(NoteDetailDto.class,
-                                note.id, note.seq, travel.name, task.status, note.title, note.content,
+                                note.id, travel.name, task.status, note.title, note.content,
                                 note.link, note.createBy.email, note.createdAt, note.modifiedBy.email, note.updatedAt
                         )
                 ).from(travel).join(travel.tasks, task)
@@ -32,9 +32,8 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository {
                 .join(note.createBy, createBy)
                 .join(note.modifiedBy, modifiedBy)
                 .where(
-                        // TODO 사용자가 동시에 할일을 등록하게 되면 SEQ값이 중복될 가능성이 있고, 같은 SEQ로 조회되는 글이 20개가 넘을 가능성 있음
-                        (key.equals("TRAVEL") ? task.id.eq(id) : travel.id.eq(id)).and(note.seq.lt(seq)))
-                .orderBy(note.seq.desc())
+                        (key.equals("TRAVEL") ? task.id.eq(travelOrTaskId) : travel.id.eq(travelOrTaskId)).and(note.id.lt(seq)))
+                .orderBy(note.id.desc())
                 .limit(PAGE_OFFSET)
                 .fetch();
     }
@@ -45,7 +44,7 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository {
         var modifiedBy = new QUser("modifiedBy");
         return factory.select(
                         Projections.constructor(NoteDetailDto.class,
-                                note.id, note.seq, travel.name, task.status, note.title, note.content,
+                                note.id, travel.name, task.status, note.title, note.content,
                                 note.link, note.createBy.email, note.createdAt, note.modifiedBy.email, note.updatedAt
                         )
                 ).from(travel)

@@ -15,8 +15,6 @@ public class NoteDetailDto {
 
     @Schema(description = "노트 고유키", example = "1")
     private Long noteId;
-    @Schema(description = "노트 시퀀스", example = "1")
-    private Long noteSeq;
     @Schema(description = "여행 제목", example = "여행 제목")
     private String travelTitle;
     @Schema(description = "할일 여행 단계", example = "BEFORE_TRAVEL / DURING_TRAVEL / AFTER_TRAVEL")

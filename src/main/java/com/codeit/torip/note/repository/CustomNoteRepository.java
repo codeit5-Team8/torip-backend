@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CustomNoteRepository {
 
-    List<NoteDetailDto> selectNoteDetailList(String key, long id, long seq);
+    List<NoteDetailDto> selectNoteDetailList(String key, long travelOrTaskId, long seq);
 
     NoteDetailDto selectNoteDetail(long noteId);
 

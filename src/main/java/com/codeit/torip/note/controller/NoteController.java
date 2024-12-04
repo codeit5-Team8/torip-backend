@@ -17,7 +17,7 @@ public class NoteController {
     private final NoteService noteService;
 
     @PostMapping
-    @Operation(summary = "할일 등록 API", description = "할일에 대한 노트를 등록합니다",
+    @Operation(summary = "노트 등록 API", description = "할일에 대한 노트를 등록합니다",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공"),
                     @ApiResponse(responseCode = "400", description = "실패")
@@ -29,7 +29,7 @@ public class NoteController {
     }
 
     @GetMapping
-    @Operation(summary = "할일 목록 조회 API", description = "할일에 대한 노트 목록을 조회합니다",
+    @Operation(summary = "노트 목록 조회 API", description = "할일에 대한 노트 목록을 조회합니다",
             parameters = {
                     @Parameter(
                             name = "id",
@@ -45,7 +45,7 @@ public class NoteController {
                     ),
                     @Parameter(
                             name = "seq",
-                            description = "현재 페이지에서 노트의 가장 작은 순번 [ 최초 조회시 0으로 요청 ]",
+                            description = "현재 페이지에서 가장 작은 노트 고유키 [ 최초 조회시 0으로 요청 ]",
                             required = true,
                             example = "0"
                     )
@@ -62,7 +62,7 @@ public class NoteController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "할일 상세 조회 API", description = "할일에 대한 노트 상세 조회를 합니다",
+    @Operation(summary = "노트 상세 조회 API", description = "할일에 대한 노트 상세 조회를 합니다",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공"),
                     @ApiResponse(responseCode = "400", description = "실패")
@@ -73,7 +73,7 @@ public class NoteController {
     }
 
     @PutMapping
-    @Operation(summary = "할일 수정 API", description = "할일에 대한 노트를 수정합니다",
+    @Operation(summary = "노트 수정 API", description = "할일에 대한 노트를 수정합니다",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공"),
                     @ApiResponse(responseCode = "400", description = "실패")
@@ -85,7 +85,7 @@ public class NoteController {
     }
 
     @DeleteMapping("/{noteId}")
-    @Operation(summary = "할일 수정 API", description = "할일에 대한 노트를 삭제합니다",
+    @Operation(summary = "노트 삭제 API", description = "할일에 대한 노트를 삭제합니다",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공"),
                     @ApiResponse(responseCode = "400", description = "실패")

@@ -51,8 +51,6 @@ public class QTask extends EntityPathBase<Task> {
 
     public final EnumPath<TaskScope> scope = createEnum("scope", TaskScope.class);
 
-    public final NumberPath<Long> seq = createNumber("seq", Long.class);
-
     public final EnumPath<TravelStatus> status = createEnum("status", TravelStatus.class);
 
     public final DateTimePath<java.time.LocalDateTime> taskDDay = createDateTime("taskDDay", java.time.LocalDateTime.class);

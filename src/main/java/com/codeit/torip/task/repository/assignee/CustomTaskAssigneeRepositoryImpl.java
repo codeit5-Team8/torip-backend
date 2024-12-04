@@ -32,8 +32,8 @@ public class CustomTaskAssigneeRepositoryImpl implements CustomTaskAssigneeRepos
                 .join(task.assignees, taskAssignee)
                 .join(taskAssignee.assignee, user)
                 .where(
-                        travel.id.eq(travelId).and(task.seq.lt(seq))
-                ).orderBy(task.seq.desc())
+                        travel.id.eq(travelId).and(task.id.lt(seq))
+                ).orderBy(task.id.desc())
                 .limit(PAGE_OFFSET)
                 .fetch();
     }

@@ -24,8 +24,6 @@ public class TaskDto {
     private long travelId;
     @Schema(description = "할일 고유키", example = "1", nullable = false)
     private long taskId;
-    @Schema(description = "마지막 할일 시퀀스", example = "1", defaultValue = "1")
-    private Long noteSeq = 1L;
     @NotBlank
     @Schema(description = "할일 제목", example = "1", nullable = false)
     private String taskTitle;

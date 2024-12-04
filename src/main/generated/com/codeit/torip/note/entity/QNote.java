@@ -45,8 +45,6 @@ public class QNote extends EntityPathBase<Note> {
     // inherited
     public final com.codeit.torip.user.entity.QUser modifiedBy;
 
-    public final NumberPath<Long> seq = createNumber("seq", Long.class);
-
     public final com.codeit.torip.task.entity.QTask task;
 
     public final StringPath title = createString("title");

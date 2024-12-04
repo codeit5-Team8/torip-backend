@@ -19,14 +19,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "task", indexes = {@Index(name = "idx_task_id_seq", columnList = "id, seq")})
+@Table(name = "task", indexes = {@Index(name = "idx_scope", columnList = "scope")})
 public class Task extends BaseUserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
-    private Long seq;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "travel_id", nullable = false)
@@ -67,7 +64,6 @@ public class Task extends BaseUserEntity {
                 .status(taskDto.getTravelStatus())
                 .scope(taskDto.getScope())
                 .travel(Travel.builder().id(taskDto.getTravelId()).build())
-                .seq(taskDto.getNoteSeq())
                 .build();
     }
 

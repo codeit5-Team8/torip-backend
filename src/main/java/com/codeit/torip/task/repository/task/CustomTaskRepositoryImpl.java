@@ -27,7 +27,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
         return factory.select(
                         Projections.constructor(
                                 TaskDetailDto.class,
-                                task.id, task.seq, travel.name, task.title, task.filePath, task.status,
+                                task.id, travel.name, task.title, task.filePath, task.status,
                                 task.taskDDay, task.scope, task.completionDate, task.createBy.email,
                                 task.createdAt, task.modifiedBy.email, task.updatedAt
                         ))
@@ -36,9 +36,8 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
                 .join(task.createBy, createBy)
                 .join(task.modifiedBy, modifiedBy)
                 .where(
-                        // TODO 사용자가 동시에 할일을 등록하게 되면 SEQ값이 중복될 가능성이 있고, 같은 SEQ로 조회되는 글이 20개가 넘을 가능성 있음
-                        travel.id.eq(travelId).and(task.seq.lt(seq))
-                ).orderBy(task.seq.desc())
+                        travel.id.eq(travelId).and(task.id.lt(seq))
+                ).orderBy(task.id.desc())
                 .limit(PAGE_OFFSET)
                 .fetch();
     }
@@ -51,7 +50,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
         return factory.select(
                         Projections.constructor(
                                 TaskDetailDto.class,
-                                task.id, task.seq, travel.name, task.title, task.filePath, task.status,
+                                task.id, travel.name, task.title, task.filePath, task.status,
                                 task.taskDDay, task.scope, task.completionDate, task.createBy.email,
                                 task.createdAt, task.modifiedBy.email, task.updatedAt
                         ))
@@ -71,7 +70,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
         return factory.select(
                         Projections.constructor(
                                 TaskDetailDto.class,
-                                task.id, task.seq, travel.name, task.title, task.filePath, task.status,
+                                task.id, travel.name, task.title, task.filePath, task.status,
                                 task.taskDDay, task.scope, task.completionDate, task.createBy.email, task.createdAt,
                                 task.modifiedBy.email, task.updatedAt
                         ))
