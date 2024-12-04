@@ -1,23 +1,25 @@
 package com.codeit.torip.travel.entity;
 
-import com.codeit.torip.common.entity.BaseUserEntity;
+import com.codeit.torip.common.entity.BaseEntity;
 import com.codeit.torip.task.entity.Task;
 import com.codeit.torip.travel.dto.CreateTravelRequest;
 import com.codeit.torip.travel.dto.TravelResponse;
 import com.codeit.torip.travel.dto.UpdateTravelRequest;
 import com.codeit.torip.user.entity.User;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@NoArgsConstructor
+@Setter
 @Getter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "travel")
 public class Travel extends BaseUserEntity {
     @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -36,6 +38,14 @@ public class Travel extends BaseUserEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TravelMember> members = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Task> tasks = new ArrayList<>();
 
     // 여행지 (2차 개발)
     // private String destination;
