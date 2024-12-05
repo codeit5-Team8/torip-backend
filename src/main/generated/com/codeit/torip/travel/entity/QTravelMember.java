@@ -22,11 +22,19 @@ public class QTravelMember extends EntityPathBase<TravelMember> {
 
     public static final QTravelMember travelMember = new QTravelMember("travelMember");
 
+    public final com.codeit.torip.common.entity.QBaseEntity _super = new com.codeit.torip.common.entity.QBaseEntity(this);
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final EnumPath<TravelMemberRole> role = createEnum("role", TravelMemberRole.class);
 
     public final QTravel travel;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public final com.codeit.torip.user.entity.QUser user;
 

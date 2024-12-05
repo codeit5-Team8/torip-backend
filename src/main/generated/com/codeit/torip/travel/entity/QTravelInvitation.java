@@ -22,29 +22,21 @@ public class QTravelInvitation extends EntityPathBase<TravelInvitation> {
 
     public static final QTravelInvitation travelInvitation = new QTravelInvitation("travelInvitation");
 
-    public final com.codeit.torip.common.entity.QBaseEntity _super;
-
-    // inherited
-    public final com.codeit.torip.user.entity.QUser createBy;
+    public final com.codeit.torip.common.entity.QBaseEntity _super = new com.codeit.torip.common.entity.QBaseEntity(this);
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> createdAt;
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final com.codeit.torip.user.entity.QUser invitee;
-
-    public final com.codeit.torip.user.entity.QUser inviter;
-
-    // inherited
-    public final com.codeit.torip.user.entity.QUser modifiedBy;
 
     public final EnumPath<TravelInvitationStatus> status = createEnum("status", TravelInvitationStatus.class);
 
     public final QTravel travel;
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> updatedAt;
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public QTravelInvitation(String variable) {
         this(TravelInvitation.class, forVariable(variable), INITS);
@@ -64,14 +56,8 @@ public class QTravelInvitation extends EntityPathBase<TravelInvitation> {
 
     public QTravelInvitation(Class<? extends TravelInvitation> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this._super = new com.codeit.torip.common.entity.QBaseEntity(type, metadata, inits);
-        this.createBy = _super.createBy;
-        this.createdAt = _super.createdAt;
         this.invitee = inits.isInitialized("invitee") ? new com.codeit.torip.user.entity.QUser(forProperty("invitee")) : null;
-        this.inviter = inits.isInitialized("inviter") ? new com.codeit.torip.user.entity.QUser(forProperty("inviter")) : null;
-        this.modifiedBy = _super.modifiedBy;
         this.travel = inits.isInitialized("travel") ? new QTravel(forProperty("travel"), inits.get("travel")) : null;
-        this.updatedAt = _super.updatedAt;
     }
 
 }

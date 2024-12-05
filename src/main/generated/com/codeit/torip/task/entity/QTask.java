@@ -28,9 +28,6 @@ public class QTask extends EntityPathBase<Task> {
 
     public final DateTimePath<java.time.LocalDateTime> completionDate = createDateTime("completionDate", java.time.LocalDateTime.class);
 
-    // inherited
-    public final com.codeit.torip.user.entity.QUser createBy;
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt;
 
@@ -43,9 +40,6 @@ public class QTask extends EntityPathBase<Task> {
 
     // inherited
     public final com.codeit.torip.user.entity.QUser lastUpdatedUser;
-
-    // inherited
-    public final com.codeit.torip.user.entity.QUser modifiedBy;
 
     public final ListPath<com.codeit.torip.note.entity.Note, com.codeit.torip.note.entity.QNote> notes = this.<com.codeit.torip.note.entity.Note, com.codeit.torip.note.entity.QNote>createList("notes", com.codeit.torip.note.entity.Note.class, com.codeit.torip.note.entity.QNote.class, PathInits.DIRECT2);
 
@@ -81,11 +75,9 @@ public class QTask extends EntityPathBase<Task> {
     public QTask(Class<? extends Task> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this._super = new com.codeit.torip.common.entity.QBaseUserEntity(type, metadata, inits);
-        this.createBy = _super.createBy;
         this.createdAt = _super.createdAt;
         this.lastcreatedUser = _super.lastcreatedUser;
         this.lastUpdatedUser = _super.lastUpdatedUser;
-        this.modifiedBy = _super.modifiedBy;
         this.travel = inits.isInitialized("travel") ? new com.codeit.torip.travel.entity.QTravel(forProperty("travel"), inits.get("travel")) : null;
         this.updatedAt = _super.updatedAt;
     }

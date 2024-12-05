@@ -28,7 +28,7 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository {
         if (seq != 0) condition = condition.and(note.id.lt(seq));
         return factory.select(
                         Projections.constructor(NoteDetailDto.class,
-                                note.id, travel.name, task.status, note.title, note.content, note.link,
+                                note.id, travel.name, task.status, note.title, note.content,
                                 note.lastcreatedUser.email, note.createdAt, note.lastUpdatedUser.email, note.updatedAt
                         )
                 ).from(travel).join(travel.tasks, task)
@@ -47,7 +47,7 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository {
         var modifiedBy = new QUser("modifiedBy");
         return factory.select(
                         Projections.constructor(NoteDetailDto.class,
-                                note.id, travel.name, task.status, note.title, note.content, note.link,
+                                note.id, travel.name, task.status, note.title, note.content,
                                 note.lastcreatedUser.email, note.createdAt, note.lastUpdatedUser.email, note.updatedAt
                         )
                 ).from(travel)

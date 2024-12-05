@@ -5,10 +5,10 @@ spring:
     timeout-per-shutdown-phase: 120
 
   datasource:
-    url: jdbc:mysql://${DB_IP}:3306/${DB_NAME}
+    url: ENC(pKVVajA7+LVU36jCm6g1Un8eZUBUMEOeHOETLogC7LOXcCUv95YkA2GOrV4iO8dTGCGz07D0ZUtaOeaM3IeDVofvJZh3NWWnSIbahGAEou/EwAWYpGP56MWJYTFmpucVJpgdn/gOLIA=)
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: ${MYSQL_USERNAME}
-    password: ${MYSQL_PASSWORD}
+    username: ENC(LgLrkT0khBL+kgrGYDyGlp+ppmt8H0z9)
+    password: ENC(lTsm0BH9YoDHtZlPvGsRV5cbDRzX1GA2)
 
   jpa:
     hibernate:
@@ -23,7 +23,7 @@ spring:
 jwt:
   expiredAccessTokenMs: 600000
   expiredRefreshTokenMs: 86400000
-  secretKey: SECRETARYSHIPSECRETARYSHIPSECRETARYSHIPSECRETARYSHIPSECRETARYSHIPSECRETARYSHIPSECRETARYSHIP
+  secretKey: ENC(N+AnyaBk0MGt58SHgUFDn6QLWvhUSU5MVpWMcigoNUDnDjwxqheFtpNBV9IO8EnG)
 
 ## Jasypt
 jasypt:

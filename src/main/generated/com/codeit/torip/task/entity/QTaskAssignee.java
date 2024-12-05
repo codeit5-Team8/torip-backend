@@ -26,9 +26,6 @@ public class QTaskAssignee extends EntityPathBase<TaskAssignee> {
 
     public final com.codeit.torip.user.entity.QUser assignee;
 
-    // inherited
-    public final com.codeit.torip.user.entity.QUser createBy;
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt;
 
@@ -39,9 +36,6 @@ public class QTaskAssignee extends EntityPathBase<TaskAssignee> {
 
     // inherited
     public final com.codeit.torip.user.entity.QUser lastUpdatedUser;
-
-    // inherited
-    public final com.codeit.torip.user.entity.QUser modifiedBy;
 
     public final QTask task;
 
@@ -68,11 +62,9 @@ public class QTaskAssignee extends EntityPathBase<TaskAssignee> {
         super(type, metadata, inits);
         this._super = new com.codeit.torip.common.entity.QBaseUserEntity(type, metadata, inits);
         this.assignee = inits.isInitialized("assignee") ? new com.codeit.torip.user.entity.QUser(forProperty("assignee")) : null;
-        this.createBy = _super.createBy;
         this.createdAt = _super.createdAt;
         this.lastcreatedUser = _super.lastcreatedUser;
         this.lastUpdatedUser = _super.lastUpdatedUser;
-        this.modifiedBy = _super.modifiedBy;
         this.task = inits.isInitialized("task") ? new QTask(forProperty("task"), inits.get("task")) : null;
         this.updatedAt = _super.updatedAt;
     }

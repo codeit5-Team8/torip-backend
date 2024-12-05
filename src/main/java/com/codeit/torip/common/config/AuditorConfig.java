@@ -2,7 +2,6 @@ package com.codeit.torip.common.config;
 
 import com.codeit.torip.auth.entity.CustomUserDetail;
 import com.codeit.torip.user.entity.User;
-import com.codeit.torip.user.repository.UserRepository;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +26,11 @@ public class AuditorConfig {
         @Override
         public @NotNull Optional<User> getCurrentAuditor() {
             var authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication == null || !authentication.isAuthenticated()) return Optional.empty();
+            if (
+                    authentication == null
+                            || !authentication.isAuthenticated()
+                            || authentication.getPrincipal().equals("anonymousUser")
+            ) return Optional.empty();
             var userDetail = (CustomUserDetail) authentication.getPrincipal();
             var user = new User();
             user.setId(userDetail.getId());

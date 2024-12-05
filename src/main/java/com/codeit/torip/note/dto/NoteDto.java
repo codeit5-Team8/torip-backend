@@ -27,7 +27,5 @@ public class NoteDto {
     @NotBlank
     @Schema(description = "노트 내용", example = "노트 내용", nullable = false)
     private String content;
-    @Schema(description = "노트 링크", example = "노트 링크")
-    private String link;
 
 }

@@ -6,12 +6,14 @@ import com.codeit.torip.task.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/torip/task")
+@Tag(name = "Task", description = "할일 관련 API")
 public class TaskController {
 
     private final TaskService taskService;
@@ -32,7 +34,7 @@ public class TaskController {
     @Operation(summary = "할일 목록 조회 API", description = "여행에 대한 할일 목록을 조회합니다",
             parameters = {
                     @Parameter(
-                            name = "taskId",
+                            name = "travelId",
                             description = "여행 고유키",
                             required = true,
                             example = "1"
@@ -53,14 +55,14 @@ public class TaskController {
         return ResponseDto.success(taskService.getTaskList(travelId, seq));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{taskId}")
     @Operation(summary = "할일 상세 조회 API", description = "여행에 대한 할일을 상세 조회합니다",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공"),
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto getTaskDetail(@PathVariable("id") long taskId) {
+    public ResponseDto getTaskDetail(@PathVariable("taskId") long taskId) {
         return ResponseDto.success(taskService.getTaskDetail(taskId));
     }
 

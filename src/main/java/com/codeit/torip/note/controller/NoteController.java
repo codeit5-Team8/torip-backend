@@ -6,12 +6,14 @@ import com.codeit.torip.note.service.NoteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/torip/note")
+@Tag(name = "Note", description = "노트 관련 API")
 public class NoteController {
 
     private final NoteService noteService;
@@ -32,7 +34,7 @@ public class NoteController {
     @Operation(summary = "노트 목록 조회 API", description = "할일에 대한 노트 목록을 조회합니다",
             parameters = {
                     @Parameter(
-                            name = "id",
+                            name = "key",
                             description = "여행/할일 필터링 구분",
                             required = true,
                             example = "TRAVEL / TASK"
@@ -61,14 +63,14 @@ public class NoteController {
         return ResponseDto.success(noteService.getNoteList(key, id, seq));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{noteId}")
     @Operation(summary = "노트 상세 조회 API", description = "할일에 대한 노트 상세 조회를 합니다",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공"),
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto getNoteDetail(@PathVariable(name = "id") long noteId) {
+    public ResponseDto getNoteDetail(@PathVariable(name = "noteId") long noteId) {
         return ResponseDto.success(noteService.getNoteDetail(noteId));
     }
 

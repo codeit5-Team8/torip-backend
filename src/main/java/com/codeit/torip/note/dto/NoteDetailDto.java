@@ -23,8 +23,6 @@ public class NoteDetailDto {
     private String noteTitle;
     @Schema(description = "노트 내용", example = "노트 내용")
     private String noteContent;
-    @Schema(description = "노트 링크", example = "노트 링크")
-    private String link;
     @Schema(description = "노트 등록자", example = "demo@gmail.com")
     private String createdBy;
     @Schema(description = "할일 등록일", example = "2024-10-11 15:21:00")

@@ -22,23 +22,17 @@ public class QBaseUserEntity extends EntityPathBase<BaseUserEntity> {
 
     public static final QBaseUserEntity baseUserEntity = new QBaseUserEntity("baseUserEntity");
 
-    public final QBaseEntity _super;
-
-    // inherited
-    public final com.codeit.torip.user.entity.QUser createBy;
+    public final QBaseEntity _super = new QBaseEntity(this);
 
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> createdAt;
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     public final com.codeit.torip.user.entity.QUser lastcreatedUser;
 
     public final com.codeit.torip.user.entity.QUser lastUpdatedUser;
 
-    // inherited
-    public final com.codeit.torip.user.entity.QUser modifiedBy;
-
     //inherited
-    public final DateTimePath<java.time.LocalDateTime> updatedAt;
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public QBaseUserEntity(String variable) {
         this(BaseUserEntity.class, forVariable(variable), INITS);
@@ -58,13 +52,8 @@ public class QBaseUserEntity extends EntityPathBase<BaseUserEntity> {
 
     public QBaseUserEntity(Class<? extends BaseUserEntity> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this._super = new QBaseEntity(type, metadata, inits);
-        this.createBy = _super.createBy;
-        this.createdAt = _super.createdAt;
         this.lastcreatedUser = inits.isInitialized("lastcreatedUser") ? new com.codeit.torip.user.entity.QUser(forProperty("lastcreatedUser")) : null;
         this.lastUpdatedUser = inits.isInitialized("lastUpdatedUser") ? new com.codeit.torip.user.entity.QUser(forProperty("lastUpdatedUser")) : null;
-        this.modifiedBy = _super.modifiedBy;
-        this.updatedAt = _super.updatedAt;
     }
 
 }
