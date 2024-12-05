@@ -1,7 +1,9 @@
 package com.codeit.torip.task.controller;
 
 import com.codeit.torip.common.dto.ResponseDto;
+import com.codeit.torip.task.dto.TaskDetailDto;
 import com.codeit.torip.task.dto.TaskDto;
+import com.codeit.torip.task.dto.TaskProceedStatusDto;
 import com.codeit.torip.task.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -9,6 +11,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,9 +29,9 @@ public class TaskController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto registerTask(@RequestBody TaskDto taskDto) {
-        taskService.registerTask(taskDto);
-        return ResponseDto.success(null);
+    public ResponseDto<Long> registerTask(@RequestBody TaskDto taskDto) {
+        var taskId = taskService.registerTask(taskDto);
+        return new ResponseDto<Long>().success(taskId);
     }
 
     @GetMapping
@@ -51,8 +55,9 @@ public class TaskController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto getTaskList(@RequestParam(name = "travelId") long travelId, @RequestParam(name = "seq") long seq) {
-        return ResponseDto.success(taskService.getTaskList(travelId, seq));
+    public ResponseDto<List<TaskDetailDto>> getTaskList(@RequestParam(name = "travelId") long travelId, @RequestParam(name = "seq") long seq) {
+        var taskDetailDtoList = taskService.getTaskList(travelId, seq);
+        return new ResponseDto<List<TaskDetailDto>>().success(taskDetailDtoList);
     }
 
     @GetMapping("/{taskId}")
@@ -62,8 +67,9 @@ public class TaskController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto getTaskDetail(@PathVariable("taskId") long taskId) {
-        return ResponseDto.success(taskService.getTaskDetail(taskId));
+    public ResponseDto<TaskDetailDto> getTaskDetail(@PathVariable("taskId") long taskId) {
+        var taskDetailDto = taskService.getTaskDetail(taskId);
+        return new ResponseDto<TaskDetailDto>().success(taskDetailDto);
     }
 
     @PutMapping
@@ -73,9 +79,9 @@ public class TaskController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto modifyTask(@RequestBody TaskDto taskDto) {
-        taskService.modifyTask(taskDto);
-        return ResponseDto.success(null);
+    public ResponseDto<Long> modifyTask(@RequestBody TaskDto taskDto) {
+        var result = taskService.modifyTask(taskDto);
+        return new ResponseDto<Long>().success(result);
     }
 
     @DeleteMapping("/{taskId}")
@@ -85,9 +91,9 @@ public class TaskController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto deleteTask(@PathVariable("taskId") long taskId) {
+    public ResponseDto<Long> deleteTask(@PathVariable("taskId") long taskId) {
         taskService.deleteTask(taskId);
-        return ResponseDto.success(null);
+        return new ResponseDto<Long>().success(taskId);
     }
 
     @GetMapping("/progress")
@@ -97,8 +103,9 @@ public class TaskController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto getProgressStatus() {
-        return ResponseDto.success(taskService.getProgressStatus());
+    public ResponseDto<TaskProceedStatusDto> getProgressStatus() {
+        var taskProceedStatusDto = taskService.getProgressStatus();
+        return new ResponseDto<TaskProceedStatusDto>().success(taskProceedStatusDto);
     }
 
 }

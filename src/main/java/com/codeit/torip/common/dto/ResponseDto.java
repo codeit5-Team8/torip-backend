@@ -13,7 +13,7 @@ import static com.codeit.torip.common.contant.ToripConstants.HttpConstant.SUCCES
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseDto {
+public class ResponseDto<T> {
 
     @Schema(description = "성공 여부")
     private Boolean success;
@@ -22,10 +22,10 @@ public class ResponseDto {
     @Schema(description = "결과 메세지")
     private String message;
     @Schema(description = "결과 데이터")
-    private Object result;
+    private T result;
 
-    public static ResponseDto success(Object result) {
-        return ResponseDto.builder()
+    public ResponseDto<T> success(T result) {
+        return ResponseDto.<T>builder()
                 .success(true)
                 .code(SUCCESS_CODE)
                 .message(SUCCESS_MESSAGE)
@@ -33,8 +33,8 @@ public class ResponseDto {
                 .build();
     }
 
-    public static ResponseDto fail(Integer code, String message) {
-        return ResponseDto.builder()
+    public ResponseDto<T> fail(Integer code, String message) {
+        return ResponseDto.<T>builder()
                 .success(false)
                 .code(code)
                 .message(message)

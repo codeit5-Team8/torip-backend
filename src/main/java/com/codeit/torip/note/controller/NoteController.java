@@ -1,6 +1,7 @@
 package com.codeit.torip.note.controller;
 
 import com.codeit.torip.common.dto.ResponseDto;
+import com.codeit.torip.note.dto.NoteDetailDto;
 import com.codeit.torip.note.dto.NoteDto;
 import com.codeit.torip.note.service.NoteService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,7 +9,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,9 +29,9 @@ public class NoteController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto registerNote(@RequestBody NoteDto noteDto) {
-        noteService.registerNode(noteDto);
-        return ResponseDto.success(null);
+    public ResponseDto<Long> registerNote(@RequestBody NoteDto noteDto) {
+        var noteId = noteService.registerNode(noteDto);
+        return new ResponseDto<Long>().success(noteId);
     }
 
     @GetMapping
@@ -57,10 +61,11 @@ public class NoteController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto getNoteList(
+    public ResponseDto<List<NoteDetailDto>> getNoteList(
             @RequestParam("key") String key, @RequestParam("id") long id, @RequestParam("seq") long seq
     ) {
-        return ResponseDto.success(noteService.getNoteList(key, id, seq));
+        var noteDetailDtoList = noteService.getNoteList(key, id, seq);
+        return new ResponseDto<List<NoteDetailDto>>().success(noteDetailDtoList);
     }
 
     @GetMapping("/{noteId}")
@@ -70,8 +75,9 @@ public class NoteController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto getNoteDetail(@PathVariable(name = "noteId") long noteId) {
-        return ResponseDto.success(noteService.getNoteDetail(noteId));
+    public ResponseDto<NoteDetailDto> getNoteDetail(@PathVariable(name = "noteId") long noteId) {
+        var noteDetail = noteService.getNoteDetail(noteId);
+        return new ResponseDto<NoteDetailDto>().success(noteDetail);
     }
 
     @PutMapping
@@ -81,9 +87,9 @@ public class NoteController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto modifyNote(@RequestBody NoteDto noteDto) {
-        noteService.modifyNote(noteDto);
-        return ResponseDto.success(null);
+    public ResponseDto<Long> modifyNote(@RequestBody NoteDto noteDto) {
+        var noteId = noteService.modifyNote(noteDto);
+        return new ResponseDto<Long>().success(noteId);
     }
 
     @DeleteMapping("/{noteId}")
@@ -93,9 +99,9 @@ public class NoteController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto deleteNote(@PathVariable("noteId") long noteId) {
+    public ResponseDto<?> deleteNote(@PathVariable("noteId") long noteId) {
         noteService.deleteNote(noteId);
-        return ResponseDto.success(null);
+        return new ResponseDto<>().success(null);
     }
 
 }

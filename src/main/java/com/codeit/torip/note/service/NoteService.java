@@ -21,14 +21,15 @@ public class NoteService {
     private final TaskRepository taskRepository;
 
     @Transactional
-    public void registerNode(NoteDto noteDto) {
+    public Long registerNode(NoteDto noteDto) {
         // 할일 조회
         var taskEntity = taskRepository.findById(noteDto.getTaskId())
                 .orElseThrow(() -> new RuntimeException("할일이 존재하지 않습니다"));
         var noteEntity = Note.from(noteDto);
         noteEntity.setTask(taskEntity);
         // 노트 등록
-        noteRepository.save(noteEntity);
+        var result = noteRepository.save(noteEntity);
+        return result.getId();
     }
 
     public List<NoteDetailDto> getNoteList(String key, long travelOrTaskId, long seq) {
@@ -42,13 +43,14 @@ public class NoteService {
     }
 
     @Transactional
-    public void modifyNote(NoteDto noteDto) {
+    public Long modifyNote(NoteDto noteDto) {
         // 노트 조회
         var noteEntity = noteRepository.findById(noteDto.getNoteId())
                 .orElseThrow(() -> new RuntimeException("노트 정보가 존재하지 않습니다"));
         // 노트 수정
         noteEntity.modifyTo(noteDto);
-        noteRepository.save(noteEntity);
+        var result = noteRepository.save(noteEntity);
+        return result.getId();
     }
 
     @Transactional

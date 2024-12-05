@@ -1,14 +1,17 @@
 package com.codeit.torip.travel.controller;
 
 import com.codeit.torip.common.dto.ResponseDto;
-import com.codeit.torip.travel.dto.CreateTravelRequest;
-import com.codeit.torip.travel.dto.UpdateTravelRequest;
+import com.codeit.torip.travel.dto.*;
+import com.codeit.torip.travel.entity.Travel;
 import com.codeit.torip.travel.service.TravelService;
+import com.codeit.torip.user.dto.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "Travel", description = "여행 관련 API")
 @RequiredArgsConstructor
@@ -25,9 +28,10 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto createTravel(@RequestBody CreateTravelRequest createTravelRequest) {
+    public ResponseDto<TravelResponse> createTravel(@RequestBody CreateTravelRequest createTravelRequest) {
+        var travelResponse = travelService.createTravel(createTravelRequest);
         // 여행 생성 로직
-        return ResponseDto.success(travelService.createTravel(createTravelRequest));
+        return new ResponseDto<TravelResponse>().success(travelResponse);
     }
 
     @GetMapping("/{id}")
@@ -37,9 +41,10 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto getTravel(@PathVariable Long id) {
+    public ResponseDto<TravelResponse> getTravel(@PathVariable Long id) {
+        var travelResponse = travelService.getTravel(id);
         // 여행 조회 로직
-        return ResponseDto.success(travelService.getTravel(id));
+        return new ResponseDto<TravelResponse>().success(travelResponse);
     }
 
     @GetMapping("/list")
@@ -49,9 +54,11 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto getTravelList(@RequestParam Long lastSeenId) {
+    public ResponseDto<PageCollectionResponse<TravelResponse>> getTravelList(@RequestParam Long lastSeenId) {
+        var travelResponseList = travelService.getTravelList(lastSeenId);
         // 여행 목록 조회 로직
-        return ResponseDto.success(travelService.getTravelList(lastSeenId));
+        return new ResponseDto<PageCollectionResponse<TravelResponse>>()
+                .success(travelResponseList);
     }
 
     @PatchMapping("/{id}")
@@ -61,9 +68,10 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto updateTravel(@PathVariable Long id, @RequestBody UpdateTravelRequest updateTravelRequest) {
+    public ResponseDto<TravelResponse> updateTravel(@PathVariable Long id, @RequestBody UpdateTravelRequest updateTravelRequest) {
+        var travelResponse = travelService.updateTravel(id, updateTravelRequest);
         // 여행 수정 로직
-        return ResponseDto.success(travelService.updateTravel(id, updateTravelRequest));
+        return new ResponseDto<TravelResponse>().success(travelResponse);
     }
 
     @DeleteMapping("/{id}")
@@ -73,11 +81,10 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto deleteTravel(@PathVariable Long id) {
+    public ResponseDto<?> deleteTravel(@PathVariable Long id) {
         // 여행 삭제 로직
         travelService.deleteTravel(id);
-
-        return ResponseDto.success(null);
+        return new ResponseDto<>().success(null);
     }
 
     @PostMapping("/{id}/request")
@@ -87,9 +94,10 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto requestTravelParticipation(@PathVariable Long id, @RequestBody Long inviterId) {
+    public ResponseDto<TravelInvitationResponse> requestTravelParticipation(@PathVariable Long id, @RequestBody Long inviterId) {
+        var travelInvitationResponse = travelService.requestTravelParticipation(id, inviterId);
         // 여행 참가 로직
-        return ResponseDto.success(travelService.requestTravelParticipation(id, inviterId));
+        return new ResponseDto<TravelInvitationResponse>().success(travelInvitationResponse);
     }
 
     @PostMapping("request/{id}/accept")
@@ -99,9 +107,10 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto acceptTravelParticipation(@PathVariable Long id) {
+    public ResponseDto<TravelInvitationResponse> acceptTravelParticipation(@PathVariable Long id) {
+        var travelInvitationResponse = travelService.acceptTravelParticipation(id);
         // 여행 참가 수락 로직
-        return ResponseDto.success(travelService.acceptTravelParticipation(id));
+        return new ResponseDto<TravelInvitationResponse>().success(travelInvitationResponse);
     }
 
     @GetMapping("/{id}/request")
@@ -111,9 +120,10 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto getTravelInvitations(@PathVariable Long id) {
+    public ResponseDto<List<TravelInvitationResponse>> getTravelInvitations(@PathVariable Long id) {
+        var travelInvitationResponseList = travelService.getTravelInvitations(id);
         // 여행 참가 요청 조회 로직
-        return ResponseDto.success(travelService.getTravelInvitations(id));
+        return new ResponseDto<List<TravelInvitationResponse>>().success(travelInvitationResponseList);
     }
 
     @GetMapping("/{id}/members")
@@ -123,8 +133,9 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto getTravelMembers(@PathVariable Long id) {
+    public ResponseDto<List<UserResponse>> getTravelMembers(@PathVariable Long id) {
+        var userResponseList = travelService.getTravelMembers(id);
         // 여행 참가자 조회 로직
-        return ResponseDto.success(travelService.getTravelMembers(id));
+        return new ResponseDto<List<UserResponse>>().success(userResponseList);
     }
 }

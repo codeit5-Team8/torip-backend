@@ -28,7 +28,7 @@ public class TaskService {
     private final TaskAssigneeRepository taskAssigneeRepository;
 
     @Transactional
-    public void registerTask(TaskDto taskDto) {
+    public Long registerTask(TaskDto taskDto) {
         // TODO 내 여행인지 로직 추가
         var email = AuthUtil.getEmail();
         var taskEntity = Task.from(taskDto);
@@ -40,7 +40,8 @@ public class TaskService {
             assignees.add(taskAssigneeEntity);
         }
         // 할일 등록
-        taskRepository.save(taskEntity);
+        var result = taskRepository.save(taskEntity);
+        return result.getId();
     }
 
     public List<TaskDetailDto> getTaskList(long travelId, long seq) {
@@ -73,12 +74,12 @@ public class TaskService {
     }
 
     @Transactional
-    public void modifyTask(TaskDto taskDto) {
+    public Long modifyTask(TaskDto taskDto) {
         // 할일 수정
         var assignees = taskDto.getAssignees();
         var taskEntity = taskRepository.findById(taskDto.getTaskId()).get();
         taskEntity.modifyTo(taskDto);
-        taskRepository.save(taskEntity);
+        var result = taskRepository.save(taskEntity);
         // 담당자 조회
         var assigneeModifyDtoList = taskAssigneeRepository.selectTaskModifyAssignee(taskDto.getTaskId());
         // 기존 담당자 제거
@@ -94,6 +95,7 @@ public class TaskService {
             var assigneeEntity = TaskAssignee.builder().task(taskEntity).assignee(userEntity).build();
             taskAssigneeRepository.save(assigneeEntity);
         }
+        return result.getId();
     }
 
     public TaskProceedStatusDto getProgressStatus() {
