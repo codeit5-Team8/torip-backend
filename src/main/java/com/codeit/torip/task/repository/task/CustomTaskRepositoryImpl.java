@@ -9,11 +9,10 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import static com.codeit.torip.common.contant.ToripConstants.Task.PAGE_OFFSET;
+import static com.codeit.torip.common.contant.ToripConstants.Task.PAGE_SIZE;
 import static com.codeit.torip.task.entity.QTask.task;
 import static com.codeit.torip.task.entity.QTaskAssignee.taskAssignee;
 import static com.codeit.torip.travel.entity.QTravel.travel;
-import static com.codeit.torip.user.entity.QUser.user;
 
 @RequiredArgsConstructor
 public class CustomTaskRepositoryImpl implements CustomTaskRepository {
@@ -41,7 +40,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
                 .join(task.lastUpdatedUser, modifiedBy)
                 .where(condition)
                 .orderBy(task.id.desc())
-                .limit(PAGE_OFFSET)
+                .limit(PAGE_SIZE)
                 .fetch();
     }
 
@@ -82,7 +81,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
                 .join(task.travel, travel)
                 .join(task.lastcreatedUser, createdBy)
                 .join(task.lastUpdatedUser, modifiedBy)
-                .where(user.email.eq(email))
+                .where(taskAssignee.assignee.email.eq(email))
                 .fetch();
     }
 

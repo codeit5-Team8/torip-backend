@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,8 +24,7 @@ public class NoteController {
     @PostMapping
     @Operation(summary = "노트 등록 API", description = "할일에 대한 노트를 등록합니다",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "성공"),
-                    @ApiResponse(responseCode = "400", description = "실패")
+                    @ApiResponse(responseCode = "200", description = "성공")
             }
     )
     public ResponseDto<Long> registerNote(@RequestBody NoteDto noteDto) {
@@ -57,8 +55,7 @@ public class NoteController {
                     )
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "성공"),
-                    @ApiResponse(responseCode = "400", description = "실패")
+                    @ApiResponse(responseCode = "200", description = "성공")
             }
     )
     public ResponseDto<List<NoteDetailDto>> getNoteList(
@@ -71,8 +68,7 @@ public class NoteController {
     @GetMapping("/{noteId}")
     @Operation(summary = "노트 상세 조회 API", description = "할일에 대한 노트 상세 조회를 합니다",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "성공"),
-                    @ApiResponse(responseCode = "400", description = "실패")
+                    @ApiResponse(responseCode = "200", description = "성공")
             }
     )
     public ResponseDto<NoteDetailDto> getNoteDetail(@PathVariable(name = "noteId") long noteId) {
@@ -83,8 +79,7 @@ public class NoteController {
     @PutMapping
     @Operation(summary = "노트 수정 API", description = "할일에 대한 노트를 수정합니다",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "성공"),
-                    @ApiResponse(responseCode = "400", description = "실패")
+                    @ApiResponse(responseCode = "200", description = "성공")
             }
     )
     public ResponseDto<Long> modifyNote(@RequestBody NoteDto noteDto) {
@@ -95,8 +90,7 @@ public class NoteController {
     @DeleteMapping("/{noteId}")
     @Operation(summary = "노트 삭제 API", description = "할일에 대한 노트를 삭제합니다",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "성공"),
-                    @ApiResponse(responseCode = "400", description = "실패")
+                    @ApiResponse(responseCode = "200", description = "성공")
             }
     )
     public ResponseDto<?> deleteNote(@PathVariable("noteId") long noteId) {

@@ -5,23 +5,18 @@ import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import static com.codeit.torip.common.contant.ToripConstants.HttpConstant.*;
+import static com.codeit.torip.common.contant.ToripConstants.HttpConstant.CLIENT_FAIL_CODE;
+import static com.codeit.torip.common.contant.ToripConstants.HttpConstant.SERVER_FAIL_CODE;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
-    @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseDto<?> expiredJwtExceptionHandler(ExpiredJwtException e) {
-        return new ResponseDto<>().fail(FORBIDDEN_CODE, e.getMessage());
-    }
 
     @ExceptionHandler(Exception.class)
     public ResponseDto<?> defaultExceptionHandler(Exception e) {
@@ -32,37 +27,43 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataAccessException.class)
     public ResponseDto<?> dataAccessExceptionHandler(DataAccessException e) {
         log.error("DataAccessException", e);
+        return new ResponseDto<>().fail(SERVER_FAIL_CODE, e.getMessage());
+    }
+    
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseDto<?> expiredJwtExceptionHandler(ExpiredJwtException e) {
+        log.warn("ExpiredJwtException", e);
         return new ResponseDto<>().fail(CLIENT_FAIL_CODE, e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseDto<?> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
-        log.error("MethodArgumentNotValidException", e);
+        log.warn("MethodArgumentNotValidException", e);
         return new ResponseDto<>().fail(CLIENT_FAIL_CODE, e.getMessage());
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseDto<?> constraintViolationExceptionHandler(ConstraintViolationException e) {
-        log.error("ConstraintViolationException", e);
+        log.warn("ConstraintViolationException", e);
         return new ResponseDto<>().fail(CLIENT_FAIL_CODE, e.getMessage());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseDto<?> httpMessageNotReadableExceptionHandler(HttpMessageNotReadableException e) {
-        log.error("HttpMessageNotReadableException", e);
+        log.warn("HttpMessageNotReadableException", e);
         return new ResponseDto<>().fail(CLIENT_FAIL_CODE, e.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseDto<?> illegalArgumentExceptionHandler(IllegalArgumentException e) {
-        log.error("lIllegalArgumentException", e);
+        log.warn("lIllegalArgumentException", e);
         return new ResponseDto<>().fail(CLIENT_FAIL_CODE, e.getMessage());
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseDto<?> httpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException e) {
-        log.error("HttpRequestMethodNotSupportedException", e);
-        return new ResponseDto<>().fail(METHOD_NOT_ALLOWED_CODE, e.getMessage());
+        log.warn("HttpRequestMethodNotSupportedException", e);
+        return new ResponseDto<>().fail(CLIENT_FAIL_CODE, e.getMessage());
     }
 
 }

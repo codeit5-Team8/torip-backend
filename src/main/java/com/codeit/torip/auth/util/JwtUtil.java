@@ -66,7 +66,7 @@ public class JwtUtil {
         String tokenType = getClaim(refreshToken, "type");
 
         if (!"refresh".equals(tokenType)) {
-            throw new RuntimeException("토큰값이 다릅니다.");
+            throw new IllegalArgumentException("토큰값이 다릅니다.");
         }
 
         String loginId = getLoginId(refreshToken);

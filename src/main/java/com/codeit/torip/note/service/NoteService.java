@@ -24,7 +24,7 @@ public class NoteService {
     public Long registerNode(NoteDto noteDto) {
         // 할일 조회
         var taskEntity = taskRepository.findById(noteDto.getTaskId())
-                .orElseThrow(() -> new RuntimeException("할일이 존재하지 않습니다"));
+                .orElseThrow(() -> new IllegalArgumentException("할일이 존재하지 않습니다"));
         var noteEntity = Note.from(noteDto);
         noteEntity.setTask(taskEntity);
         // 노트 등록
@@ -46,7 +46,7 @@ public class NoteService {
     public Long modifyNote(NoteDto noteDto) {
         // 노트 조회
         var noteEntity = noteRepository.findById(noteDto.getNoteId())
-                .orElseThrow(() -> new RuntimeException("노트 정보가 존재하지 않습니다"));
+                .orElseThrow(() -> new IllegalArgumentException("노트 정보가 존재하지 않습니다"));
         // 노트 수정
         noteEntity.modifyTo(noteDto);
         var result = noteRepository.save(noteEntity);

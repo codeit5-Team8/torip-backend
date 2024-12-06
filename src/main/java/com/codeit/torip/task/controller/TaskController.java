@@ -25,8 +25,7 @@ public class TaskController {
     @PostMapping
     @Operation(summary = "할일 등록 API", description = "여행에 대한 할일을 등록합니다",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "성공"),
-                    @ApiResponse(responseCode = "400", description = "실패")
+                    @ApiResponse(responseCode = "200", description = "성공")
             }
     )
     public ResponseDto<Long> registerTask(@RequestBody TaskDto taskDto) {
@@ -51,8 +50,7 @@ public class TaskController {
                     )
             },
             responses = {
-                    @ApiResponse(responseCode = "200", description = "성공"),
-                    @ApiResponse(responseCode = "400", description = "실패")
+                    @ApiResponse(responseCode = "200", description = "성공")
             }
     )
     public ResponseDto<List<TaskDetailDto>> getTaskList(@RequestParam(name = "travelId") long travelId, @RequestParam(name = "seq") long seq) {
@@ -63,8 +61,7 @@ public class TaskController {
     @GetMapping("/{taskId}")
     @Operation(summary = "할일 상세 조회 API", description = "여행에 대한 할일을 상세 조회합니다",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "성공"),
-                    @ApiResponse(responseCode = "400", description = "실패")
+                    @ApiResponse(responseCode = "200", description = "성공")
             }
     )
     public ResponseDto<TaskDetailDto> getTaskDetail(@PathVariable("taskId") long taskId) {
@@ -75,8 +72,7 @@ public class TaskController {
     @PutMapping
     @Operation(summary = "할일 수정 API", description = "여행에 대한 할일을 수정합니다",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "성공"),
-                    @ApiResponse(responseCode = "400", description = "실패")
+                    @ApiResponse(responseCode = "200", description = "성공")
             }
     )
     public ResponseDto<Long> modifyTask(@RequestBody TaskDto taskDto) {
@@ -87,8 +83,7 @@ public class TaskController {
     @DeleteMapping("/{taskId}")
     @Operation(summary = "할일 삭제 API", description = "여행에 대한 할일을 삭제합니다",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "성공"),
-                    @ApiResponse(responseCode = "400", description = "실패")
+                    @ApiResponse(responseCode = "200", description = "성공")
             }
     )
     public ResponseDto<Long> deleteTask(@PathVariable("taskId") long taskId) {
@@ -99,8 +94,7 @@ public class TaskController {
     @GetMapping("/progress")
     @Operation(summary = "할일 완료도 조회 API", description = "여행에 대한 할일 완료도를 조회",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "성공"),
-                    @ApiResponse(responseCode = "400", description = "실패")
+                    @ApiResponse(responseCode = "200", description = "성공")
             }
     )
     public ResponseDto<TaskProceedStatusDto> getProgressStatus() {

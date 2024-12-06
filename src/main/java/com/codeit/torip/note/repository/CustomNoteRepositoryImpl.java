@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import static com.codeit.torip.common.contant.ToripConstants.Note.PAGE_OFFSET;
+import static com.codeit.torip.common.contant.ToripConstants.Note.PAGE_SIZE;
 import static com.codeit.torip.note.entity.QNote.note;
 import static com.codeit.torip.task.entity.QTask.task;
 import static com.codeit.torip.travel.entity.QTravel.travel;
@@ -37,7 +37,7 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository {
                 .join(note.lastUpdatedUser, modifiedBy)
                 .where(condition)
                 .orderBy(note.id.desc())
-                .limit(PAGE_OFFSET)
+                .limit(PAGE_SIZE)
                 .fetch();
     }
 
