@@ -1,7 +1,7 @@
 package com.codeit.torip.note.entity;
 
 import com.codeit.torip.common.entity.BaseUserEntity;
-import com.codeit.torip.note.dto.NoteDto;
+import com.codeit.torip.note.dto.request.NoteRequest;
 import com.codeit.torip.task.entity.Task;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,15 +31,15 @@ public class Note extends BaseUserEntity {
     @Column(nullable = false, length = 500)
     private String content;
 
-    public static Note from(NoteDto noteDto) {
+    public static Note from(NoteRequest noteRequest) {
         return Note.builder()
-                .title(noteDto.getTitle())
-                .content(noteDto.getContent())
+                .title(noteRequest.getTitle())
+                .content(noteRequest.getContent())
                 .build();
     }
 
-    public void modifyTo(NoteDto noteDto) {
-        this.title = noteDto.getTitle();
-        this.content = noteDto.getContent();
+    public void modifyTo(NoteRequest noteRequest) {
+        this.title = noteRequest.getTitle();
+        this.content = noteRequest.getContent();
     }
 }

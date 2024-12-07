@@ -1,12 +1,11 @@
 package com.codeit.torip.auth.service;
 
-import com.codeit.torip.auth.dto.EmailCheckResponse;
-import com.codeit.torip.auth.dto.LoginRequest;
-import com.codeit.torip.auth.dto.RegisterRequest;
-import com.codeit.torip.auth.dto.TokenResponse;
-import com.codeit.torip.auth.exception.DuplicateEmailException;
-import com.codeit.torip.auth.exception.DuplicateUsernameException;
+import com.codeit.torip.auth.dto.response.EmailCheckResponse;
+import com.codeit.torip.auth.dto.request.LoginRequest;
+import com.codeit.torip.auth.dto.request.RegisterRequest;
+import com.codeit.torip.auth.dto.response.TokenResponse;
 import com.codeit.torip.auth.util.JwtUtil;
+import com.codeit.torip.common.exception.AlertException;
 import com.codeit.torip.user.entity.User;
 import com.codeit.torip.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -42,11 +41,11 @@ public class AuthService {
 
     public TokenResponse register(RegisterRequest registerRequest) {
         if (userRepository.existsUserByEmail(registerRequest.getEmail())) {
-            throw new DuplicateEmailException();
+            throw new AlertException("이메일이 중복되었습니다.");
         }
 
         if (userRepository.existsUserByUsername(registerRequest.getUsername())) {
-            throw new DuplicateUsernameException();
+            throw new AlertException("사용자 이름이 중복되었습니다.");
         }
 
         User user = User.builder()
@@ -74,7 +73,7 @@ public class AuthService {
     }
 
     @Transactional(readOnly = true)
-    public EmailCheckResponse checkEmailExists(String username) {
-        return new EmailCheckResponse(userRepository.existsUserByEmail(username));
+    public EmailCheckResponse checkEmailExists(String email) {
+        return new EmailCheckResponse(userRepository.existsUserByEmail(email));
     }
 }

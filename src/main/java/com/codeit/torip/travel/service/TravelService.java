@@ -1,6 +1,6 @@
 package com.codeit.torip.travel.service;
 
-import com.codeit.torip.auth.util.AuthenticationFacade;
+import com.codeit.torip.auth.util.AuthUtil;
 import com.codeit.torip.travel.dto.*;
 import com.codeit.torip.travel.entity.Travel;
 import com.codeit.torip.travel.entity.TravelInvitation;
@@ -24,13 +24,12 @@ import java.util.List;
 public class TravelService {
 
     private final TravelRepository travelRepository;
-    private final AuthenticationFacade authenticationFacade;
     private final UserRepository userRepository;
     private final TravelInvitationRepository travelInvitationRepository;
     private final int PAGE_SIZE = 3;
 
     public TravelResponse createTravel(CreateTravelRequest createTravelRequest) {
-        User userInfo = authenticationFacade.getUserInfo();
+        User userInfo = AuthUtil.getUserInfo();
 
         Travel travel = new Travel(createTravelRequest, userInfo);
         travelRepository.save(travel);
@@ -39,7 +38,7 @@ public class TravelService {
     }
 
     public TravelResponse getTravel(Long id) {
-        User userInfo = authenticationFacade.getUserInfo();
+        User userInfo = AuthUtil.getUserInfo();
 
         Travel travel = travelRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("여행이 존재하지 않습니다."));
         travel.checkMemberExists(userInfo);
@@ -48,7 +47,7 @@ public class TravelService {
     }
 
     public void deleteTravel(Long id) {
-        User userInfo = authenticationFacade.getUserInfo();
+        User userInfo = AuthUtil.getUserInfo();
 
         Travel travel = travelRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("여행이 존재하지 않습니다."));
         travel.checkOwner(userInfo);
@@ -59,7 +58,7 @@ public class TravelService {
     }
 
     public List<UserResponse> getTravelMembers(Long id) {
-        User userInfo = authenticationFacade.getUserInfo();
+        User userInfo = AuthUtil.getUserInfo();
 
         Travel travel = travelRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("여행이 존재하지 않습니다."));
         travel.checkMemberExists(userInfo);
@@ -71,7 +70,7 @@ public class TravelService {
     }
 
     public PageCollectionResponse<TravelResponse> getTravelList(Long lastSeenId) {
-        User userInfo = authenticationFacade.getUserInfo();
+        User userInfo = AuthUtil.getUserInfo();
 
         List<Travel> travels = travelRepository.findAllByMembersUserIdAndIdGreaterThanOrderByIdAsc(userInfo.getId(), lastSeenId, PageRequest.of(0, PAGE_SIZE));
 
@@ -83,7 +82,7 @@ public class TravelService {
     }
 
     public TravelResponse updateTravel(Long id, UpdateTravelRequest updateTravelRequest) {
-        User userInfo = authenticationFacade.getUserInfo();
+        User userInfo = AuthUtil.getUserInfo();
 
         Travel travel = travelRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("여행이 존재하지 않습니다."));
 
@@ -94,7 +93,7 @@ public class TravelService {
     }
 
     public TravelInvitationResponse requestTravelParticipation(Long id, Long inviterId) {
-        User userInfo = authenticationFacade.getUserInfo();
+        User userInfo = AuthUtil.getUserInfo();
 
         Travel travel = travelRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("여행이 존재하지 않습니다."));
         travel.checkMemberNotExists(userInfo);
@@ -106,7 +105,7 @@ public class TravelService {
     }
 
     public TravelInvitationResponse acceptTravelParticipation(Long id) {
-        User userInfo = authenticationFacade.getUserInfo();
+        User userInfo = AuthUtil.getUserInfo();
 
         TravelInvitation travelInvitation = travelInvitationRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("초대가 존재하지 않습니다."));
         travelInvitation.getTravel().checkOwner(userInfo);
@@ -118,7 +117,7 @@ public class TravelService {
     }
 
     public List<TravelInvitationResponse> getTravelInvitations(Long id) {
-        User userInfo = authenticationFacade.getUserInfo();
+        User userInfo = AuthUtil.getUserInfo();
 
         Travel travel = travelRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("여행이 존재하지 않습니다."));
         travel.checkOwner(userInfo);

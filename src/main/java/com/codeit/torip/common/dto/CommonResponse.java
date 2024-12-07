@@ -6,14 +6,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static com.codeit.torip.common.contant.ToripConstants.HttpConstant.SUCCESS_CODE;
-import static com.codeit.torip.common.contant.ToripConstants.HttpConstant.SUCCESS_MESSAGE;
+import static com.codeit.torip.common.contant.ToripConstants.HttpConstant.*;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResponseDto<T> {
+public class CommonResponse<T> {
 
     @Schema(description = "성공 여부")
     private Boolean success;
@@ -24,8 +23,8 @@ public class ResponseDto<T> {
     @Schema(description = "결과 데이터")
     private T result;
 
-    public ResponseDto<T> success(T result) {
-        return ResponseDto.<T>builder()
+    public CommonResponse<T> success(T result) {
+        return CommonResponse.<T>builder()
                 .success(true)
                 .code(SUCCESS_CODE)
                 .message(SUCCESS_MESSAGE)
@@ -33,8 +32,8 @@ public class ResponseDto<T> {
                 .build();
     }
 
-    public ResponseDto<T> fail(Integer code, String message) {
-        return ResponseDto.<T>builder()
+    public CommonResponse<T> fail(Integer code, String message) {
+        return CommonResponse.<T>builder()
                 .success(false)
                 .code(code)
                 .message(message)

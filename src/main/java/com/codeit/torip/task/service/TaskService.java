@@ -1,9 +1,10 @@
 package com.codeit.torip.task.service;
 
 import com.codeit.torip.auth.util.AuthUtil;
-import com.codeit.torip.task.dto.TaskDetailDto;
-import com.codeit.torip.task.dto.TaskDto;
-import com.codeit.torip.task.dto.TaskProceedStatusDto;
+import com.codeit.torip.task.dto.response.TaskDetailResponse;
+import com.codeit.torip.task.dto.request.TaskRequest;
+import com.codeit.torip.task.dto.request.TaskListRequest;
+import com.codeit.torip.task.dto.response.TaskProceedStatusResponse;
 import com.codeit.torip.task.entity.Task;
 import com.codeit.torip.task.entity.TaskAssignee;
 import com.codeit.torip.task.repository.assignee.TaskAssigneeRepository;
@@ -28,13 +29,13 @@ public class TaskService {
     private final TaskAssigneeRepository taskAssigneeRepository;
 
     @Transactional
-    public Long registerTask(TaskDto taskDto) {
+    public Long registerTask(TaskRequest taskRequest) {
         // TODO 내 여행인지 로직 추가
         var email = AuthUtil.getEmail();
-        var taskEntity = Task.from(taskDto);
+        var taskEntity = Task.from(taskRequest);
         var assignees = taskEntity.getAssignees();
         // 담당자 추가
-        for (var assignee : taskDto.getAssignees()) {
+        for (var assignee : taskRequest.getAssignees()) {
             var userEntity = userRepository.findUserByEmail(assignee).orElseThrow();
             var taskAssigneeEntity = TaskAssignee.builder().task(taskEntity).assignee(userEntity).build();
             assignees.add(taskAssigneeEntity);
@@ -44,13 +45,12 @@ public class TaskService {
         return result.getId();
     }
 
-    public List<TaskDetailDto> getTaskList(long travelId, long seq) {
-        // TODO 내 여행인지 로직 추가
-        var email = AuthUtil.getEmail();
+    public List<TaskDetailResponse> getTaskList(TaskListRequest taskListRequest) {
         // 할일 정보 불러오기
-        var taskDetailDtoList = taskRepository.selectTaskDetailList(travelId, seq);
+        var taskDetailDtoList = taskRepository.selectTaskDetailList(taskListRequest);
+        var taskIdList = taskDetailDtoList.stream().map(TaskDetailResponse::getTaskId).toList();
         // 담당자 정보 불러오기
-        var assigneeDtoList = taskAssigneeRepository.selectTaskAssigneeList(travelId, seq);
+        var assigneeDtoList = taskAssigneeRepository.selectTaskAssigneeList(taskIdList);
         for (var taskDetail : taskDetailDtoList) {
             var taskId = taskDetail.getTaskId();
             for (var assigneeDto : assigneeDtoList) {
@@ -62,9 +62,7 @@ public class TaskService {
         return taskDetailDtoList;
     }
 
-    public TaskDetailDto getTaskDetail(long taskId) {
-        // TODO 내 여행인지 로직 추가
-        var email = AuthUtil.getEmail();
+    public TaskDetailResponse getTaskDetail(long taskId) {
         // 할일 정보 불러오기
         var taskDetailDto = taskRepository.selectTaskDetail(taskId);
         // 담당자 정보 불러오기
@@ -74,14 +72,14 @@ public class TaskService {
     }
 
     @Transactional
-    public Long modifyTask(TaskDto taskDto) {
+    public Long modifyTask(TaskRequest taskRequest) {
         // 할일 수정
-        var assignees = taskDto.getAssignees();
-        var taskEntity = taskRepository.findById(taskDto.getTaskId()).get();
-        taskEntity.modifyTo(taskDto);
+        var assignees = taskRequest.getAssignees();
+        var taskEntity = taskRepository.findById(taskRequest.getTaskId()).get();
+        taskEntity.modifyTo(taskRequest);
         var result = taskRepository.save(taskEntity);
         // 담당자 조회
-        var assigneeModifyDtoList = taskAssigneeRepository.selectTaskModifyAssignee(taskDto.getTaskId());
+        var assigneeModifyDtoList = taskAssigneeRepository.selectTaskModifyAssignee(taskRequest.getTaskId());
         // 기존 담당자 제거
         for (var assigneeModifyDto : assigneeModifyDtoList) {
             var email = assigneeModifyDto.getEmail();
@@ -98,12 +96,11 @@ public class TaskService {
         return result.getId();
     }
 
-    public TaskProceedStatusDto getProgressStatus() {
-        var email = AuthUtil.getEmail();
+    public TaskProceedStatusResponse getProgressStatus() {
         // TODO 나중에 효율적인 쿼리로 리펙토링 하자
-        var taskDetailList = taskRepository.selectAllTaskDetailList(email);
+        var taskDetailList = taskRepository.selectAllTaskDetailList();
         // 통계 산정
-        var proceedStatus = new TaskProceedStatusDto();
+        var proceedStatus = new TaskProceedStatusResponse();
         for (var taskDetail : taskDetailList) {
             var scope = taskDetail.getTaskScope();
             if (scope.equals(PUBLIC)) proceedStatus.setCommonTask(taskDetail.getTaskCompletionDate());

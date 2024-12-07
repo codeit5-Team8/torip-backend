@@ -2,7 +2,7 @@ package com.codeit.torip.task.entity;
 
 import com.codeit.torip.common.entity.BaseUserEntity;
 import com.codeit.torip.note.entity.Note;
-import com.codeit.torip.task.dto.TaskDto;
+import com.codeit.torip.task.dto.request.TaskRequest;
 import com.codeit.torip.travel.entity.Travel;
 import jakarta.persistence.*;
 import lombok.*;
@@ -55,25 +55,25 @@ public class Task extends BaseUserEntity {
 
     private LocalDateTime completionDate;
 
-    public static Task from(TaskDto taskDto) {
+    public static Task from(TaskRequest taskRequest) {
         return Task.builder()
-                .taskDDay(taskDto.getTaskDDay())
-                .title(taskDto.getTaskTitle())
-                .filePath(taskDto.getFilePath())
-                .taskDDay(taskDto.getTaskDDay())
-                .status(taskDto.getTravelStatus())
-                .scope(taskDto.getScope())
-                .travel(Travel.builder().id(taskDto.getTravelId()).build())
+                .taskDDay(taskRequest.getTaskDDay())
+                .title(taskRequest.getTaskTitle())
+                .filePath(taskRequest.getFilePath())
+                .taskDDay(taskRequest.getTaskDDay())
+                .status(taskRequest.getTravelStatus())
+                .scope(taskRequest.getScope())
+                .travel(Travel.builder().id(taskRequest.getTravelId()).build())
                 .build();
     }
 
-    public void modifyTo(TaskDto taskDto) {
-        this.title = taskDto.getTaskTitle();
-        this.filePath = taskDto.getFilePath();
-        this.status = taskDto.getTravelStatus();
-        this.taskDDay = taskDto.getTaskDDay();
-        this.scope = taskDto.getScope();
-        this.completionDate = taskDto.getCompletionDate();
+    public void modifyTo(TaskRequest taskRequest) {
+        this.title = taskRequest.getTaskTitle();
+        this.filePath = taskRequest.getFilePath();
+        this.status = taskRequest.getTravelStatus();
+        this.taskDDay = taskRequest.getTaskDDay();
+        this.scope = taskRequest.getScope();
+        this.completionDate = taskRequest.getCompletionDate();
     }
 
 }

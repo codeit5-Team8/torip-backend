@@ -1,4 +1,4 @@
-package com.codeit.torip.note.dto;
+package com.codeit.torip.note.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NoteDto {
+public class NoteRequest {
 
     @NotNull
     @Schema(description = "여행 고유키", example = "1", nullable = false)

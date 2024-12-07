@@ -1,4 +1,4 @@
-package com.codeit.torip.task.dto;
+package com.codeit.torip.task.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskProceedStatusDto {
+public class TaskProceedStatusResponse {
 
     @Schema(description = "개인 할일 수", example = "1")
     private int personalTask;

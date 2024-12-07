@@ -1,4 +1,4 @@
-package com.codeit.torip.auth.config.filter;
+package com.codeit.torip.auth.filter;
 
 import com.codeit.torip.auth.entity.CustomUserDetail;
 import com.codeit.torip.auth.util.JwtUtil;
