@@ -1,4 +1,4 @@
-package com.codeit.torip.note.dto;
+package com.codeit.torip.note.dto.response;
 
 import com.codeit.torip.task.entity.TravelStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class NoteDetailDto {
+public class NoteDetailResponse {
 
     @Schema(description = "노트 고유키", example = "1")
     private Long noteId;

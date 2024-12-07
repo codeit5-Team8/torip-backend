@@ -32,9 +32,7 @@ public class AuditorConfig {
                             || authentication.getPrincipal().equals("anonymousUser")
             ) return Optional.empty();
             var userDetail = (CustomUserDetail) authentication.getPrincipal();
-            var user = new User();
-            user.setId(userDetail.getId());
-            return Optional.of(user);
+            return Optional.of(userDetail.getUser());
         }
     }
 }

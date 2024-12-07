@@ -1,4 +1,4 @@
-package com.codeit.torip.task.dto;
+package com.codeit.torip.task.dto.request;
 
 import com.codeit.torip.task.entity.TaskScope;
 import com.codeit.torip.task.entity.TravelStatus;
@@ -17,7 +17,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskDto {
+public class TaskRequest {
 
     @NotBlank
     @Schema(description = "여행 고유키", example = "1", nullable = false)

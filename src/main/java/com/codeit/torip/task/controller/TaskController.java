@@ -1,12 +1,12 @@
 package com.codeit.torip.task.controller;
 
-import com.codeit.torip.common.dto.ResponseDto;
-import com.codeit.torip.task.dto.TaskDetailDto;
-import com.codeit.torip.task.dto.TaskDto;
-import com.codeit.torip.task.dto.TaskProceedStatusDto;
+import com.codeit.torip.common.dto.CommonResponse;
+import com.codeit.torip.task.dto.response.TaskDetailResponse;
+import com.codeit.torip.task.dto.request.TaskRequest;
+import com.codeit.torip.task.dto.request.TaskListRequest;
+import com.codeit.torip.task.dto.response.TaskProceedStatusResponse;
 import com.codeit.torip.task.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -28,34 +28,20 @@ public class TaskController {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public ResponseDto<Long> registerTask(@RequestBody TaskDto taskDto) {
-        var taskId = taskService.registerTask(taskDto);
-        return new ResponseDto<Long>().success(taskId);
+    public CommonResponse<Long> registerTask(@RequestBody TaskRequest taskRequest) {
+        var taskId = taskService.registerTask(taskRequest);
+        return new CommonResponse<Long>().success(taskId);
     }
 
     @GetMapping
     @Operation(summary = "할일 목록 조회 API", description = "여행에 대한 할일 목록을 조회합니다",
-            parameters = {
-                    @Parameter(
-                            name = "travelId",
-                            description = "여행 고유키",
-                            required = true,
-                            example = "1"
-                    ),
-                    @Parameter(
-                            name = "seq",
-                            description = "현재 페이지에서 가장 작은 할일 고유키 [ 최초 조회시 0으로 요청 ]",
-                            required = true,
-                            example = "0"
-                    )
-            },
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public ResponseDto<List<TaskDetailDto>> getTaskList(@RequestParam(name = "travelId") long travelId, @RequestParam(name = "seq") long seq) {
-        var taskDetailDtoList = taskService.getTaskList(travelId, seq);
-        return new ResponseDto<List<TaskDetailDto>>().success(taskDetailDtoList);
+    public CommonResponse<List<TaskDetailResponse>> getTaskList(@ModelAttribute TaskListRequest taskListRequest) {
+        var taskDetailDtoList = taskService.getTaskList(taskListRequest);
+        return new CommonResponse<List<TaskDetailResponse>>().success(taskDetailDtoList);
     }
 
     @GetMapping("/{taskId}")
@@ -64,9 +50,9 @@ public class TaskController {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public ResponseDto<TaskDetailDto> getTaskDetail(@PathVariable("taskId") long taskId) {
+    public CommonResponse<TaskDetailResponse> getTaskDetail(@PathVariable("taskId") long taskId) {
         var taskDetailDto = taskService.getTaskDetail(taskId);
-        return new ResponseDto<TaskDetailDto>().success(taskDetailDto);
+        return new CommonResponse<TaskDetailResponse>().success(taskDetailDto);
     }
 
     @PutMapping
@@ -75,9 +61,9 @@ public class TaskController {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public ResponseDto<Long> modifyTask(@RequestBody TaskDto taskDto) {
-        var result = taskService.modifyTask(taskDto);
-        return new ResponseDto<Long>().success(result);
+    public CommonResponse<Long> modifyTask(@RequestBody TaskRequest taskRequest) {
+        var result = taskService.modifyTask(taskRequest);
+        return new CommonResponse<Long>().success(result);
     }
 
     @DeleteMapping("/{taskId}")
@@ -86,20 +72,20 @@ public class TaskController {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public ResponseDto<Long> deleteTask(@PathVariable("taskId") long taskId) {
+    public CommonResponse<Long> deleteTask(@PathVariable("taskId") long taskId) {
         taskService.deleteTask(taskId);
-        return new ResponseDto<Long>().success(taskId);
+        return new CommonResponse<Long>().success(taskId);
     }
 
     @GetMapping("/progress")
-    @Operation(summary = "할일 완료도 조회 API", description = "여행에 대한 할일 완료도를 조회",
+    @Operation(summary = "할일 진행도 조회 API", description = "내 할일에 대한 진행도를 조회",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public ResponseDto<TaskProceedStatusDto> getProgressStatus() {
+    public CommonResponse<TaskProceedStatusResponse> getProgressStatus() {
         var taskProceedStatusDto = taskService.getProgressStatus();
-        return new ResponseDto<TaskProceedStatusDto>().success(taskProceedStatusDto);
+        return new CommonResponse<TaskProceedStatusResponse>().success(taskProceedStatusDto);
     }
 
 }

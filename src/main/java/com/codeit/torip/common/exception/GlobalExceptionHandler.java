@@ -1,6 +1,6 @@
 package com.codeit.torip.common.exception;
 
-import com.codeit.torip.common.dto.ResponseDto;
+import com.codeit.torip.common.dto.CommonResponse;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -19,51 +19,57 @@ import static com.codeit.torip.common.contant.ToripConstants.HttpConstant.SERVER
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseDto<?> defaultExceptionHandler(Exception e) {
+    public CommonResponse<?> defaultExceptionHandler(Exception e) {
         log.error("Exception", e);
-        return new ResponseDto<>().fail(SERVER_FAIL_CODE, e.getMessage());
+        return new CommonResponse<>().fail(SERVER_FAIL_CODE, e.getMessage());
     }
 
     @ExceptionHandler(DataAccessException.class)
-    public ResponseDto<?> dataAccessExceptionHandler(DataAccessException e) {
+    public CommonResponse<?> dataAccessExceptionHandler(DataAccessException e) {
         log.error("DataAccessException", e);
-        return new ResponseDto<>().fail(SERVER_FAIL_CODE, e.getMessage());
+        return new CommonResponse<>().fail(SERVER_FAIL_CODE, e.getMessage());
+    }
+
+    @ExceptionHandler(AlertException.class)
+    public CommonResponse<?> alertExceptionHandler(AlertException e) {
+        log.warn("AlertException", e);
+        return new CommonResponse<>().fail(CLIENT_FAIL_CODE, e.getMessage());
     }
     
     @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseDto<?> expiredJwtExceptionHandler(ExpiredJwtException e) {
+    public CommonResponse<?> expiredJwtExceptionHandler(ExpiredJwtException e) {
         log.warn("ExpiredJwtException", e);
-        return new ResponseDto<>().fail(CLIENT_FAIL_CODE, e.getMessage());
+        return new CommonResponse<>().fail(CLIENT_FAIL_CODE, e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseDto<?> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
+    public CommonResponse<?> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
         log.warn("MethodArgumentNotValidException", e);
-        return new ResponseDto<>().fail(CLIENT_FAIL_CODE, e.getMessage());
+        return new CommonResponse<>().fail(CLIENT_FAIL_CODE, e.getMessage());
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseDto<?> constraintViolationExceptionHandler(ConstraintViolationException e) {
+    public CommonResponse<?> constraintViolationExceptionHandler(ConstraintViolationException e) {
         log.warn("ConstraintViolationException", e);
-        return new ResponseDto<>().fail(CLIENT_FAIL_CODE, e.getMessage());
+        return new CommonResponse<>().fail(CLIENT_FAIL_CODE, e.getMessage());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseDto<?> httpMessageNotReadableExceptionHandler(HttpMessageNotReadableException e) {
+    public CommonResponse<?> httpMessageNotReadableExceptionHandler(HttpMessageNotReadableException e) {
         log.warn("HttpMessageNotReadableException", e);
-        return new ResponseDto<>().fail(CLIENT_FAIL_CODE, e.getMessage());
+        return new CommonResponse<>().fail(CLIENT_FAIL_CODE, e.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseDto<?> illegalArgumentExceptionHandler(IllegalArgumentException e) {
+    public CommonResponse<?> illegalArgumentExceptionHandler(IllegalArgumentException e) {
         log.warn("lIllegalArgumentException", e);
-        return new ResponseDto<>().fail(CLIENT_FAIL_CODE, e.getMessage());
+        return new CommonResponse<>().fail(CLIENT_FAIL_CODE, e.getMessage());
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseDto<?> httpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException e) {
+    public CommonResponse<?> httpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException e) {
         log.warn("HttpRequestMethodNotSupportedException", e);
-        return new ResponseDto<>().fail(CLIENT_FAIL_CODE, e.getMessage());
+        return new CommonResponse<>().fail(CLIENT_FAIL_CODE, e.getMessage());
     }
 
 }

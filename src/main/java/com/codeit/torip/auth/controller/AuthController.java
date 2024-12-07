@@ -1,16 +1,15 @@
 package com.codeit.torip.auth.controller;
 
-import com.codeit.torip.auth.dto.EmailCheckResponse;
-import com.codeit.torip.auth.dto.LoginRequest;
-import com.codeit.torip.auth.dto.RegisterRequest;
-import com.codeit.torip.auth.dto.TokenResponse;
+import com.codeit.torip.auth.dto.response.EmailCheckResponse;
+import com.codeit.torip.auth.dto.request.LoginRequest;
+import com.codeit.torip.auth.dto.request.RegisterRequest;
+import com.codeit.torip.auth.dto.response.TokenResponse;
 import com.codeit.torip.auth.service.AuthService;
+import com.codeit.torip.common.dto.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Auth", description = "인증 관련 API")
@@ -28,8 +27,8 @@ public class AuthController {
                     @ApiResponse(responseCode = "400", description = "로그인 실패")
             }
     )
-    public TokenResponse login(@RequestBody LoginRequest loginRequest) {
-        return authService.login(loginRequest);
+    public CommonResponse<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
+        return new CommonResponse<TokenResponse>().success(authService.login(loginRequest));
     }
 
     @PostMapping("/register")
@@ -39,8 +38,8 @@ public class AuthController {
                     @ApiResponse(responseCode = "400", description = "회원가입 실패")
             }
     )
-    public TokenResponse register(@RequestBody RegisterRequest registerRequest) {
-        return authService.register(registerRequest);
+    public CommonResponse<TokenResponse> register(@RequestBody RegisterRequest registerRequest) {
+        return new CommonResponse<TokenResponse>().success(authService.register(registerRequest));
     }
 
     @PostMapping("/refresh")
@@ -50,8 +49,8 @@ public class AuthController {
                     @ApiResponse(responseCode = "400", description = "토큰 갱신 실패")
             }
     )
-    public TokenResponse refresh(@RequestBody String refreshToken) {
-        return authService.refresh(refreshToken);
+    public CommonResponse<TokenResponse> refresh(@RequestBody String refreshToken) {
+        return new CommonResponse<TokenResponse>().success(authService.refresh(refreshToken));
     }
 
     @GetMapping("/register/username/exists")
@@ -63,7 +62,7 @@ public class AuthController {
                             description = "이메일 검사 실패. 잘못된 이메일 형식이거나 서버 오류로 인해 검사가 실패했습니다.")
             }
     )
-    public ResponseEntity<EmailCheckResponse> checkEmailExists(@RequestParam String username) {
-        return new ResponseEntity<>(authService.checkEmailExists(username), HttpStatus.OK);
+    public CommonResponse<EmailCheckResponse> checkEmailExists(@RequestParam String email) {
+        return new CommonResponse<EmailCheckResponse>().success(authService.checkEmailExists(email));
     }
 }

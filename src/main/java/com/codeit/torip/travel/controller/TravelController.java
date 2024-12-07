@@ -1,8 +1,7 @@
 package com.codeit.torip.travel.controller;
 
-import com.codeit.torip.common.dto.ResponseDto;
+import com.codeit.torip.common.dto.CommonResponse;
 import com.codeit.torip.travel.dto.*;
-import com.codeit.torip.travel.entity.Travel;
 import com.codeit.torip.travel.service.TravelService;
 import com.codeit.torip.user.dto.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,10 +27,10 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto<TravelResponse> createTravel(@RequestBody CreateTravelRequest createTravelRequest) {
+    public CommonResponse<TravelResponse> createTravel(@RequestBody CreateTravelRequest createTravelRequest) {
         var travelResponse = travelService.createTravel(createTravelRequest);
         // 여행 생성 로직
-        return new ResponseDto<TravelResponse>().success(travelResponse);
+        return new CommonResponse<TravelResponse>().success(travelResponse);
     }
 
     @GetMapping("/{id}")
@@ -41,10 +40,10 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto<TravelResponse> getTravel(@PathVariable Long id) {
+    public CommonResponse<TravelResponse> getTravel(@PathVariable Long id) {
         var travelResponse = travelService.getTravel(id);
         // 여행 조회 로직
-        return new ResponseDto<TravelResponse>().success(travelResponse);
+        return new CommonResponse<TravelResponse>().success(travelResponse);
     }
 
     @GetMapping("/list")
@@ -54,10 +53,10 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto<PageCollectionResponse<TravelResponse>> getTravelList(@RequestParam Long lastSeenId) {
+    public CommonResponse<PageCollectionResponse<TravelResponse>> getTravelList(@RequestParam Long lastSeenId) {
         var travelResponseList = travelService.getTravelList(lastSeenId);
         // 여행 목록 조회 로직
-        return new ResponseDto<PageCollectionResponse<TravelResponse>>()
+        return new CommonResponse<PageCollectionResponse<TravelResponse>>()
                 .success(travelResponseList);
     }
 
@@ -68,10 +67,10 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto<TravelResponse> updateTravel(@PathVariable Long id, @RequestBody UpdateTravelRequest updateTravelRequest) {
+    public CommonResponse<TravelResponse> updateTravel(@PathVariable Long id, @RequestBody UpdateTravelRequest updateTravelRequest) {
         var travelResponse = travelService.updateTravel(id, updateTravelRequest);
         // 여행 수정 로직
-        return new ResponseDto<TravelResponse>().success(travelResponse);
+        return new CommonResponse<TravelResponse>().success(travelResponse);
     }
 
     @DeleteMapping("/{id}")
@@ -81,10 +80,10 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto<?> deleteTravel(@PathVariable Long id) {
+    public CommonResponse<?> deleteTravel(@PathVariable Long id) {
         // 여행 삭제 로직
         travelService.deleteTravel(id);
-        return new ResponseDto<>().success(null);
+        return new CommonResponse<>().success(null);
     }
 
     @PostMapping("/{id}/request")
@@ -94,10 +93,10 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto<TravelInvitationResponse> requestTravelParticipation(@PathVariable Long id, @RequestBody Long inviterId) {
+    public CommonResponse<TravelInvitationResponse> requestTravelParticipation(@PathVariable Long id, @RequestBody Long inviterId) {
         var travelInvitationResponse = travelService.requestTravelParticipation(id, inviterId);
         // 여행 참가 로직
-        return new ResponseDto<TravelInvitationResponse>().success(travelInvitationResponse);
+        return new CommonResponse<TravelInvitationResponse>().success(travelInvitationResponse);
     }
 
     @PostMapping("request/{id}/accept")
@@ -107,10 +106,10 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto<TravelInvitationResponse> acceptTravelParticipation(@PathVariable Long id) {
+    public CommonResponse<TravelInvitationResponse> acceptTravelParticipation(@PathVariable Long id) {
         var travelInvitationResponse = travelService.acceptTravelParticipation(id);
         // 여행 참가 수락 로직
-        return new ResponseDto<TravelInvitationResponse>().success(travelInvitationResponse);
+        return new CommonResponse<TravelInvitationResponse>().success(travelInvitationResponse);
     }
 
     @GetMapping("/{id}/request")
@@ -120,10 +119,10 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto<List<TravelInvitationResponse>> getTravelInvitations(@PathVariable Long id) {
+    public CommonResponse<List<TravelInvitationResponse>> getTravelInvitations(@PathVariable Long id) {
         var travelInvitationResponseList = travelService.getTravelInvitations(id);
         // 여행 참가 요청 조회 로직
-        return new ResponseDto<List<TravelInvitationResponse>>().success(travelInvitationResponseList);
+        return new CommonResponse<List<TravelInvitationResponse>>().success(travelInvitationResponseList);
     }
 
     @GetMapping("/{id}/members")
@@ -133,9 +132,9 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public ResponseDto<List<UserResponse>> getTravelMembers(@PathVariable Long id) {
+    public CommonResponse<List<UserResponse>> getTravelMembers(@PathVariable Long id) {
         var userResponseList = travelService.getTravelMembers(id);
         // 여행 참가자 조회 로직
-        return new ResponseDto<List<UserResponse>>().success(userResponseList);
+        return new CommonResponse<List<UserResponse>>().success(userResponseList);
     }
 }

@@ -1,7 +1,10 @@
 package com.codeit.torip.task.repository.assignee;
 
+import com.codeit.torip.auth.util.AuthUtil;
 import com.codeit.torip.task.dto.TaskAssigneeDto;
+import com.codeit.torip.task.dto.request.TaskListRequest;
 import com.codeit.torip.task.dto.TaskModifyAssigneeDto;
+import com.codeit.torip.user.entity.QUser;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -21,10 +24,8 @@ public class CustomTaskAssigneeRepositoryImpl implements CustomTaskAssigneeRepos
     private final JPAQueryFactory factory;
 
     @Override
-    public List<TaskAssigneeDto> selectTaskAssigneeList(long travelId, long seq) {
-        // 쿼리 조건 생성
-        BooleanExpression condition = travel.id.eq(travelId);
-        if (seq != 0) condition = condition.and(task.id.lt(seq));
+    public List<TaskAssigneeDto> selectTaskAssigneeList(List<Long> taskIdList) {
+        // 담당자 정보 불러오기
         return factory.select(
                         Projections.constructor(
                                 TaskAssigneeDto.class,
@@ -32,10 +33,9 @@ public class CustomTaskAssigneeRepositoryImpl implements CustomTaskAssigneeRepos
                         )
                 )
                 .from(task)
-                .join(task.travel, travel)
                 .join(task.assignees, taskAssignee)
                 .join(taskAssignee.assignee, user)
-                .where(condition)
+                .where(task.id.in(taskIdList))
                 .orderBy(task.id.desc())
                 .limit(PAGE_SIZE)
                 .fetch();
@@ -50,7 +50,6 @@ public class CustomTaskAssigneeRepositoryImpl implements CustomTaskAssigneeRepos
                         )
                 )
                 .from(task)
-                .join(task.travel, travel)
                 .join(task.assignees, taskAssignee)
                 .join(taskAssignee.assignee, user)
                 .where(task.id.eq(taskId))
@@ -66,9 +65,9 @@ public class CustomTaskAssigneeRepositoryImpl implements CustomTaskAssigneeRepos
                                 user.email
                         )
                 )
-                .from(taskAssignee)
+                .from(task)
+                .join(task.assignees, taskAssignee)
                 .join(taskAssignee.assignee, user)
-                .join(taskAssignee.task, task)
                 .where(task.id.eq(taskId))
                 .fetch();
     }

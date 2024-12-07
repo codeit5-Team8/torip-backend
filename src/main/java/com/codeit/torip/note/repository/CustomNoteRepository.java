@@ -1,13 +1,13 @@
 package com.codeit.torip.note.repository;
 
-import com.codeit.torip.note.dto.NoteDetailDto;
+import com.codeit.torip.note.dto.response.NoteDetailResponse;
 
 import java.util.List;
 
 public interface CustomNoteRepository {
 
-    List<NoteDetailDto> selectNoteDetailList(String key, long travelOrTaskId, long seq);
+    List<NoteDetailResponse> selectNoteDetailList(String key, long travelOrTaskId, long seq);
 
-    NoteDetailDto selectNoteDetail(long noteId);
+    NoteDetailResponse selectNoteDetail(long noteId);
 
 }

@@ -1,15 +1,16 @@
 package com.codeit.torip.task.repository.task;
 
-import com.codeit.torip.task.dto.TaskDetailDto;
+import com.codeit.torip.task.dto.response.TaskDetailResponse;
+import com.codeit.torip.task.dto.request.TaskListRequest;
 
 import java.util.List;
 
 public interface CustomTaskRepository {
 
-    List<TaskDetailDto> selectTaskDetailList(long travelId, long seq);
+    List<TaskDetailResponse> selectTaskDetailList(TaskListRequest taskListRequest);
 
-    TaskDetailDto selectTaskDetail(long taskId);
+    TaskDetailResponse selectTaskDetail(long taskId);
 
-    List<TaskDetailDto> selectAllTaskDetailList(String email);
+    List<TaskDetailResponse> selectAllTaskDetailList();
 
 }

@@ -1,6 +1,6 @@
-package com.codeit.torip.auth.config.security;
+package com.codeit.torip.common.config;
 
-import com.codeit.torip.auth.config.filter.JwtFilter;
+import com.codeit.torip.auth.filter.JwtFilter;
 import com.codeit.torip.auth.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
