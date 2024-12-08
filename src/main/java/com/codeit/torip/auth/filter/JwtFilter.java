@@ -1,5 +1,6 @@
-package com.codeit.torip.auth.config.filter;
+package com.codeit.torip.auth.filter;
 
+import com.codeit.torip.auth.entity.CustomUserDetail;
 import com.codeit.torip.auth.util.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -8,7 +9,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -42,7 +42,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         String loginId = jwtUtil.getLoginId(token);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(loginId);
+        CustomUserDetail userDetails = (CustomUserDetail) userDetailsService.loadUserByUsername(loginId);
 
         try {
             if (jwtUtil.validateToken(token, userDetails)) {

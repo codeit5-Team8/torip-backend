@@ -12,10 +12,15 @@ import java.util.List;
 @Getter
 public class CustomUserDetail implements UserDetails {
 
+    // TODO User는 Entity이며, DTO로 수정할 필요가 있어보임
     private final User user;
 
     public CustomUserDetail(User user) {
         this.user = user;
+    }
+
+    public Long getId() {
+        return user.getId();
     }
 
     @Override
@@ -32,4 +37,5 @@ public class CustomUserDetail implements UserDetails {
     public String getUsername() {
         return user.getEmail();
     }
+
 }

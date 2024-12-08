@@ -1,4 +1,4 @@
-package com.codeit.torip.auth.dto;
+package com.codeit.torip.auth.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
@@ -6,10 +6,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 
 @Getter
-public class RegisterRequest {
-    @NotEmpty
-    @Schema(description = "사용자의 유저 네임", example = "test", nullable = false)
-    private String username;
+public class LoginRequest {
     @NotEmpty
     @Email
     @Schema(description = "사용자의 이메일", example = "test@test.com", nullable = false)

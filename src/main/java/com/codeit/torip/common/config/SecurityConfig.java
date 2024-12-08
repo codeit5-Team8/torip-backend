@@ -1,6 +1,6 @@
-package com.codeit.torip.auth.config.security;
+package com.codeit.torip.common.config;
 
-import com.codeit.torip.auth.config.filter.JwtFilter;
+import com.codeit.torip.auth.filter.JwtFilter;
 import com.codeit.torip.auth.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -54,6 +54,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-resources/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/v1/**").permitAll()
                         .anyRequest().authenticated());
         return http.build();
     }

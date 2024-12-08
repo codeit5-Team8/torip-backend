@@ -1,0 +1,116 @@
+package com.codeit.torip.task.repository.task;
+
+import com.codeit.torip.auth.util.AuthUtil;
+import com.codeit.torip.task.dto.response.TaskDetailResponse;
+import com.codeit.torip.task.dto.request.TaskListRequest;
+import com.codeit.torip.user.entity.QUser;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
+import static com.codeit.torip.common.contant.ToripConstants.Task.PAGE_SIZE;
+import static com.codeit.torip.task.entity.QTask.task;
+import static com.codeit.torip.task.entity.QTaskAssignee.taskAssignee;
+import static com.codeit.torip.travel.entity.QTravel.travel;
+
+@RequiredArgsConstructor
+public class CustomTaskRepositoryImpl implements CustomTaskRepository {
+
+    private final JPAQueryFactory factory;
+
+    @Override
+    public List<TaskDetailResponse> selectTaskDetailList(TaskListRequest taskListRequest) {
+        var assignee = new QUser("assignee");
+        var createdBy = new QUser("createdBy");
+        var modifiedBy = new QUser("modifiedBy");
+        // 쿼리 조건 생성
+        BooleanExpression condition = getCondition(assignee);
+        condition = condition.and(travel.id.eq(taskListRequest.getTravelId()));
+        var seq = taskListRequest.getSeq();
+        if (seq != 0) condition = condition.and(task.id.lt(seq));
+        var status = taskListRequest.getTravelStatus();
+        if(status != null){
+            condition = condition.and(task.status.eq(status));
+        }
+        var scope = taskListRequest.getScope();
+        if(scope != null){
+            condition = condition.and(task.status.eq(status));
+        }
+        // 할일 정보 불러오기
+        return factory.select(
+                        Projections.constructor(
+                                TaskDetailResponse.class,
+                                task.id, travel.name, task.title, task.filePath, task.status,
+                                task.taskDDay, task.scope, task.completionDate,
+                                task.lastcreatedUser.email, task.createdAt, task.lastUpdatedUser.email, task.updatedAt
+                        ))
+                .from(task)
+                .join(task.travel, travel)
+                .join(task.assignees, taskAssignee)
+                .join(taskAssignee.assignee, assignee)
+                .join(task.lastcreatedUser, createdBy)
+                .join(task.lastUpdatedUser, modifiedBy)
+                .where(condition)
+                .orderBy(task.id.desc())
+                .limit(PAGE_SIZE)
+                .fetch();
+    }
+
+    @Override
+    public TaskDetailResponse selectTaskDetail(long taskId) {
+        var assignee = new QUser("assignee");
+        var createdBy = new QUser("createdBy");
+        var modifiedBy = new QUser("modifiedBy");
+        // 쿼리 조건 생성
+        BooleanExpression condition = getCondition(assignee);
+        condition = condition.and(task.id.eq(taskId));
+        // 할일 정보 불러오기
+        return factory.select(
+                        Projections.constructor(
+                                TaskDetailResponse.class,
+                                task.id, travel.name, task.title, task.filePath, task.status,
+                                task.taskDDay, task.scope, task.completionDate,
+                                task.lastcreatedUser.email, task.createdAt, task.lastUpdatedUser.email, task.updatedAt
+                        ))
+                .from(task)
+                .join(task.travel, travel)
+                .join(task.assignees, taskAssignee)
+                .join(taskAssignee.assignee, assignee)
+                .join(task.lastcreatedUser, createdBy)
+                .join(task.lastUpdatedUser, modifiedBy)
+                .where(condition)
+                .fetchOne();
+    }
+
+    @Override
+    public List<TaskDetailResponse> selectAllTaskDetailList() {
+        var assignee = new QUser("assignee");
+        var createdBy = new QUser("createdBy");
+        var modifiedBy = new QUser("modifiedBy");
+        // 쿼리 조건 생성
+        BooleanExpression condition = getCondition(assignee);
+        // 할일 목록 불러오기
+        return factory.select(
+                        Projections.constructor(
+                                TaskDetailResponse.class,
+                                task.id, travel.name, task.title, task.filePath, task.status,
+                                task.taskDDay, task.scope, task.completionDate,
+                                task.lastcreatedUser.email, task.createdAt, task.lastUpdatedUser.email, task.updatedAt
+                        ))
+                .from(taskAssignee)
+                .join(taskAssignee.task, task)
+                .join(task.travel, travel)
+                .join(task.lastcreatedUser, createdBy)
+                .join(task.lastUpdatedUser, modifiedBy)
+                .where(condition)
+                .fetch();
+    }
+
+    private BooleanExpression getCondition(QUser assignee) {
+        return assignee.email.eq(AuthUtil.getEmail());
+    }
+
+}
