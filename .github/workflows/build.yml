@@ -43,7 +43,6 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
           key: ${{ secrets.SERVER_KEY }}
-          port: 22
           script: |
             sudo pkill -f 'java -jar torip-0.0.1-SNAPSHOT.jar' || true
             sudo ./run_app.sh
