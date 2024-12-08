@@ -43,7 +43,7 @@ public class TaskService {
         var assignees = taskEntity.getAssignees();
         // 담당자 추가
         for (var assignee : taskRequest.getAssignees()) {
-            var userEntity = userRepository.findUserByEmail(assignee).orElseThrow();
+            var userEntity = userRepository.findUserByEmail(assignee).orElseThrow(() -> new IllegalArgumentException("담당자가 존재하지 않습니다."));
             var taskAssigneeEntity = TaskAssignee.builder().task(taskEntity).assignee(userEntity).build();
             assignees.add(taskAssigneeEntity);
         }

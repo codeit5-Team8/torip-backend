@@ -7,8 +7,6 @@ import com.codeit.torip.trip.dto.request.UpdateTripRequest;
 import com.codeit.torip.trip.dto.response.TripResponse;
 import com.codeit.torip.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,11 +17,15 @@ import java.util.Objects;
 
 @Getter
 @Entity
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "trip")
 public class Trip extends BaseUserEntity {
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<TripMember> members = new ArrayList<>();
+
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<Task> tasks = new ArrayList<>();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,15 +38,6 @@ public class Trip extends BaseUserEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
-
-    @Builder.Default
-    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TripMember> members = new ArrayList<>();
-
-    @Builder.Default
-    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Task> tasks = new ArrayList<>();
-
     // 여행지 (2차 개발)
     // private String destination;
 

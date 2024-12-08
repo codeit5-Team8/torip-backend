@@ -65,6 +65,7 @@ public class Task extends BaseUserEntity {
                 .taskDDay(taskRequest.getTaskDDay())
                 .status(taskRequest.getTripStatus())
                 .scope(taskRequest.getScope())
+                .completionDate(taskRequest.getCompletionDate())
                 .build();
     }
 
