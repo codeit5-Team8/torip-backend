@@ -33,7 +33,7 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_KEY }}
-          source: "./build/libs/torip-0.0.1-SNAPSHOT.jar"
+          source: "./build/libs/torip -0.0.1-SNAPSHOT.jar"
           target: "/home/ec2-user/torip-0.0.1-SNAPSHOT.jar"
 
       - name: Deploy to dev
