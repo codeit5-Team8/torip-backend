@@ -1,11 +1,13 @@
-package com.codeit.torip.travel.entity;
+package com.codeit.torip.trip.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
 import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
+
 import javax.annotation.processing.Generated;
+
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.PathInits;
 
@@ -16,12 +18,9 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QTravelMember extends EntityPathBase<TravelMember> {
 
-    private static final long serialVersionUID = 32226532L;
-
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QTravelMember travelMember = new QTravelMember("travelMember");
-
+    private static final long serialVersionUID = 32226532L;
+    private static final PathInits INITS = PathInits.DIRECT2;
     public final com.codeit.torip.common.entity.QBaseEntity _super = new com.codeit.torip.common.entity.QBaseEntity(this);
 
     //inherited

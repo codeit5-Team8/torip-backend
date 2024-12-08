@@ -1,8 +1,12 @@
-package com.codeit.torip.travel.controller;
+package com.codeit.torip.trip.controller;
 
 import com.codeit.torip.common.dto.CommonResponse;
-import com.codeit.torip.travel.dto.*;
-import com.codeit.torip.travel.service.TravelService;
+import com.codeit.torip.trip.dto.PageCollection;
+import com.codeit.torip.trip.dto.request.CreateTripRequest;
+import com.codeit.torip.trip.dto.request.UpdateTripRequest;
+import com.codeit.torip.trip.dto.response.TripInvitationResponse;
+import com.codeit.torip.trip.dto.response.TripResponse;
+import com.codeit.torip.trip.service.TripService;
 import com.codeit.torip.user.dto.UserResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,13 +16,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Travel", description = "여행 관련 API")
+@Tag(name = "Trip", description = "여행 관련 API")
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/torip/travel")
+@RequestMapping("/api/v1/torip/trip")
 @RestController
-public class TravelController {
+public class TripController {
 
-    private final TravelService travelService;
+    private final TripService tripService;
 
     @PostMapping
     @Operation(summary = "여행 생성 API", description = "여행을 생성합니다",
@@ -27,10 +31,10 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public CommonResponse<TravelResponse> createTravel(@RequestBody CreateTravelRequest createTravelRequest) {
-        var travelResponse = travelService.createTravel(createTravelRequest);
+    public CommonResponse<TripResponse> createTrip(@RequestBody CreateTripRequest createTripRequest) {
+        var TripResponse = tripService.createTrip(createTripRequest);
         // 여행 생성 로직
-        return new CommonResponse<TravelResponse>().success(travelResponse);
+        return new CommonResponse<TripResponse>().success(TripResponse);
     }
 
     @GetMapping("/{id}")
@@ -40,10 +44,10 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public CommonResponse<TravelResponse> getTravel(@PathVariable Long id) {
-        var travelResponse = travelService.getTravel(id);
+    public CommonResponse<TripResponse> getTrip(@PathVariable Long id) {
+        var TripResponse = tripService.getTrip(id);
         // 여행 조회 로직
-        return new CommonResponse<TravelResponse>().success(travelResponse);
+        return new CommonResponse<TripResponse>().success(TripResponse);
     }
 
     @GetMapping("/list")
@@ -53,11 +57,11 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public CommonResponse<PageCollectionResponse<TravelResponse>> getTravelList(@RequestParam Long lastSeenId) {
-        var travelResponseList = travelService.getTravelList(lastSeenId);
+    public CommonResponse<PageCollection<TripResponse>> getTripList(@RequestParam Long lastSeenId) {
+        var TripResponseList = tripService.getTripList(lastSeenId);
         // 여행 목록 조회 로직
-        return new CommonResponse<PageCollectionResponse<TravelResponse>>()
-                .success(travelResponseList);
+        return new CommonResponse<PageCollection<TripResponse>>()
+                .success(TripResponseList);
     }
 
     @PatchMapping("/{id}")
@@ -67,10 +71,10 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public CommonResponse<TravelResponse> updateTravel(@PathVariable Long id, @RequestBody UpdateTravelRequest updateTravelRequest) {
-        var travelResponse = travelService.updateTravel(id, updateTravelRequest);
+    public CommonResponse<TripResponse> updateTrip(@PathVariable Long id, @RequestBody UpdateTripRequest updateTripRequest) {
+        var TripResponse = tripService.updateTrip(id, updateTripRequest);
         // 여행 수정 로직
-        return new CommonResponse<TravelResponse>().success(travelResponse);
+        return new CommonResponse<TripResponse>().success(TripResponse);
     }
 
     @DeleteMapping("/{id}")
@@ -80,23 +84,23 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public CommonResponse<?> deleteTravel(@PathVariable Long id) {
+    public CommonResponse<?> deleteTrip(@PathVariable Long id) {
         // 여행 삭제 로직
-        travelService.deleteTravel(id);
-        return new CommonResponse<>().success(null);
+        tripService.deleteTrip(id);
+        return new CommonResponse<>().success("여행이 삭제되었습니다.");
     }
 
-    @PostMapping("/{id}/request")
+    @PostMapping("/{tripId}/request")
     @Operation(summary = "여행 참가 요청 API", description = "여행에 참가를 요청합니다",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공"),
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public CommonResponse<TravelInvitationResponse> requestTravelParticipation(@PathVariable Long id, @RequestBody Long inviterId) {
-        var travelInvitationResponse = travelService.requestTravelParticipation(id, inviterId);
+    public CommonResponse<TripInvitationResponse> requestTripParticipation(@PathVariable Long tripId) {
+        var TripInvitationResponse = tripService.requestTripParticipation(tripId);
         // 여행 참가 로직
-        return new CommonResponse<TravelInvitationResponse>().success(travelInvitationResponse);
+        return new CommonResponse<TripInvitationResponse>().success(TripInvitationResponse);
     }
 
     @PostMapping("request/{id}/accept")
@@ -106,10 +110,10 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public CommonResponse<TravelInvitationResponse> acceptTravelParticipation(@PathVariable Long id) {
-        var travelInvitationResponse = travelService.acceptTravelParticipation(id);
+    public CommonResponse<TripInvitationResponse> acceptTripParticipation(@PathVariable Long id) {
+        var TripInvitationResponse = tripService.acceptTripParticipation(id);
         // 여행 참가 수락 로직
-        return new CommonResponse<TravelInvitationResponse>().success(travelInvitationResponse);
+        return new CommonResponse<TripInvitationResponse>().success(TripInvitationResponse);
     }
 
     @GetMapping("/{id}/request")
@@ -119,10 +123,10 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public CommonResponse<List<TravelInvitationResponse>> getTravelInvitations(@PathVariable Long id) {
-        var travelInvitationResponseList = travelService.getTravelInvitations(id);
+    public CommonResponse<List<TripInvitationResponse>> getTripInvitations(@PathVariable Long id) {
+        var TripInvitationResponseList = tripService.getTripInvitations(id);
         // 여행 참가 요청 조회 로직
-        return new CommonResponse<List<TravelInvitationResponse>>().success(travelInvitationResponseList);
+        return new CommonResponse<List<TripInvitationResponse>>().success(TripInvitationResponseList);
     }
 
     @GetMapping("/{id}/members")
@@ -132,8 +136,8 @@ public class TravelController {
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public CommonResponse<List<UserResponse>> getTravelMembers(@PathVariable Long id) {
-        var userResponseList = travelService.getTravelMembers(id);
+    public CommonResponse<List<UserResponse>> getTripMembers(@PathVariable Long id) {
+        var userResponseList = tripService.getTripMembers(id);
         // 여행 참가자 조회 로직
         return new CommonResponse<List<UserResponse>>().success(userResponseList);
     }

@@ -5,7 +5,9 @@ import static com.querydsl.core.types.PathMetadataFactory.*;
 import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
+
 import javax.annotation.processing.Generated;
+
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.PathInits;
 
@@ -16,12 +18,9 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QTask extends EntityPathBase<Task> {
 
-    private static final long serialVersionUID = 2101569600L;
-
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QTask task = new QTask("task");
-
+    private static final long serialVersionUID = 2101569600L;
+    private static final PathInits INITS = PathInits.DIRECT2;
     public final com.codeit.torip.common.entity.QBaseUserEntity _super;
 
     public final ListPath<TaskAssignee, QTaskAssignee> assignees = this.<TaskAssignee, QTaskAssignee>createList("assignees", TaskAssignee.class, QTaskAssignee.class, PathInits.DIRECT2);
@@ -51,7 +50,7 @@ public class QTask extends EntityPathBase<Task> {
 
     public final StringPath title = createString("title");
 
-    public final com.codeit.torip.travel.entity.QTravel travel;
+    public final com.codeit.torip.trip.entity.QTravel travel;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt;
@@ -78,7 +77,7 @@ public class QTask extends EntityPathBase<Task> {
         this.createdAt = _super.createdAt;
         this.lastcreatedUser = _super.lastcreatedUser;
         this.lastUpdatedUser = _super.lastUpdatedUser;
-        this.travel = inits.isInitialized("travel") ? new com.codeit.torip.travel.entity.QTravel(forProperty("travel"), inits.get("travel")) : null;
+        this.travel = inits.isInitialized("travel") ? new com.codeit.torip.trip.entity.QTravel(forProperty("travel"), inits.get("travel")) : null;
         this.updatedAt = _super.updatedAt;
     }
 

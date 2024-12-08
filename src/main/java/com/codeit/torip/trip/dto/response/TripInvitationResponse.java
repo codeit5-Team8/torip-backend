@@ -1,6 +1,6 @@
-package com.codeit.torip.travel.dto;
+package com.codeit.torip.trip.dto.response;
 
-import com.codeit.torip.travel.entity.TravelInvitationStatus;
+import com.codeit.torip.trip.entity.TripInvitationStatus;
 import com.codeit.torip.user.dto.UserResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,10 +11,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Getter
-public class TravelInvitationResponse {
-    private String travelName;
+public class TripInvitationResponse {
+    private String tripName;
     private UserResponse invitee;
-    private TravelInvitationStatus status;
+    private TripInvitationStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

@@ -1,4 +1,4 @@
-package com.codeit.torip.travel.dto;
+package com.codeit.torip.trip.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Builder
 @AllArgsConstructor
-public class PageCollectionResponse<T> {
+public class PageCollection<T> {
     private Long lastSeenId;
     private List<T> content;
 }

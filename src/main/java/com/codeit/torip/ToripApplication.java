@@ -4,9 +4,9 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.Locale;
@@ -19,6 +19,11 @@ import java.util.concurrent.TimeUnit;
 public class ToripApplication {
 
     private final ThreadPoolTaskExecutor taskExecutor;
+    @Value("${spring.datasource.url}")
+    private String dbUrl;
+
+    @Value("${spring.datasource.username}")
+    private String dbUsername;
 
     public static void main(String[] args) {
         SpringApplication.run(ToripApplication.class, args);

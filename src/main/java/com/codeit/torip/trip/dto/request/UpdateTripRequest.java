@@ -1,11 +1,11 @@
-package com.codeit.torip.travel.dto;
+package com.codeit.torip.trip.dto.request;
 
 import lombok.Getter;
 
 import java.time.LocalDate;
 
 @Getter
-public class UpdateTravelRequest {
+public class UpdateTripRequest {
     String name;
     LocalDate startDate;
     LocalDate endDate;

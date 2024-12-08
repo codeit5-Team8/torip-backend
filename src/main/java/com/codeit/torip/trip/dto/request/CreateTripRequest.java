@@ -1,4 +1,4 @@
-package com.codeit.torip.travel.dto;
+package com.codeit.torip.trip.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
@@ -9,7 +9,7 @@ import lombok.Getter;
 import java.time.LocalDate;
 
 @Getter
-public class CreateTravelRequest {
+public class CreateTripRequest {
     @NotEmpty
     @Schema(description = "여행 이름", example = "여행1", nullable = false)
     @Size(min = 1, max = 30)
