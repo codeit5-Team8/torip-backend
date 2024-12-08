@@ -9,6 +9,8 @@ import com.codeit.torip.task.entity.Task;
 import com.codeit.torip.task.entity.TaskAssignee;
 import com.codeit.torip.task.repository.assignee.TaskAssigneeRepository;
 import com.codeit.torip.task.repository.task.TaskRepository;
+import com.codeit.torip.trip.entity.Trip;
+import com.codeit.torip.trip.repository.TripRepository;
 import com.codeit.torip.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,12 +29,17 @@ public class TaskService {
     private final UserRepository userRepository;
     private final TaskRepository taskRepository;
     private final TaskAssigneeRepository taskAssigneeRepository;
+    private final TripRepository tripRepository;
 
     @Transactional
     public Long registerTask(TaskRequest taskRequest) {
-        // TODO 내 여행인지 로직 추가
+        Trip trip = tripRepository.findTripById(taskRequest.getTripId()).orElseThrow(() -> new IllegalArgumentException("여행이 존재하지 않습니다."));
+
         var email = AuthUtil.getEmail();
-        var taskEntity = Task.from(taskRequest);
+        var taskEntity = Task.from(taskRequest, trip);
+
+        trip.addTask(taskEntity);
+
         var assignees = taskEntity.getAssignees();
         // 담당자 추가
         for (var assignee : taskRequest.getAssignees()) {
