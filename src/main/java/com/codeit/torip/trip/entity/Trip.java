@@ -37,6 +37,7 @@ public class Trip extends BaseUserEntity {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
+    @Builder.Default
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TripMember> members = new ArrayList<>();
 
