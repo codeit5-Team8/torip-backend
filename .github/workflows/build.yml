@@ -20,7 +20,12 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
+        env:
+          MY_SECRET: ${{ secrets.JASYPT_KEY }}
         run: ./gradlew build -x test
+
+      - name: Check if JAR file exists
+        run: ls -l ./build/libs/
 
       - name: Copy jar file to remote
         uses: appleboy/scp-action@master
