@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: torip
+  lifecycle:
+    timeout-per-shutdown-phase: 120
+
+  datasource:
+    url: jdbc:mysql://${DB_IP}:3306/${DB_NAME}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+
+jwt:
+  expiredAccessTokenMs: 600000
+  expiredRefreshTokenMs: 86400000
+  secretKey: ENC(N+AnyaBk0MGt58SHgUFDn6QLWvhUSU5MVpWMcigoNUDnDjwxqheFtpNBV9IO8EnG)
+
+## Jasypt
+jasypt:
+  encryptor:
+    key: ${jasypt_key}
+
+server:
+  shutdown: graceful
