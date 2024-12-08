@@ -2,7 +2,7 @@ package com.codeit.torip.task.dto.response;
 
 import com.codeit.torip.task.dto.TaskAssigneeDto;
 import com.codeit.torip.task.entity.TaskScope;
-import com.codeit.torip.task.entity.TravelStatus;
+import com.codeit.torip.task.entity.TripStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,7 +28,7 @@ public class TaskDetailResponse {
     @Schema(description = "할일 파일 경로", example = "/home/image/sample.jpg")
     private String taskFilePath;
     @Schema(description = "할일 여행 단계", example = "BEFORE_TRAVEL / DURING_TRAVEL / AFTER_TRAVEL")
-    private TravelStatus taskStatus;
+    private TripStatus taskStatus;
     @Schema(description = "할일 D-Day", example = "2024-10-11 15:21:00")
     private LocalDateTime taskDDay;
     @Schema(description = "할일 공유 범위", example = "PUBLIC / PRIVATE")
@@ -47,7 +47,7 @@ public class TaskDetailResponse {
     @Schema(description = "할일 담당자 목록", example = "[demo@gmail.com]")
     private List<TaskAssigneeDto> assignees = new ArrayList<>();
 
-    public TaskDetailResponse(Long taskId, String travelName, String taskTitle, String taskFilePath, TravelStatus taskStatus, LocalDateTime taskDDay, TaskScope taskScope, LocalDateTime taskCompletionDate, String taskCreatedBy, LocalDateTime taskCreatedAt, String taskModifiedBy, LocalDateTime taskUpdatedAt) {
+    public TaskDetailResponse(Long taskId, String travelName, String taskTitle, String taskFilePath, TripStatus taskStatus, LocalDateTime taskDDay, TaskScope taskScope, LocalDateTime taskCompletionDate, String taskCreatedBy, LocalDateTime taskCreatedAt, String taskModifiedBy, LocalDateTime taskUpdatedAt) {
         this.taskId = taskId;
         this.travelName = travelName;
         this.taskTitle = taskTitle;

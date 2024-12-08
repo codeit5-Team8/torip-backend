@@ -14,7 +14,7 @@ import static com.codeit.torip.common.contant.ToripConstants.Note.PAGE_SIZE;
 import static com.codeit.torip.note.entity.QNote.note;
 import static com.codeit.torip.task.entity.QTask.task;
 import static com.codeit.torip.task.entity.QTaskAssignee.taskAssignee;
-import static com.codeit.torip.travel.entity.QTravel.travel;
+import static com.codeit.torip.trip.entity.QTrip.trip;
 
 @RequiredArgsConstructor
 public class CustomNoteRepositoryImpl implements CustomNoteRepository {
@@ -28,15 +28,15 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository {
         var modifiedBy = new QUser("modifiedBy");
         // 쿼리 조건 생성
         BooleanExpression condition = getCondition(assignee);
-        condition = key.equals("TRAVEL") ? condition.and(travel.id.eq(travelOrTaskId))
+        condition = key.equals("TRAVEL") ? condition.and(trip.id.eq(travelOrTaskId))
                 : condition.and(task.id.eq(travelOrTaskId));
         if (seq != 0) condition = condition.and(note.id.lt(seq));
         return factory.select(
                         Projections.constructor(NoteDetailResponse.class,
-                                note.id, travel.name, task.status, note.title, note.content,
+                                note.id, trip.name, task.status, note.title, note.content,
                                 note.lastcreatedUser.email, note.createdAt, note.lastUpdatedUser.email, note.updatedAt
                         )
-                ).from(travel).join(travel.tasks, task)
+                ).from(trip).join(trip.tasks, task)
                 .join(task.assignees, taskAssignee)
                 .join(taskAssignee.assignee, assignee)
                 .join(task.notes, note)
@@ -58,11 +58,11 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository {
         condition.and(note.id.eq(noteId));
         return factory.select(
                         Projections.constructor(NoteDetailResponse.class,
-                                note.id, travel.name, task.status, note.title, note.content,
+                                note.id, trip.name, task.status, note.title, note.content,
                                 note.lastcreatedUser.email, note.createdAt, note.lastUpdatedUser.email, note.updatedAt
                         )
-                ).from(travel)
-                .join(travel.tasks, task)
+                ).from(trip)
+                .join(trip.tasks, task)
                 .join(task.assignees, taskAssignee)
                 .join(taskAssignee.assignee, assignee)
                 .join(task.notes, note)

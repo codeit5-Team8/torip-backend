@@ -1,7 +1,7 @@
 package com.codeit.torip.task.dto.request;
 
 import com.codeit.torip.task.entity.TaskScope;
-import com.codeit.torip.task.entity.TravelStatus;
+import com.codeit.torip.task.entity.TripStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -31,7 +31,7 @@ public class TaskRequest {
     private String filePath;
     @NotBlank
     @Schema(description = "할일 여행 단계", example = "BEFORE_TRAVEL / DURING_TRAVEL / AFTER_TRAVEL")
-    private TravelStatus travelStatus;
+    private TripStatus tripStatus;
     @Schema(description = "할일 D-Day", example = "2024-10-11 15:21:00")
     private LocalDateTime taskDDay;
     @NotBlank

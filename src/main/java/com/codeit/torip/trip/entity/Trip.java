@@ -1,10 +1,10 @@
-package com.codeit.torip.travel.entity;
+package com.codeit.torip.trip.entity;
 
 import com.codeit.torip.common.entity.BaseUserEntity;
 import com.codeit.torip.task.entity.Task;
-import com.codeit.torip.travel.dto.CreateTravelRequest;
-import com.codeit.torip.travel.dto.TravelResponse;
-import com.codeit.torip.travel.dto.UpdateTravelRequest;
+import com.codeit.torip.trip.dto.request.CreateTripRequest;
+import com.codeit.torip.trip.dto.request.UpdateTripRequest;
+import com.codeit.torip.trip.dto.response.TripResponse;
 import com.codeit.torip.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,8 +22,8 @@ import java.util.Objects;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "travel")
-public class Travel extends BaseUserEntity {
+@Table(name = "trip")
+public class Trip extends BaseUserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,11 +37,11 @@ public class Travel extends BaseUserEntity {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
-    @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TravelMember> members = new ArrayList<>();
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TripMember> members = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "travel", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks = new ArrayList<>();
 
     // 여행지 (2차 개발)
@@ -50,14 +50,14 @@ public class Travel extends BaseUserEntity {
     // 여행 대표 이미지 (2차 개발)
     // private String representativeImage;
 
-    public Travel(CreateTravelRequest request, User owner) {
+    public Trip(CreateTripRequest request, User owner) {
         this.name = Objects.requireNonNull(request.getName());
         this.startDate = Objects.requireNonNull(request.getStartDate());
         this.endDate = Objects.requireNonNull(request.getEndDate());
         this.owner = Objects.requireNonNull(owner);
         this.lastcreatedUser = owner;
         this.lastUpdatedUser = owner;
-        this.members.add(new TravelMember(this, owner, TravelMemberRole.OWNER));
+        this.members.add(new TripMember(this, owner, TripMemberRole.OWNER));
     }
 
     // 오너 확인 함수
@@ -81,7 +81,7 @@ public class Travel extends BaseUserEntity {
         }
     }
 
-    public void update(User updateUser, UpdateTravelRequest request) {
+    public void update(User updateUser, UpdateTripRequest request) {
         checkOwner(updateUser);
         this.lastUpdatedUser = Objects.requireNonNull(updateUser);
         this.name = Objects.requireNonNullElse(request.getName(), this.name);
@@ -95,7 +95,7 @@ public class Travel extends BaseUserEntity {
 
         checkMemberNotExists(newUser);
 
-        this.members.add(new TravelMember(this, newUser, TravelMemberRole.MEMBER));
+        this.members.add(new TripMember(this, newUser, TripMemberRole.MEMBER));
     }
 
 
@@ -108,12 +108,11 @@ public class Travel extends BaseUserEntity {
             throw new IllegalArgumentException("해당 Task는 여행에 이미 속해있습니다 않습니다.");
         }
 
-        // TODO task 쪽에서 travel 정보를 업데이트 해주는 로직이 필요할 수도 있음
         this.tasks.add(newTask);
     }
 
-    public TravelResponse toResponse() {
-        return TravelResponse.builder()
+    public TripResponse toResponse() {
+        return TripResponse.builder()
                 .id(id)
                 .name(name)
                 .startDate(startDate)

@@ -1,9 +1,9 @@
 package com.codeit.torip.task.service;
 
 import com.codeit.torip.auth.util.AuthUtil;
-import com.codeit.torip.task.dto.response.TaskDetailResponse;
-import com.codeit.torip.task.dto.request.TaskRequest;
 import com.codeit.torip.task.dto.request.TaskListRequest;
+import com.codeit.torip.task.dto.request.TaskRequest;
+import com.codeit.torip.task.dto.response.TaskDetailResponse;
 import com.codeit.torip.task.dto.response.TaskProceedStatusResponse;
 import com.codeit.torip.task.entity.Task;
 import com.codeit.torip.task.entity.TaskAssignee;

@@ -3,7 +3,7 @@ package com.codeit.torip.task.entity;
 import com.codeit.torip.common.entity.BaseUserEntity;
 import com.codeit.torip.note.entity.Note;
 import com.codeit.torip.task.dto.request.TaskRequest;
-import com.codeit.torip.travel.entity.Travel;
+import com.codeit.torip.trip.entity.Trip;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -27,7 +27,7 @@ public class Task extends BaseUserEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "travel_id", nullable = false)
-    private Travel travel;
+    private Trip trip;
 
     @Builder.Default
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -44,7 +44,7 @@ public class Task extends BaseUserEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TravelStatus status;
+    private TripStatus status;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -61,16 +61,16 @@ public class Task extends BaseUserEntity {
                 .title(taskRequest.getTaskTitle())
                 .filePath(taskRequest.getFilePath())
                 .taskDDay(taskRequest.getTaskDDay())
-                .status(taskRequest.getTravelStatus())
+                .status(taskRequest.getTripStatus())
                 .scope(taskRequest.getScope())
-                .travel(Travel.builder().id(taskRequest.getTravelId()).build())
+                .trip(Trip.builder().id(taskRequest.getTravelId()).build())
                 .build();
     }
 
     public void modifyTo(TaskRequest taskRequest) {
         this.title = taskRequest.getTaskTitle();
         this.filePath = taskRequest.getFilePath();
-        this.status = taskRequest.getTravelStatus();
+        this.status = taskRequest.getTripStatus();
         this.taskDDay = taskRequest.getTaskDDay();
         this.scope = taskRequest.getScope();
         this.completionDate = taskRequest.getCompletionDate();
