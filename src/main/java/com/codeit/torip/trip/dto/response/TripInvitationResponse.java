@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 public class TripInvitationResponse {
-    private String travelName;
+    private String tripName;
     private UserResponse invitee;
     private TripInvitationStatus status;
     private LocalDateTime createdAt;

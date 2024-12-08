@@ -21,7 +21,7 @@ public class TaskRequest {
 
     @NotBlank
     @Schema(description = "여행 고유키", example = "1", nullable = false)
-    private long travelId;
+    private long tripId;
     @Schema(description = "할일 고유키", example = "1", nullable = false)
     private long taskId;
     @NotBlank
@@ -30,7 +30,7 @@ public class TaskRequest {
     @Schema(description = "할일 파일 경로", example = "/home/image/sample.jpg")
     private String filePath;
     @NotBlank
-    @Schema(description = "할일 여행 단계", example = "BEFORE_TRAVEL / DURING_TRAVEL / AFTER_TRAVEL")
+    @Schema(description = "할일 여행 단계", example = "BEFORE_TRIP / DURING_TRIP / AFTER_TRIP")
     private TripStatus tripStatus;
     @Schema(description = "할일 D-Day", example = "2024-10-11 15:21:00")
     private LocalDateTime taskDDay;

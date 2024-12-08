@@ -22,14 +22,14 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository {
     private final JPAQueryFactory factory;
 
     @Override
-    public List<NoteDetailResponse> selectNoteDetailList(String key, long travelOrTaskId, long seq) {
+    public List<NoteDetailResponse> selectNoteDetailList(String key, long tripOrTaskId, long seq) {
         var assignee = new QUser("assignee");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
         // 쿼리 조건 생성
         BooleanExpression condition = getCondition(assignee);
-        condition = key.equals("TRAVEL") ? condition.and(trip.id.eq(travelOrTaskId))
-                : condition.and(task.id.eq(travelOrTaskId));
+        condition = key.equals("TRIP") ? condition.and(trip.id.eq(tripOrTaskId))
+                : condition.and(task.id.eq(tripOrTaskId));
         if (seq != 0) condition = condition.and(note.id.lt(seq));
         return factory.select(
                         Projections.constructor(NoteDetailResponse.class,

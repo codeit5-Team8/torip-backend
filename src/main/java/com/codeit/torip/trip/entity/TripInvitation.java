@@ -12,14 +12,14 @@ import java.util.Objects;
 @NoArgsConstructor
 @Getter
 @Entity
-@Table(name = "travel_invitation")
+@Table(name = "trip_invitation")
 public class TripInvitation extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "travel_id", nullable = false)
+    @JoinColumn(name = "trip_id", nullable = false)
     private Trip trip;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -38,7 +38,7 @@ public class TripInvitation extends BaseEntity {
 
     public TripInvitationResponse toResponse() {
         return TripInvitationResponse.builder()
-                .travelName(trip.getName())
+                .tripName(trip.getName())
                 .invitee(invitee.toResponse())
                 .createdAt(createdAt)
                 .updatedAt(updatedAt)

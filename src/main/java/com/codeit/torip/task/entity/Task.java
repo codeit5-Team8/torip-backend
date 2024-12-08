@@ -15,6 +15,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = false)
 @Builder()
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,7 +27,7 @@ public class Task extends BaseUserEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "travel_id", nullable = false)
+    @JoinColumn(name = "trip_id", nullable = false)
     private Trip trip;
 
     @Builder.Default
@@ -55,15 +56,15 @@ public class Task extends BaseUserEntity {
 
     private LocalDateTime completionDate;
 
-    public static Task from(TaskRequest taskRequest) {
+    public static Task from(TaskRequest taskRequest, Trip trip) {
         return Task.builder()
+                .trip(trip)
                 .taskDDay(taskRequest.getTaskDDay())
                 .title(taskRequest.getTaskTitle())
                 .filePath(taskRequest.getFilePath())
                 .taskDDay(taskRequest.getTaskDDay())
                 .status(taskRequest.getTripStatus())
                 .scope(taskRequest.getScope())
-                .trip(Trip.builder().id(taskRequest.getTravelId()).build())
                 .build();
     }
 

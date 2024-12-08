@@ -11,14 +11,14 @@ import java.util.Objects;
 @NoArgsConstructor
 @Entity
 @Getter
-@Table(name = "travel_member")
+@Table(name = "trip_member")
 public class TripMember extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "travel_id", nullable = false)
+    @JoinColumn(name = "trip_id", nullable = false)
     private Trip trip;
 
     @ManyToOne(fetch = FetchType.LAZY)

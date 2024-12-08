@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface TripInvitationRepository extends JpaRepository<TripInvitation, Long> {
 
-    List<TripInvitation> findAllByTripIdAndStatusOrderByCreatedAt(Long travelId, TripInvitationStatus status);
+    List<TripInvitation> findAllByTripIdAndStatusOrderByCreatedAt(Long tripId, TripInvitationStatus status);
 
-    void deleteAllByTripId(Long travelId);
+    void deleteAllByTripId(Long tripId);
 }
