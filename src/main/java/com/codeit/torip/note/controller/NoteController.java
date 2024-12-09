@@ -1,8 +1,8 @@
 package com.codeit.torip.note.controller;
 
 import com.codeit.torip.common.dto.CommonResponse;
-import com.codeit.torip.note.dto.response.NoteDetailResponse;
 import com.codeit.torip.note.dto.request.NoteRequest;
+import com.codeit.torip.note.dto.response.NoteDetailResponse;
 import com.codeit.torip.note.service.NoteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,7 +39,7 @@ public class NoteController {
                             name = "key",
                             description = "여행/할일 필터링 구분",
                             required = true,
-                            example = "TRAVEL / TASK"
+                            example = "TRIP / TASK"
                     ),
                     @Parameter(
                             name = "id",
