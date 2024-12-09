@@ -1,12 +1,8 @@
 package com.codeit.torip.task.repository.assignee;
 
-import com.codeit.torip.auth.util.AuthUtil;
 import com.codeit.torip.task.dto.TaskAssigneeDto;
-import com.codeit.torip.task.dto.request.TaskListRequest;
 import com.codeit.torip.task.dto.TaskModifyAssigneeDto;
-import com.codeit.torip.user.entity.QUser;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -15,7 +11,6 @@ import java.util.List;
 import static com.codeit.torip.common.contant.ToripConstants.Task.PAGE_SIZE;
 import static com.codeit.torip.task.entity.QTask.task;
 import static com.codeit.torip.task.entity.QTaskAssignee.taskAssignee;
-import static com.codeit.torip.travel.entity.QTravel.travel;
 import static com.codeit.torip.user.entity.QUser.user;
 
 @RequiredArgsConstructor

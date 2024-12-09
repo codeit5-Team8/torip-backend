@@ -1,4 +1,4 @@
-package com.codeit.torip.travel.dto;
+package com.codeit.torip.trip.dto.response;
 
 import com.codeit.torip.user.dto.UserResponse;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @Getter
-public class TravelResponse {
+public class TripResponse {
     private Long id;
     private String name;
     private LocalDate startDate;
