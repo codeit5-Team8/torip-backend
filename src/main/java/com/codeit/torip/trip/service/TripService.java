@@ -41,6 +41,7 @@ public class TripService {
         return trip.toResponse();
     }
 
+    @Transactional(readOnly = true)
     public TripResponse getTrip(Long id) {
         User userInfo = AuthUtil.getUserInfo();
 
@@ -61,6 +62,7 @@ public class TripService {
         tripRepository.delete(trip);
     }
 
+    @Transactional(readOnly = true)
     public List<UserResponse> getTripMembers(Long id) {
         User userInfo = AuthUtil.getUserInfo();
 
@@ -73,6 +75,7 @@ public class TripService {
 
     }
 
+    @Transactional(readOnly = true)
     public PageCollection<TripResponse> getTripList(Long lastSeenId) {
         User userInfo = AuthUtil.getUserInfo();
 
@@ -120,6 +123,7 @@ public class TripService {
         return tripInvitation.toResponse();
     }
 
+    @Transactional(readOnly = true)
     public List<TripInvitationResponse> getTripInvitations(Long id) {
         User userInfo = AuthUtil.getUserInfo();
 
