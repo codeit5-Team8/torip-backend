@@ -7,10 +7,10 @@ import java.time.LocalDate;
 
 @Getter
 public class UpdateTripRequest {
-    @Schema(description = "여행 이름", example = "여행1", nullable = false)
+    @Schema(description = "여행 이름", example = "여행1", nullable = true)
     String name;
-    @Schema(description = "여행 시작 날짜", example = "2024-02-12", nullable = false)
+    @Schema(description = "여행 시작 날짜", example = "2024-02-12", nullable = true)
     LocalDate startDate;
-    @Schema(description = "여행 종료 날짜", example = "2024-02-20", nullable = false)
+    @Schema(description = "여행 종료 날짜", example = "2024-02-20", nullable = true)
     LocalDate endDate;
 }

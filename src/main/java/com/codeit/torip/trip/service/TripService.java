@@ -14,7 +14,6 @@ import com.codeit.torip.trip.repository.TripInvitationRepository;
 import com.codeit.torip.trip.repository.TripRepository;
 import com.codeit.torip.user.dto.UserResponse;
 import com.codeit.torip.user.entity.User;
-import com.codeit.torip.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -28,9 +27,7 @@ import java.util.List;
 public class TripService {
 
     private final TripRepository tripRepository;
-    private final UserRepository userRepository;
     private final TripInvitationRepository tripInvitationRepository;
-    private final int PAGE_SIZE = 3;
 
     public TripResponse createTrip(CreateTripRequest createTripRequest) {
         User userInfo = AuthUtil.getUserInfo();
@@ -79,6 +76,7 @@ public class TripService {
     public PageCollection<TripResponse> getTripList(Long lastSeenId) {
         User userInfo = AuthUtil.getUserInfo();
 
+        int PAGE_SIZE = 3;
         List<Trip> trips = tripRepository.findAllByMembersUserIdAndIdGreaterThanOrderByIdAsc(userInfo.getId(), lastSeenId, PageRequest.of(0, PAGE_SIZE));
 
 
