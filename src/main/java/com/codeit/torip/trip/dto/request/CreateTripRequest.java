@@ -15,9 +15,9 @@ public class CreateTripRequest {
     @Size(min = 1, max = 30)
     String name;
     @NotNull
-    @Schema(description = "여행 시작 날짜", example = "test@test.com", nullable = false)
+    @Schema(description = "여행 시작 날짜", example = "2024-02-12", nullable = false)
     LocalDate startDate;
     @NotNull
-    @Schema(description = "여행 종료 날짜", example = "test@test.com", nullable = false)
+    @Schema(description = "여행 종료 날짜", example = "2024-02-20", nullable = false)
     LocalDate endDate;
 }

@@ -5,10 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
 @AllArgsConstructor
+@Builder
 @Getter
-public class TokenResponse {
+public class LoginResponse {
+    @Schema(description = "사용자의 id", example = "1")
+    private Long id;
+    @Schema(description = "사용자의 유저네임", example = "test")
+    private String username;
+    @Schema(description = "사용자의 이메일", example = "test@test.com")
+    private String email;
     @Schema(description = "accessToken", example = "eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklkIjoic3RyaW5nIiwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTczMjgwMzI0OSwiZXhwIjoxNzMyODAzODQ5fQ.F3hjvzGHgoahAAUUe3M44UfU8eceSHHdl4LFkH8GBjQ")
     private String accessToken;
     @Schema(description = "refreshToken", example = "eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklkIjoic3RyaW5nIiwidHlwZSI6ImFjY2VzcyIsImlhdCI6MTczMjgwMzI0OSwiZXhwIjoxNzMyODAzODQ5fQ.F3hjvzGHgoahAAUUe3M44UfU8eceSHHdl4LFkH8GBjQ")
