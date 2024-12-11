@@ -1,5 +1,6 @@
 package com.codeit.torip.note.service;
 
+import com.codeit.torip.note.controller.NoteListRequest;
 import com.codeit.torip.note.dto.request.NoteRequest;
 import com.codeit.torip.note.dto.response.NoteDetailResponse;
 import com.codeit.torip.note.entity.Note;
@@ -32,9 +33,9 @@ public class NoteService {
         return result.getId();
     }
 
-    public List<NoteDetailResponse> getNoteList(String key, long tripOrTaskId, long seq) {
+    public List<NoteDetailResponse> getNoteList(NoteListRequest noteListRequest) {
         // 노트 목록 조회
-        return noteRepository.selectNoteDetailList(key, tripOrTaskId, seq);
+        return noteRepository.selectNoteDetailList(noteListRequest);
     }
 
     public NoteDetailResponse getNoteDetail(long noteId) {

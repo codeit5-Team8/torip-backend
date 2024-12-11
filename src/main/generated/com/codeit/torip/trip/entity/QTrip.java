@@ -5,22 +5,23 @@ import static com.querydsl.core.types.PathMetadataFactory.*;
 import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
-
 import javax.annotation.processing.Generated;
-
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QTravel is a Querydsl query type for Travel
+ * QTrip is a Querydsl query type for Trip
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QTravel extends EntityPathBase<Travel> {
+public class QTrip extends EntityPathBase<Trip> {
 
-    public static final QTravel travel = new QTravel("travel");
-    private static final long serialVersionUID = 1515629994L;
+    private static final long serialVersionUID = 1253766528L;
+
     private static final PathInits INITS = PathInits.DIRECT2;
+
+    public static final QTrip trip = new QTrip("trip");
+
     public final com.codeit.torip.common.entity.QBaseUserEntity _super;
 
     //inherited
@@ -36,7 +37,7 @@ public class QTravel extends EntityPathBase<Travel> {
     // inherited
     public final com.codeit.torip.user.entity.QUser lastUpdatedUser;
 
-    public final ListPath<TravelMember, QTravelMember> members = this.<TravelMember, QTravelMember>createList("members", TravelMember.class, QTravelMember.class, PathInits.DIRECT2);
+    public final ListPath<TripMember, QTripMember> members = this.<TripMember, QTripMember>createList("members", TripMember.class, QTripMember.class, PathInits.DIRECT2);
 
     public final StringPath name = createString("name");
 
@@ -49,23 +50,23 @@ public class QTravel extends EntityPathBase<Travel> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt;
 
-    public QTravel(String variable) {
-        this(Travel.class, forVariable(variable), INITS);
+    public QTrip(String variable) {
+        this(Trip.class, forVariable(variable), INITS);
     }
 
-    public QTravel(Path<? extends Travel> path) {
+    public QTrip(Path<? extends Trip> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QTravel(PathMetadata metadata) {
+    public QTrip(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QTravel(PathMetadata metadata, PathInits inits) {
-        this(Travel.class, metadata, inits);
+    public QTrip(PathMetadata metadata, PathInits inits) {
+        this(Trip.class, metadata, inits);
     }
 
-    public QTravel(Class<? extends Travel> type, PathMetadata metadata, PathInits inits) {
+    public QTrip(Class<? extends Trip> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this._super = new com.codeit.torip.common.entity.QBaseUserEntity(type, metadata, inits);
         this.createdAt = _super.createdAt;

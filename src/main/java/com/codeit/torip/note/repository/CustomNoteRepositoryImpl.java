@@ -1,6 +1,7 @@
 package com.codeit.torip.note.repository;
 
 import com.codeit.torip.auth.util.AuthUtil;
+import com.codeit.torip.note.controller.NoteListRequest;
 import com.codeit.torip.note.dto.response.NoteDetailResponse;
 import com.codeit.torip.user.entity.QUser;
 import com.querydsl.core.types.Projections;
@@ -22,10 +23,13 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository {
     private final JPAQueryFactory factory;
 
     @Override
-    public List<NoteDetailResponse> selectNoteDetailList(String key, long tripOrTaskId, long seq) {
+    public List<NoteDetailResponse> selectNoteDetailList(NoteListRequest noteListRequest) {
         var assignee = new QUser("assignee");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
+        var key = noteListRequest.getKey();
+        var tripOrTaskId = noteListRequest.getId();
+        var seq = noteListRequest.getSeq();
         // 쿼리 조건 생성
         BooleanExpression condition = getCondition(assignee);
         condition = key.equals("TRIP") ? condition.and(trip.id.eq(tripOrTaskId))

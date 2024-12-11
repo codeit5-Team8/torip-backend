@@ -19,7 +19,6 @@ spring:
         show_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
 
-
 jwt:
   expiredAccessTokenMs: 600000
   expiredRefreshTokenMs: 86400000
@@ -32,3 +31,13 @@ jasypt:
 
 server:
   shutdown: graceful
+
+cloud:
+  aws:
+    credentials:
+      access-key: ENC(QtldJ/h2U1UGb0Zfmf2RkggGD08nRsPcQxkSF2+xyhE=)
+      secret-key: ENC(ZtjaK/1Tb791Ju8ay/v5NSMSH5fmupELDujmeestR+BGOSwRLhB0sVtfRMmRmknXwF/zrgmvP58=)
+    region:
+      static: ENC(x6/uuqcHpKqcLwYSWMfOZtRPHXBGSejO)
+    s3:
+      bucket: ENC(5RyziorhkYWj9Zxqxt3Ykg==)

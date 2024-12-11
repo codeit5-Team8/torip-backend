@@ -56,9 +56,8 @@ public class Task extends BaseUserEntity {
 
     private LocalDateTime completionDate;
 
-    public static Task from(TaskRequest taskRequest, Trip trip) {
+    public static Task from(TaskRequest taskRequest) {
         return Task.builder()
-                .trip(trip)
                 .taskDDay(taskRequest.getTaskDDay())
                 .title(taskRequest.getTaskTitle())
                 .filePath(taskRequest.getFilePath())

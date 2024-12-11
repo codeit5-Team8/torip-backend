@@ -1,6 +1,7 @@
 package com.codeit.torip.task.service;
 
 import com.codeit.torip.auth.util.AuthUtil;
+import com.codeit.torip.common.exception.AlertException;
 import com.codeit.torip.task.dto.request.TaskListRequest;
 import com.codeit.torip.task.dto.request.TaskRequest;
 import com.codeit.torip.task.dto.response.TaskDetailResponse;
@@ -33,17 +34,17 @@ public class TaskService {
 
     @Transactional
     public Long registerTask(TaskRequest taskRequest) {
-        Trip trip = tripRepository.findTripById(taskRequest.getTripId()).orElseThrow(() -> new IllegalArgumentException("여행이 존재하지 않습니다."));
-
+        Trip trip = tripRepository.findTripById(taskRequest.getTripId()).orElseThrow(() -> new AlertException("여행이 존재하지 않습니다."));
+        // TODO 내 여행인지에 대한 유효성 검증 추가
         var email = AuthUtil.getEmail();
-        var taskEntity = Task.from(taskRequest, trip);
-
+        var taskEntity = Task.from(taskRequest);
+        taskEntity.setTrip(trip);
         trip.addTask(taskEntity);
 
         var assignees = taskEntity.getAssignees();
         // 담당자 추가
         for (var assignee : taskRequest.getAssignees()) {
-            var userEntity = userRepository.findUserByEmail(assignee).orElseThrow(() -> new IllegalArgumentException("담당자가 존재하지 않습니다."));
+            var userEntity = userRepository.findUserByEmail(assignee).orElseThrow(() -> new AlertException("담당자가 존재하지 않습니다."));
             var taskAssigneeEntity = TaskAssignee.builder().task(taskEntity).assignee(userEntity).build();
             assignees.add(taskAssigneeEntity);
         }
@@ -104,14 +105,13 @@ public class TaskService {
     }
 
     public TaskProceedStatusResponse getProgressStatus() {
-        // TODO 나중에 효율적인 쿼리로 리펙토링 하자
         var taskDetailList = taskRepository.selectAllTaskDetailList();
         // 통계 산정
         var proceedStatus = new TaskProceedStatusResponse();
-        for (var taskDetail : taskDetailList) {
-            var scope = taskDetail.getTaskScope();
-            if (scope.equals(PUBLIC)) proceedStatus.setCommonTask(taskDetail.getTaskCompletionDate());
-            else proceedStatus.setPersonalTask(taskDetail.getTaskCompletionDate());
+        for (var taskProceedStatus : taskDetailList) {
+            var scope = taskProceedStatus.getTaskScope();
+            if (scope.equals(PUBLIC)) proceedStatus.setCommonTask(taskProceedStatus.getTaskCompletionDate());
+            else proceedStatus.setPersonalTask(taskProceedStatus.getTaskCompletionDate());
         }
         return proceedStatus;
     }
