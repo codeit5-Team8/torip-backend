@@ -1,8 +1,9 @@
 package com.codeit.torip.auth.controller;
 
-import com.codeit.torip.auth.dto.response.EmailCheckResponse;
 import com.codeit.torip.auth.dto.request.LoginRequest;
 import com.codeit.torip.auth.dto.request.RegisterRequest;
+import com.codeit.torip.auth.dto.response.EmailCheckResponse;
+import com.codeit.torip.auth.dto.response.LoginResponse;
 import com.codeit.torip.auth.dto.response.TokenResponse;
 import com.codeit.torip.auth.service.AuthService;
 import com.codeit.torip.common.dto.CommonResponse;
@@ -27,8 +28,8 @@ public class AuthController {
                     @ApiResponse(responseCode = "400", description = "로그인 실패")
             }
     )
-    public CommonResponse<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
-        return new CommonResponse<TokenResponse>().success(authService.login(loginRequest));
+    public CommonResponse<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+        return new CommonResponse<LoginResponse>().success(authService.login(loginRequest));
     }
 
     @PostMapping("/register")
@@ -38,8 +39,8 @@ public class AuthController {
                     @ApiResponse(responseCode = "400", description = "회원가입 실패")
             }
     )
-    public CommonResponse<TokenResponse> register(@RequestBody RegisterRequest registerRequest) {
-        return new CommonResponse<TokenResponse>().success(authService.register(registerRequest));
+    public CommonResponse<LoginResponse> register(@RequestBody RegisterRequest registerRequest) {
+        return new CommonResponse<LoginResponse>().success(authService.register(registerRequest));
     }
 
     @PostMapping("/refresh")
