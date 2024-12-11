@@ -38,6 +38,7 @@ public class Trip extends BaseUserEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
+    
     // 여행지 (2차 개발)
     // private String destination;
 
@@ -52,6 +53,29 @@ public class Trip extends BaseUserEntity {
         this.lastcreatedUser = owner;
         this.lastUpdatedUser = owner;
         this.members.add(new TripMember(this, owner, TripMemberRole.OWNER));
+
+        checkStartDateBeforeEndDate(this.startDate, this.endDate);
+    }
+
+    public void update(User updateUser, UpdateTripRequest request) {
+        checkOwner(updateUser);
+        this.lastUpdatedUser = Objects.requireNonNull(updateUser);
+        this.name = Objects.requireNonNullElse(request.getName(), this.name);
+        this.startDate = Objects.requireNonNullElse(request.getStartDate(), this.startDate);
+        this.endDate = Objects.requireNonNullElse(request.getEndDate(), this.endDate);
+        checkStartDateBeforeEndDate(this.startDate, this.endDate);
+    }
+
+    // Task 추가 함수
+    public void addTask(Task newTask) {
+
+        Objects.requireNonNull(newTask);
+
+        if (tasks.stream().anyMatch(task -> task.equals(newTask))) {
+            throw new IllegalArgumentException("해당 Task는 여행에 이미 속해있습니다 않습니다.");
+        }
+
+        this.tasks.add(newTask);
     }
 
     // 오너 확인 함수
@@ -59,6 +83,12 @@ public class Trip extends BaseUserEntity {
         if (!owner.getId().equals(user.getId())) {
             throw new IllegalArgumentException("여행 오너가 아닙니다.");
         }
+    }
+
+    public void addMember(User newUser) {
+        Objects.requireNonNull(newUser);
+        checkMemberNotExists(newUser);
+        this.members.add(new TripMember(this, newUser, TripMemberRole.MEMBER));
     }
 
     // 멤버인지 확인 함수
@@ -75,35 +105,13 @@ public class Trip extends BaseUserEntity {
         }
     }
 
-    public void update(User updateUser, UpdateTripRequest request) {
-        checkOwner(updateUser);
-        this.lastUpdatedUser = Objects.requireNonNull(updateUser);
-        this.name = Objects.requireNonNullElse(request.getName(), this.name);
-        this.startDate = Objects.requireNonNullElse(request.getStartDate(), this.startDate);
-        this.endDate = Objects.requireNonNullElse(request.getEndDate(), this.endDate);
-    }
 
-    public void addMember(User newUser) {
-
-        Objects.requireNonNull(newUser);
-
-        checkMemberNotExists(newUser);
-
-        this.members.add(new TripMember(this, newUser, TripMemberRole.MEMBER));
-    }
-
-
-    // Task 추가 함수
-    public void addTask(Task newTask) {
-
-        Objects.requireNonNull(newTask);
-
-        if (tasks.stream().anyMatch(task -> task.equals(newTask))) {
-            throw new IllegalArgumentException("해당 Task는 여행에 이미 속해있습니다 않습니다.");
+    private void checkStartDateBeforeEndDate(LocalDate startDate, LocalDate endDate) {
+        if (startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException("여행 시작 날짜가 여행 종료 날짜보다 늦습니다.");
         }
-
-        this.tasks.add(newTask);
     }
+
 
     public TripResponse toResponse() {
         return TripResponse.builder()
