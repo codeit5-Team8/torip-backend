@@ -8,6 +8,8 @@ public class ToripConstants {
 
     public static class Task {
         public static final Integer PAGE_SIZE = 30;
+        public static final Integer TASK_LIMIT_PER_TRIP_STATUS = 60;
+        public static final Integer TASK_LIMIT = 180;
     }
 
     public static class HttpConstant {

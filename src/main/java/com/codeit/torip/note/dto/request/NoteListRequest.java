@@ -1,4 +1,4 @@
-package com.codeit.torip.note.controller;
+package com.codeit.torip.note.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;

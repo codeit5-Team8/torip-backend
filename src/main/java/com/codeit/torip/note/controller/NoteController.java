@@ -1,6 +1,7 @@
 package com.codeit.torip.note.controller;
 
 import com.codeit.torip.common.dto.CommonResponse;
+import com.codeit.torip.note.dto.request.NoteListRequest;
 import com.codeit.torip.note.dto.request.NoteRequest;
 import com.codeit.torip.note.dto.response.NoteDetailResponse;
 import com.codeit.torip.note.service.NoteService;

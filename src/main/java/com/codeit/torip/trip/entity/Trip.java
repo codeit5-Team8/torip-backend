@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.codeit.torip.common.contant.ToripConstants.Task.TASK_LIMIT_PER_TRIP_STATUS;
+
 @Getter
 @Entity
 @NoArgsConstructor
@@ -38,7 +40,7 @@ public class Trip extends BaseUserEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
-    
+
     // 여행지 (2차 개발)
     // private String destination;
 
@@ -70,7 +72,10 @@ public class Trip extends BaseUserEntity {
     public void addTask(Task newTask) {
 
         Objects.requireNonNull(newTask);
-
+        var status = newTask.getStatus().name();
+        if (tasks.stream().map((task) -> task.getStatus().name().equals(status)).count() > TASK_LIMIT_PER_TRIP_STATUS) {
+            throw new IllegalArgumentException("여행 상태 별 할일은 최대 60개까지 생성하실 수 있습니다.");
+        }
         if (tasks.stream().anyMatch(task -> task.equals(newTask))) {
             throw new IllegalArgumentException("해당 Task는 여행에 이미 속해있습니다 않습니다.");
         }

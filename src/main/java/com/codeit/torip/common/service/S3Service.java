@@ -49,11 +49,11 @@ public class S3Service {
                             .signatureDuration(Duration.ofMinutes(1))
             );
             return S3UrlResponse.builder()
-                    .signedUrl(presignRequest.url().toString())
+                    .signedUrl(presignRequest.url().toExternalForm())
                     .filePath(uniqueFileName)
                     .build();
         } catch (Exception e) {
-            throw new RuntimeException("Presigned PUT URL 생성에 실패하였습니다", e);
+            throw new RuntimeException("Signed PUT URL 생성에 실패하였습니다.", e);
         }
     }
 
@@ -69,11 +69,11 @@ public class S3Service {
                             .signatureDuration(Duration.ofMinutes(10))
             );
             return S3UrlResponse.builder()
-                    .signedUrl(presignedGetObjectRequest.url().toString())
+                    .signedUrl(presignedGetObjectRequest.url().toExternalForm())
                     .filePath(filePath)
                     .build();
         } catch (Exception e) {
-            throw new RuntimeException("Presigned GET URL 생성에 실패하였습니다", e);
+            throw new RuntimeException("Signed GET URL 생성에 실패하였습니다.", e);
         }
     }
 

@@ -1,7 +1,7 @@
 package com.codeit.torip.note.repository;
 
 import com.codeit.torip.auth.util.AuthUtil;
-import com.codeit.torip.note.controller.NoteListRequest;
+import com.codeit.torip.note.dto.request.NoteListRequest;
 import com.codeit.torip.note.dto.response.NoteDetailResponse;
 import com.codeit.torip.user.entity.QUser;
 import com.querydsl.core.types.Projections;

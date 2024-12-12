@@ -35,8 +35,8 @@ public class TaskService {
     @Transactional
     public Long registerTask(TaskRequest taskRequest) {
         Trip trip = tripRepository.findTripById(taskRequest.getTripId()).orElseThrow(() -> new AlertException("여행이 존재하지 않습니다."));
-        // TODO 내 여행인지에 대한 유효성 검증 추가
-        var email = AuthUtil.getEmail();
+        trip.checkMemberExists(AuthUtil.getUserInfo());
+
         var taskEntity = Task.from(taskRequest);
         taskEntity.setTrip(trip);
         trip.addTask(taskEntity);

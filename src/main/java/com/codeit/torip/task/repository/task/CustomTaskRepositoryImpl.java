@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import static com.codeit.torip.common.contant.ToripConstants.Task.PAGE_SIZE;
+import static com.codeit.torip.common.contant.ToripConstants.Task.TASK_LIMIT;
 import static com.codeit.torip.task.entity.QTask.task;
 import static com.codeit.torip.task.entity.QTaskAssignee.taskAssignee;
 import static com.codeit.torip.trip.entity.QTrip.trip;
@@ -40,6 +41,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
         if (scope != null) {
             condition = condition.and(task.status.eq(status));
         }
+        var pageSize = taskListRequest.getAll() ? TASK_LIMIT : PAGE_SIZE;
         // 할일 정보 불러오기
         return factory.select(
                         Projections.constructor(
@@ -56,7 +58,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
                 .join(task.lastUpdatedUser, modifiedBy)
                 .where(condition)
                 .orderBy(task.id.desc())
-                .limit(PAGE_SIZE)
+                .limit(pageSize)
                 .fetch();
     }
 

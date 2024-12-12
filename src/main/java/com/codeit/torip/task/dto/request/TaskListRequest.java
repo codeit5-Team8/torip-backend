@@ -25,5 +25,8 @@ public class TaskListRequest {
     private TripStatus tripStatus;
     @Schema(description = "할일 공유 범위", example = "NULL / PUBLIC / PRIVATE", nullable = true)
     private TaskScope scope;
+    @NotNull
+    @Schema(description = "전체 조회 FLAG", example = "ture / false", defaultValue = "false")
+    private Boolean all = false;
 
 }
