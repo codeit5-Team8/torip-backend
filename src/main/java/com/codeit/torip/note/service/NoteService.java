@@ -1,6 +1,8 @@
 package com.codeit.torip.note.service;
 
-import com.codeit.torip.note.dto.request.NoteRequest;
+import com.codeit.torip.note.dto.request.NoteListRequest;
+import com.codeit.torip.note.dto.request.NoteModRequest;
+import com.codeit.torip.note.dto.request.NoteRegRequest;
 import com.codeit.torip.note.dto.response.NoteDetailResponse;
 import com.codeit.torip.note.entity.Note;
 import com.codeit.torip.note.repository.NoteRepository;
@@ -21,20 +23,20 @@ public class NoteService {
     private final TaskRepository taskRepository;
 
     @Transactional
-    public Long registerNode(NoteRequest noteRequest) {
+    public Long registerNode(NoteRegRequest noteRegRequest) {
         // 할일 조회
-        var taskEntity = taskRepository.findById(noteRequest.getTaskId())
+        var taskEntity = taskRepository.findById(noteRegRequest.getTaskId())
                 .orElseThrow(() -> new IllegalArgumentException("할일이 존재하지 않습니다"));
-        var noteEntity = Note.from(noteRequest);
+        var noteEntity = Note.from(noteRegRequest);
         noteEntity.setTask(taskEntity);
         // 노트 등록
         var result = noteRepository.save(noteEntity);
         return result.getId();
     }
 
-    public List<NoteDetailResponse> getNoteList(String key, long tripOrTaskId, long seq) {
+    public List<NoteDetailResponse> getNoteList(NoteListRequest noteListRequest) {
         // 노트 목록 조회
-        return noteRepository.selectNoteDetailList(key, tripOrTaskId, seq);
+        return noteRepository.selectNoteDetailList(noteListRequest);
     }
 
     public NoteDetailResponse getNoteDetail(long noteId) {
@@ -43,12 +45,12 @@ public class NoteService {
     }
 
     @Transactional
-    public Long modifyNote(NoteRequest noteRequest) {
+    public Long modifyNote(NoteModRequest noteModRequest) {
         // 노트 조회
-        var noteEntity = noteRepository.findById(noteRequest.getNoteId())
+        var noteEntity = noteRepository.findById(noteModRequest.getNoteId())
                 .orElseThrow(() -> new IllegalArgumentException("노트 정보가 존재하지 않습니다"));
         // 노트 수정
-        noteEntity.modifyTo(noteRequest);
+        noteEntity.modifyTo(noteModRequest);
         var result = noteRepository.save(noteEntity);
         return result.getId();
     }

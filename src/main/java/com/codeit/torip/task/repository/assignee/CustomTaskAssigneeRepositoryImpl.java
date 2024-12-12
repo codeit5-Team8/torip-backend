@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
-import static com.codeit.torip.common.contant.ToripConstants.Task.PAGE_SIZE;
 import static com.codeit.torip.task.entity.QTask.task;
 import static com.codeit.torip.task.entity.QTaskAssignee.taskAssignee;
 import static com.codeit.torip.user.entity.QUser.user;
@@ -32,7 +31,6 @@ public class CustomTaskAssigneeRepositoryImpl implements CustomTaskAssigneeRepos
                 .join(taskAssignee.assignee, user)
                 .where(task.id.in(taskIdList))
                 .orderBy(task.id.desc())
-                .limit(PAGE_SIZE)
                 .fetch();
     }
 

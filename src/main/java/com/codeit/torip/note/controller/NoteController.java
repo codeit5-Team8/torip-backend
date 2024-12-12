@@ -1,11 +1,12 @@
 package com.codeit.torip.note.controller;
 
 import com.codeit.torip.common.dto.CommonResponse;
-import com.codeit.torip.note.dto.request.NoteRequest;
+import com.codeit.torip.note.dto.request.NoteListRequest;
+import com.codeit.torip.note.dto.request.NoteModRequest;
+import com.codeit.torip.note.dto.request.NoteRegRequest;
 import com.codeit.torip.note.dto.response.NoteDetailResponse;
 import com.codeit.torip.note.service.NoteService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -27,41 +28,19 @@ public class NoteController {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<Long> registerNote(@RequestBody NoteRequest noteRequest) {
-        var noteId = noteService.registerNode(noteRequest);
+    public CommonResponse<Long> registerNote(@RequestBody NoteRegRequest noteRegRequest) {
+        var noteId = noteService.registerNode(noteRegRequest);
         return new CommonResponse<Long>().success(noteId);
     }
 
     @GetMapping
     @Operation(summary = "노트 목록 조회 API", description = "할일에 대한 노트 목록을 조회합니다",
-            parameters = {
-                    @Parameter(
-                            name = "key",
-                            description = "여행/할일 필터링 구분",
-                            required = true,
-                            example = "TRIP / TASK"
-                    ),
-                    @Parameter(
-                            name = "id",
-                            description = "여행/할일 고유키",
-                            required = true,
-                            example = "1"
-                    ),
-                    @Parameter(
-                            name = "seq",
-                            description = "현재 페이지에서 가장 작은 노트 고유키 [ 최초 조회시 0으로 요청 ]",
-                            required = true,
-                            example = "0"
-                    )
-            },
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<List<NoteDetailResponse>> getNoteList(
-            @RequestParam("key") String key, @RequestParam("id") long id, @RequestParam("seq") long seq
-    ) {
-        var noteDetailDtoList = noteService.getNoteList(key, id, seq);
+    public CommonResponse<List<NoteDetailResponse>> getNoteList(@ModelAttribute NoteListRequest noteListRequest) {
+        var noteDetailDtoList = noteService.getNoteList(noteListRequest);
         return new CommonResponse<List<NoteDetailResponse>>().success(noteDetailDtoList);
     }
 
@@ -82,8 +61,8 @@ public class NoteController {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<Long> modifyNote(@RequestBody NoteRequest noteRequest) {
-        var noteId = noteService.modifyNote(noteRequest);
+    public CommonResponse<Long> modifyNote(@RequestBody NoteModRequest noteModRequest) {
+        var noteId = noteService.modifyNote(noteModRequest);
         return new CommonResponse<Long>().success(noteId);
     }
 
