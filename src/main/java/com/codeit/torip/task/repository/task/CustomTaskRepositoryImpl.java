@@ -1,6 +1,7 @@
 package com.codeit.torip.task.repository.task;
 
 import com.codeit.torip.auth.util.AuthUtil;
+import com.codeit.torip.task.dto.TaskProceedStatusDto;
 import com.codeit.torip.task.dto.request.TaskListRequest;
 import com.codeit.torip.task.dto.response.TaskDetailResponse;
 import com.codeit.torip.user.entity.QUser;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import static com.codeit.torip.common.contant.ToripConstants.Task.PAGE_SIZE;
+import static com.codeit.torip.common.contant.ToripConstants.Task.TASK_LIMIT;
 import static com.codeit.torip.task.entity.QTask.task;
 import static com.codeit.torip.task.entity.QTaskAssignee.taskAssignee;
 import static com.codeit.torip.trip.entity.QTrip.trip;
@@ -39,13 +41,14 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
         if (scope != null) {
             condition = condition.and(task.status.eq(status));
         }
+        var pageSize = taskListRequest.getAll() ? TASK_LIMIT : PAGE_SIZE;
         // 할일 정보 불러오기
         return factory.select(
                         Projections.constructor(
                                 TaskDetailResponse.class,
                                 task.id, trip.name, task.title, task.filePath, task.status,
                                 task.taskDDay, task.scope, task.completionDate,
-                                task.lastcreatedUser.email, task.createdAt, task.lastUpdatedUser.email, task.updatedAt
+                                task.lastcreatedUser.username, task.createdAt, task.lastUpdatedUser.username, task.updatedAt
                         ))
                 .from(task)
                 .join(task.trip, trip)
@@ -55,7 +58,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
                 .join(task.lastUpdatedUser, modifiedBy)
                 .where(condition)
                 .orderBy(task.id.desc())
-                .limit(PAGE_SIZE)
+                .limit(pageSize)
                 .fetch();
     }
 
@@ -73,7 +76,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
                                 TaskDetailResponse.class,
                                 task.id, trip.name, task.title, task.filePath, task.status,
                                 task.taskDDay, task.scope, task.completionDate,
-                                task.lastcreatedUser.email, task.createdAt, task.lastUpdatedUser.email, task.updatedAt
+                                task.lastcreatedUser.username, task.createdAt, task.lastUpdatedUser.username, task.updatedAt
                         ))
                 .from(task)
                 .join(task.trip, trip)
@@ -86,7 +89,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
     }
 
     @Override
-    public List<TaskDetailResponse> selectAllTaskDetailList() {
+    public List<TaskProceedStatusDto> selectAllTaskDetailList() {
         var assignee = new QUser("assignee");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
@@ -95,10 +98,8 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
         // 할일 목록 불러오기
         return factory.select(
                         Projections.constructor(
-                                TaskDetailResponse.class,
-                                task.id, trip.name, task.title, task.filePath, task.status,
-                                task.taskDDay, task.scope, task.completionDate,
-                                task.lastcreatedUser.email, task.createdAt, task.lastUpdatedUser.email, task.updatedAt
+                                TaskProceedStatusDto.class,
+                                task.scope, task.completionDate
                         ))
                 .from(taskAssignee)
                 .join(taskAssignee.task, task)

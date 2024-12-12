@@ -1,7 +1,6 @@
 package com.codeit.torip.task.repository.assignee;
 
 import com.codeit.torip.task.dto.TaskAssigneeDto;
-import com.codeit.torip.task.dto.request.TaskListRequest;
 import com.codeit.torip.task.dto.TaskModifyAssigneeDto;
 
 import java.util.List;

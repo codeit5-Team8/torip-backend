@@ -5,9 +5,7 @@ import static com.querydsl.core.types.PathMetadataFactory.*;
 import com.querydsl.core.types.dsl.*;
 
 import com.querydsl.core.types.PathMetadata;
-
 import javax.annotation.processing.Generated;
-
 import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.PathInits;
 
@@ -18,9 +16,12 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QTask extends EntityPathBase<Task> {
 
-    public static final QTask task = new QTask("task");
     private static final long serialVersionUID = 2101569600L;
+
     private static final PathInits INITS = PathInits.DIRECT2;
+
+    public static final QTask task = new QTask("task");
+
     public final com.codeit.torip.common.entity.QBaseUserEntity _super;
 
     public final ListPath<TaskAssignee, QTaskAssignee> assignees = this.<TaskAssignee, QTaskAssignee>createList("assignees", TaskAssignee.class, QTaskAssignee.class, PathInits.DIRECT2);
@@ -44,13 +45,13 @@ public class QTask extends EntityPathBase<Task> {
 
     public final EnumPath<TaskScope> scope = createEnum("scope", TaskScope.class);
 
-    public final EnumPath<TravelStatus> status = createEnum("status", TravelStatus.class);
+    public final EnumPath<TripStatus> status = createEnum("status", TripStatus.class);
 
     public final DateTimePath<java.time.LocalDateTime> taskDDay = createDateTime("taskDDay", java.time.LocalDateTime.class);
 
     public final StringPath title = createString("title");
 
-    public final com.codeit.torip.trip.entity.QTravel travel;
+    public final com.codeit.torip.trip.entity.QTrip trip;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt;
@@ -77,7 +78,7 @@ public class QTask extends EntityPathBase<Task> {
         this.createdAt = _super.createdAt;
         this.lastcreatedUser = _super.lastcreatedUser;
         this.lastUpdatedUser = _super.lastUpdatedUser;
-        this.travel = inits.isInitialized("travel") ? new com.codeit.torip.trip.entity.QTravel(forProperty("travel"), inits.get("travel")) : null;
+        this.trip = inits.isInitialized("trip") ? new com.codeit.torip.trip.entity.QTrip(forProperty("trip"), inits.get("trip")) : null;
         this.updatedAt = _super.updatedAt;
     }
 

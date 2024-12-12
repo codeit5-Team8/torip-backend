@@ -61,4 +61,5 @@ public class TaskDetailResponse {
         this.taskModifiedBy = taskModifiedBy;
         this.taskUpdatedAt = taskUpdatedAt;
     }
+    
 }

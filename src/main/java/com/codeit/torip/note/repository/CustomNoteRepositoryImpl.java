@@ -1,6 +1,7 @@
 package com.codeit.torip.note.repository;
 
 import com.codeit.torip.auth.util.AuthUtil;
+import com.codeit.torip.note.dto.request.NoteListRequest;
 import com.codeit.torip.note.dto.response.NoteDetailResponse;
 import com.codeit.torip.user.entity.QUser;
 import com.querydsl.core.types.Projections;
@@ -22,10 +23,13 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository {
     private final JPAQueryFactory factory;
 
     @Override
-    public List<NoteDetailResponse> selectNoteDetailList(String key, long tripOrTaskId, long seq) {
+    public List<NoteDetailResponse> selectNoteDetailList(NoteListRequest noteListRequest) {
         var assignee = new QUser("assignee");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
+        var key = noteListRequest.getKey();
+        var tripOrTaskId = noteListRequest.getId();
+        var seq = noteListRequest.getSeq();
         // 쿼리 조건 생성
         BooleanExpression condition = getCondition(assignee);
         condition = key.equals("TRIP") ? condition.and(trip.id.eq(tripOrTaskId))
@@ -33,8 +37,8 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository {
         if (seq != 0) condition = condition.and(note.id.lt(seq));
         return factory.select(
                         Projections.constructor(NoteDetailResponse.class,
-                                note.id, trip.name, task.status, note.title, note.content,
-                                note.lastcreatedUser.email, note.createdAt, note.lastUpdatedUser.email, note.updatedAt
+                                note.id, trip.name, task.title, task.status, note.title, note.content,
+                                note.lastcreatedUser.username, note.createdAt, note.lastUpdatedUser.username, note.updatedAt
                         )
                 ).from(trip).join(trip.tasks, task)
                 .join(task.assignees, taskAssignee)
@@ -58,8 +62,8 @@ public class CustomNoteRepositoryImpl implements CustomNoteRepository {
         condition.and(note.id.eq(noteId));
         return factory.select(
                         Projections.constructor(NoteDetailResponse.class,
-                                note.id, trip.name, task.status, note.title, note.content,
-                                note.lastcreatedUser.email, note.createdAt, note.lastUpdatedUser.email, note.updatedAt
+                                note.id, trip.name, task.title, task.status, note.title, note.content,
+                                note.lastcreatedUser.username, note.createdAt, note.lastUpdatedUser.username, note.updatedAt
                         )
                 ).from(trip)
                 .join(trip.tasks, task)
