@@ -1,6 +1,7 @@
 package com.codeit.torip.trip.service;
 
 import com.codeit.torip.auth.util.AuthUtil;
+import com.codeit.torip.common.exception.AlertException;
 import com.codeit.torip.trip.dto.PageCollection;
 import com.codeit.torip.trip.dto.request.CreateTripRequest;
 import com.codeit.torip.trip.dto.request.UpdateTripRequest;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.codeit.torip.common.contant.ToripConstants.Trip.PAGE_SIZE;
 
 @Transactional
 @RequiredArgsConstructor
@@ -42,7 +45,7 @@ public class TripService {
     public TripResponse getTrip(Long id) {
         User userInfo = AuthUtil.getUserInfo();
 
-        Trip trip = tripRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("여행이 존재하지 않습니다."));
+        Trip trip = tripRepository.findById(id).orElseThrow(() -> new AlertException("여행이 존재하지 않습니다."));
         trip.checkMemberExists(userInfo);
 
         return trip.toResponse();
@@ -51,7 +54,7 @@ public class TripService {
     public void deleteTrip(Long id) {
         User userInfo = AuthUtil.getUserInfo();
 
-        Trip trip = tripRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("여행이 존재하지 않습니다."));
+        Trip trip = tripRepository.findById(id).orElseThrow(() -> new AlertException("여행이 존재하지 않습니다."));
         trip.checkOwner(userInfo);
 
         tripInvitationRepository.deleteAllByTripId(id);
@@ -63,7 +66,7 @@ public class TripService {
     public List<UserResponse> getTripMembers(Long id) {
         User userInfo = AuthUtil.getUserInfo();
 
-        Trip trip = tripRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("여행이 존재하지 않습니다."));
+        Trip trip = tripRepository.findById(id).orElseThrow(() -> new AlertException("여행이 존재하지 않습니다."));
         trip.checkMemberExists(userInfo);
 
         return trip.getMembers().stream()
@@ -76,8 +79,8 @@ public class TripService {
     public PageCollection<TripResponse> getTripList(Long lastSeenId) {
         User userInfo = AuthUtil.getUserInfo();
 
-        int PAGE_SIZE = 3;
-        List<Trip> trips = tripRepository.findAllByMembersUserIdAndIdGreaterThanOrderByIdAsc(userInfo.getId(), lastSeenId, PageRequest.of(0, PAGE_SIZE));
+        List<Trip> trips = tripRepository.findAllByMembersUserIdAndIdGreaterThanOrderByIdAsc(
+                userInfo.getId(), lastSeenId, PageRequest.of(0, PAGE_SIZE));
 
 
         return PageCollection.<TripResponse>builder()
@@ -89,7 +92,7 @@ public class TripService {
     public TripResponse updateTrip(Long id, UpdateTripRequest updateTripRequest) {
         User userInfo = AuthUtil.getUserInfo();
 
-        Trip trip = tripRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("여행이 존재하지 않습니다."));
+        Trip trip = tripRepository.findById(id).orElseThrow(() -> new AlertException("여행이 존재하지 않습니다."));
 
         trip.checkOwner(userInfo);
         trip.update(userInfo, updateTripRequest);
@@ -100,8 +103,12 @@ public class TripService {
     public TripInvitationResponse requestTripParticipation(Long id) {
         User userInfo = AuthUtil.getUserInfo();
 
-        Trip trip = tripRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("여행이 존재하지 않습니다."));
+        Trip trip = tripRepository.findById(id).orElseThrow(() -> new AlertException("여행이 존재하지 않습니다."));
         trip.checkMemberNotExists(userInfo);
+
+        if (tripInvitationRepository.checkExistsByTripIdAndInviteeId(id, userInfo.getId())) {
+            throw new AlertException("이미 참가 요청을 보냈습니다.");
+        }
 
         TripInvitation tripInvitation = new TripInvitation(trip, userInfo);
         tripInvitationRepository.save(tripInvitation);
@@ -112,7 +119,7 @@ public class TripService {
     public TripInvitationResponse acceptTripParticipation(Long id) {
         User userInfo = AuthUtil.getUserInfo();
 
-        TripInvitation tripInvitation = tripInvitationRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("초대가 존재하지 않습니다."));
+        TripInvitation tripInvitation = tripInvitationRepository.findById(id).orElseThrow(() -> new AlertException("초대가 존재하지 않습니다."));
         tripInvitation.getTrip().checkOwner(userInfo);
         tripInvitation.getTrip().checkMemberNotExists(tripInvitation.getInvitee());
 
@@ -121,11 +128,24 @@ public class TripService {
         return tripInvitation.toResponse();
     }
 
+    public TripInvitationResponse rejectTripParticipation(Long id) {
+        User userInfo = AuthUtil.getUserInfo();
+
+        TripInvitation tripInvitation = tripInvitationRepository.findById(id).orElseThrow(() -> new AlertException("초대가 존재하지 않습니다."));
+        tripInvitation.getTrip().checkOwner(userInfo);
+        tripInvitation.getTrip().checkMemberNotExists(tripInvitation.getInvitee());
+
+        tripInvitation.reject();
+
+        return tripInvitation.toResponse();
+    }
+
+
     @Transactional(readOnly = true)
     public List<TripInvitationResponse> getTripInvitations(Long id) {
         User userInfo = AuthUtil.getUserInfo();
 
-        Trip trip = tripRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("여행이 존재하지 않습니다."));
+        Trip trip = tripRepository.findById(id).orElseThrow(() -> new AlertException("여행이 존재하지 않습니다."));
         trip.checkOwner(userInfo);
 
         List<TripInvitation> tripInvitations = tripInvitationRepository.findAllByTripIdAndStatusOrderByCreatedAt(id, TripInvitationStatus.Pending);
