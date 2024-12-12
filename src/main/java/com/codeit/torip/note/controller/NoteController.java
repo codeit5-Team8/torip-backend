@@ -2,7 +2,8 @@ package com.codeit.torip.note.controller;
 
 import com.codeit.torip.common.dto.CommonResponse;
 import com.codeit.torip.note.dto.request.NoteListRequest;
-import com.codeit.torip.note.dto.request.NoteRequest;
+import com.codeit.torip.note.dto.request.NoteModRequest;
+import com.codeit.torip.note.dto.request.NoteRegRequest;
 import com.codeit.torip.note.dto.response.NoteDetailResponse;
 import com.codeit.torip.note.service.NoteService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,8 +28,8 @@ public class NoteController {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<Long> registerNote(@RequestBody NoteRequest noteRequest) {
-        var noteId = noteService.registerNode(noteRequest);
+    public CommonResponse<Long> registerNote(@RequestBody NoteRegRequest noteRegRequest) {
+        var noteId = noteService.registerNode(noteRegRequest);
         return new CommonResponse<Long>().success(noteId);
     }
 
@@ -60,8 +61,8 @@ public class NoteController {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<Long> modifyNote(@RequestBody NoteRequest noteRequest) {
-        var noteId = noteService.modifyNote(noteRequest);
+    public CommonResponse<Long> modifyNote(@RequestBody NoteModRequest noteModRequest) {
+        var noteId = noteService.modifyNote(noteModRequest);
         return new CommonResponse<Long>().success(noteId);
     }
 

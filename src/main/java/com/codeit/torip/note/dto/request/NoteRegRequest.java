@@ -13,13 +13,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class NoteRequest {
+public class NoteRegRequest {
 
     @NotNull
     @Schema(description = "여행 고유키", example = "1", nullable = false)
     private long taskId;
-    @Schema(description = "노트 고유키", example = "1")
-    private long noteId;
     @NotBlank
     @Max(value = 30, message = "노트 제목은 30자를 초과하실 수 없습니다")
     @Schema(description = "노트 제목", example = "노트 제목", nullable = false)

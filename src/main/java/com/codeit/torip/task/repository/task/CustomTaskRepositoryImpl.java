@@ -48,7 +48,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
                                 TaskDetailResponse.class,
                                 task.id, trip.name, task.title, task.filePath, task.status,
                                 task.taskDDay, task.scope, task.completionDate,
-                                task.lastcreatedUser.email, task.createdAt, task.lastUpdatedUser.email, task.updatedAt
+                                task.lastcreatedUser.username, task.createdAt, task.lastUpdatedUser.username, task.updatedAt
                         ))
                 .from(task)
                 .join(task.trip, trip)
@@ -76,7 +76,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
                                 TaskDetailResponse.class,
                                 task.id, trip.name, task.title, task.filePath, task.status,
                                 task.taskDDay, task.scope, task.completionDate,
-                                task.lastcreatedUser.email, task.createdAt, task.lastUpdatedUser.email, task.updatedAt
+                                task.lastcreatedUser.username, task.createdAt, task.lastUpdatedUser.username, task.updatedAt
                         ))
                 .from(task)
                 .join(task.trip, trip)
