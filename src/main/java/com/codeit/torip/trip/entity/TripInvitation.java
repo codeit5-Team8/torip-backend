@@ -50,4 +50,9 @@ public class TripInvitation extends BaseEntity {
         trip.addMember(invitee);
         this.status = TripInvitationStatus.Accepted;
     }
+
+    public void reject() {
+        this.status = TripInvitationStatus.Rejected;
+    }
+
 }

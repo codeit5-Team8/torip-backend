@@ -2,6 +2,10 @@ package com.codeit.torip.common.contant;
 
 public class ToripConstants {
 
+    public static class Trip {
+        public static final Integer PAGE_SIZE = 3;
+    }
+
     public static class Note {
         public static final Integer PAGE_SIZE = 5;
     }

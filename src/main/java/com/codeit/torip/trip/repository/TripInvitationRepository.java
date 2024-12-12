@@ -12,5 +12,7 @@ public interface TripInvitationRepository extends JpaRepository<TripInvitation, 
 
     List<TripInvitation> findAllByTripIdAndStatusOrderByCreatedAt(Long tripId, TripInvitationStatus status);
 
+    Boolean checkExistsByTripIdAndInviteeId(Long tripId, Long inviteeId);
+
     void deleteAllByTripId(Long tripId);
 }

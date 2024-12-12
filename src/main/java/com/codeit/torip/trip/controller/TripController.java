@@ -116,6 +116,19 @@ public class TripController {
         return new CommonResponse<TripInvitationResponse>().success(TripInvitationResponse);
     }
 
+    @PostMapping("request/{id}/reject")
+    @Operation(summary = "여행 참가 거절 API", description = "여행 참가를 거절합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공"),
+                    @ApiResponse(responseCode = "400", description = "실패")
+            }
+    )
+    public CommonResponse<TripInvitationResponse> rejectTripParticipation(@PathVariable Long id) {
+        var TripInvitationResponse = tripService.rejectTripParticipation(id);
+        // 여행 참가 수락 로직
+        return new CommonResponse<TripInvitationResponse>().success(TripInvitationResponse);
+    }
+
     @GetMapping("/{id}/request")
     @Operation(summary = "여행 참가 요청 조회 API", description = "여행 참가 요청을 조회합니다",
             responses = {

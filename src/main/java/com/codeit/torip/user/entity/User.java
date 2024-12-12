@@ -38,6 +38,7 @@ public class User extends BaseEntity {
 
     public UserResponse toResponse() {
         return UserResponse.builder()
+                .id(id)
                 .email(email)
                 .username(username)
                 .build();
