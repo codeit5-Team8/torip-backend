@@ -11,6 +11,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.codeit.torip.common.contant.ToripConstants.Task.PAGE_SIZE;
 import static com.codeit.torip.common.contant.ToripConstants.Task.TASK_LIMIT;
@@ -25,12 +26,13 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
 
     @Override
     public List<TaskDetailResponse> selectTaskDetailList(TaskListRequest taskListRequest) {
+        var owner = new QUser("owner");
         var assignee = new QUser("assignee");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
         // 쿼리 조건 생성
-        BooleanExpression condition = getCondition(assignee);
-        condition = condition.and(trip.id.eq(taskListRequest.getTripId()));
+        BooleanExpression condition = trip.id.eq(taskListRequest.getTripId());
+        condition = condition.and(getCommonCondition(assignee));
         var seq = taskListRequest.getSeq();
         if (seq != 0) condition = condition.and(task.id.lt(seq));
         var status = taskListRequest.getTripStatus();
@@ -42,7 +44,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
             condition = condition.and(task.status.eq(status));
         }
         var pageSize = taskListRequest.getAll() ? TASK_LIMIT : PAGE_SIZE;
-        // 할일 정보 불러오기
+        // 할일 목록 불러오기
         return factory.select(
                         Projections.constructor(
                                 TaskDetailResponse.class,
@@ -52,6 +54,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
                         ))
                 .from(task)
                 .join(task.trip, trip)
+                .join(trip.owner, owner)
                 .join(task.assignees, taskAssignee)
                 .join(taskAssignee.assignee, assignee)
                 .join(task.lastcreatedUser, createdBy)
@@ -63,15 +66,16 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
     }
 
     @Override
-    public TaskDetailResponse selectTaskDetail(long taskId) {
+    public Optional<TaskDetailResponse> selectTaskDetail(long taskId) {
+        var owner = new QUser("owner");
         var assignee = new QUser("assignee");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
         // 쿼리 조건 생성
-        BooleanExpression condition = getCondition(assignee);
-        condition = condition.and(task.id.eq(taskId));
-        // 할일 정보 불러오기
-        return factory.select(
+        BooleanExpression condition = task.id.eq(taskId);
+        condition = condition.and(getCommonCondition(assignee));
+        // 할일 상세 불러오기
+        var taskDetail = factory.select(
                         Projections.constructor(
                                 TaskDetailResponse.class,
                                 task.id, trip.name, task.title, task.filePath, task.status,
@@ -80,38 +84,61 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
                         ))
                 .from(task)
                 .join(task.trip, trip)
+                .join(trip.owner, owner)
                 .join(task.assignees, taskAssignee)
                 .join(taskAssignee.assignee, assignee)
                 .join(task.lastcreatedUser, createdBy)
                 .join(task.lastUpdatedUser, modifiedBy)
                 .where(condition)
                 .fetchOne();
+        return Optional.ofNullable(taskDetail);
     }
 
     @Override
     public List<TaskProceedStatusDto> selectAllTaskDetailList() {
+        var owner = new QUser("owner");
         var assignee = new QUser("assignee");
         var createdBy = new QUser("createdBy");
-        var modifiedBy = new QUser("modifiedBy");
         // 쿼리 조건 생성
-        BooleanExpression condition = getCondition(assignee);
-        // 할일 목록 불러오기
+        BooleanExpression condition = getCommonCondition(assignee);
+        // 할일 완료도 불러오기
         return factory.select(
                         Projections.constructor(
                                 TaskProceedStatusDto.class,
                                 task.scope, task.completionDate
                         ))
-                .from(taskAssignee)
-                .join(taskAssignee.task, task)
+                .from(task)
                 .join(task.trip, trip)
+                .join(trip.owner, owner)
+                .join(task.assignees, taskAssignee)
+                .join(taskAssignee.assignee, assignee)
                 .join(task.lastcreatedUser, createdBy)
-                .join(task.lastUpdatedUser, modifiedBy)
                 .where(condition)
                 .fetch();
     }
 
-    private BooleanExpression getCondition(QUser assignee) {
-        return assignee.email.eq(AuthUtil.getEmail());
+    @Override
+    public boolean isAuthorizedToModify(long taskId) {
+        var owner = new QUser("owner");
+        var createdBy = new QUser("createdBy");
+        // 쿼리 조건 생성
+        var email = AuthUtil.getEmail();
+        var condition = task.id.eq(taskId);
+        condition = condition.and(trip.owner.email.eq(email).or(task.lastcreatedUser.email.eq(email)));
+        // 수정 가능 여부 판단
+        return factory.selectOne()
+                .from(task)
+                .join(task.trip, trip)
+                .join(trip.owner, owner)
+                .join(task.lastcreatedUser, createdBy)
+                .where(condition)
+                .fetchFirst() != null;
+    }
+
+    private BooleanExpression getCommonCondition(QUser assignee) {
+        var email = AuthUtil.getEmail();
+        // 오너이거나 작성자이거나 담당자인경우
+        return trip.owner.email.eq(email).or(task.lastcreatedUser.email.eq(email)).or(assignee.email.eq(email));
     }
 
 }

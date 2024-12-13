@@ -1,8 +1,8 @@
 package com.codeit.torip.task.entity;
 
 import com.codeit.torip.common.entity.BaseUserEntity;
-import com.codeit.torip.note.entity.Note;
 import com.codeit.torip.task.dto.request.TaskRequest;
+import com.codeit.torip.task.note.entity.TaskNote;
 import com.codeit.torip.trip.entity.Trip;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,10 +15,10 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = false)
-@Builder()
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "task", indexes = {@Index(name = "idx_scope", columnList = "scope")})
 public class Task extends BaseUserEntity {
@@ -32,7 +32,7 @@ public class Task extends BaseUserEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Note> notes = new ArrayList<>();
+    private List<TaskNote> notes = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)

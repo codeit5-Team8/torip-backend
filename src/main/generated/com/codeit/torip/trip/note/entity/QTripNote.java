@@ -1,4 +1,4 @@
-package com.codeit.torip.note.entity;
+package com.codeit.torip.trip.note.entity;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -11,16 +11,16 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QNote is a Querydsl query type for Note
+ * QTripNote is a Querydsl query type for TripNote
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QNote extends EntityPathBase<Note> {
+public class QTripNote extends EntityPathBase<TripNote> {
 
-    private static final long serialVersionUID = 1755390362L;
+    private static final long serialVersionUID = -1839457930L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QNote note = new QNote("note");
+    public static final QTripNote tripNote = new QTripNote("tripNote");
 
     public final com.codeit.torip.common.entity.QBaseUserEntity _super;
 
@@ -37,36 +37,36 @@ public class QNote extends EntityPathBase<Note> {
     // inherited
     public final com.codeit.torip.user.entity.QUser lastUpdatedUser;
 
-    public final com.codeit.torip.task.entity.QTask task;
-
     public final StringPath title = createString("title");
+
+    public final com.codeit.torip.trip.entity.QTrip trip;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt;
 
-    public QNote(String variable) {
-        this(Note.class, forVariable(variable), INITS);
+    public QTripNote(String variable) {
+        this(TripNote.class, forVariable(variable), INITS);
     }
 
-    public QNote(Path<? extends Note> path) {
+    public QTripNote(Path<? extends TripNote> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QNote(PathMetadata metadata) {
+    public QTripNote(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QNote(PathMetadata metadata, PathInits inits) {
-        this(Note.class, metadata, inits);
+    public QTripNote(PathMetadata metadata, PathInits inits) {
+        this(TripNote.class, metadata, inits);
     }
 
-    public QNote(Class<? extends Note> type, PathMetadata metadata, PathInits inits) {
+    public QTripNote(Class<? extends TripNote> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this._super = new com.codeit.torip.common.entity.QBaseUserEntity(type, metadata, inits);
         this.createdAt = _super.createdAt;
         this.lastcreatedUser = _super.lastcreatedUser;
         this.lastUpdatedUser = _super.lastUpdatedUser;
-        this.task = inits.isInitialized("task") ? new com.codeit.torip.task.entity.QTask(forProperty("task"), inits.get("task")) : null;
+        this.trip = inits.isInitialized("trip") ? new com.codeit.torip.trip.entity.QTrip(forProperty("trip"), inits.get("trip")) : null;
         this.updatedAt = _super.updatedAt;
     }
 

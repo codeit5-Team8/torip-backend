@@ -41,7 +41,7 @@ public class QTask extends EntityPathBase<Task> {
     // inherited
     public final com.codeit.torip.user.entity.QUser lastUpdatedUser;
 
-    public final ListPath<com.codeit.torip.note.entity.Note, com.codeit.torip.note.entity.QNote> notes = this.<com.codeit.torip.note.entity.Note, com.codeit.torip.note.entity.QNote>createList("notes", com.codeit.torip.note.entity.Note.class, com.codeit.torip.note.entity.QNote.class, PathInits.DIRECT2);
+    public final ListPath<com.codeit.torip.task.note.entity.TaskNote, com.codeit.torip.task.note.entity.QTaskNote> notes = this.<com.codeit.torip.task.note.entity.TaskNote, com.codeit.torip.task.note.entity.QTaskNote>createList("notes", com.codeit.torip.task.note.entity.TaskNote.class, com.codeit.torip.task.note.entity.QTaskNote.class, PathInits.DIRECT2);
 
     public final EnumPath<TaskScope> scope = createEnum("scope", TaskScope.class);
 

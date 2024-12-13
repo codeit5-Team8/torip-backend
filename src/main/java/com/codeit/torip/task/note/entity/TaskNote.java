@@ -1,8 +1,8 @@
-package com.codeit.torip.note.entity;
+package com.codeit.torip.task.note.entity;
 
 import com.codeit.torip.common.entity.BaseUserEntity;
-import com.codeit.torip.note.dto.request.NoteModRequest;
-import com.codeit.torip.note.dto.request.NoteRegRequest;
+import com.codeit.torip.task.note.dto.request.TaskNoteModRequest;
+import com.codeit.torip.task.note.dto.request.TaskNoteRegRequest;
 import com.codeit.torip.task.entity.Task;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,8 +15,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "note")
-public class Note extends BaseUserEntity {
+@Table(name = "task_note")
+public class TaskNote extends BaseUserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,15 +32,15 @@ public class Note extends BaseUserEntity {
     @Column(nullable = false, length = 500)
     private String content;
 
-    public static Note from(NoteRegRequest noteRegRequest) {
-        return Note.builder()
-                .title(noteRegRequest.getTitle())
-                .content(noteRegRequest.getContent())
+    public static TaskNote from(TaskNoteRegRequest taskNoteRegRequest) {
+        return TaskNote.builder()
+                .title(taskNoteRegRequest.getTitle())
+                .content(taskNoteRegRequest.getContent())
                 .build();
     }
 
-    public void modifyTo(NoteModRequest noteModRequest) {
-        this.title = noteModRequest.getTitle();
-        this.content = noteModRequest.getContent();
+    public void modifyTo(TaskNoteModRequest taskNoteModRequest) {
+        this.title = taskNoteModRequest.getTitle();
+        this.content = taskNoteModRequest.getContent();
     }
 }

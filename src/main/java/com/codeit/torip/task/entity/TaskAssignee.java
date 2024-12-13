@@ -3,12 +3,12 @@ package com.codeit.torip.task.entity;
 import com.codeit.torip.common.entity.BaseUserEntity;
 import com.codeit.torip.user.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

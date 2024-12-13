@@ -41,6 +41,8 @@ public class QTrip extends EntityPathBase<Trip> {
 
     public final StringPath name = createString("name");
 
+    public final ListPath<com.codeit.torip.trip.note.entity.TripNote, com.codeit.torip.trip.note.entity.QTripNote> notes = this.<com.codeit.torip.trip.note.entity.TripNote, com.codeit.torip.trip.note.entity.QTripNote>createList("notes", com.codeit.torip.trip.note.entity.TripNote.class, com.codeit.torip.trip.note.entity.QTripNote.class, PathInits.DIRECT2);
+
     public final com.codeit.torip.user.entity.QUser owner;
 
     public final DatePath<java.time.LocalDate> startDate = createDate("startDate", java.time.LocalDate.class);

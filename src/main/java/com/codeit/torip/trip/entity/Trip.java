@@ -5,6 +5,7 @@ import com.codeit.torip.task.entity.Task;
 import com.codeit.torip.trip.dto.request.CreateTripRequest;
 import com.codeit.torip.trip.dto.request.UpdateTripRequest;
 import com.codeit.torip.trip.dto.response.TripResponse;
+import com.codeit.torip.trip.note.entity.TripNote;
 import com.codeit.torip.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -27,6 +28,9 @@ public class Trip extends BaseUserEntity {
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Task> tasks = new ArrayList<>();
+
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<TripNote> notes = new ArrayList<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -98,7 +102,8 @@ public class Trip extends BaseUserEntity {
 
     // 멤버인지 확인 함수
     public void checkMemberExists(User user) {
-        if (members.stream().noneMatch(member -> member.getUser().getId().equals(user.getId()))) {
+        if (members.stream().noneMatch(member -> member.getUser().getId().equals(user.getId()))
+                || members.stream().noneMatch(member -> member.getUser().getEmail().equals(user.getEmail()))) {
             throw new IllegalArgumentException("여행에 참가하지 않은 사용자입니다.");
         }
     }
