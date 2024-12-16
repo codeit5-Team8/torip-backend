@@ -23,7 +23,7 @@ public class User extends BaseEntity {
     private String email;
     @Column(nullable = false, length = 100)
     private String password;
-    @Column(nullable = false, length = 30, unique = true)
+    @Column(nullable = false, length = 30)
     private String username;
     @Enumerated(EnumType.STRING)
     private OauthPlatform oauthPlatform;

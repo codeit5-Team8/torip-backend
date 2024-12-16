@@ -27,7 +27,7 @@ public class AuthService {
     @Transactional(readOnly = true)
     public LoginResponse login(LoginRequest loginRequest) {
         User user = userRepository.findUserByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("유저를 찾지 못했습니다. : " + loginRequest.getEmail()));
+                .orElseThrow(() -> new UsernameNotFoundException("가입되지 않은 이메일입니다."));
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword()))
             throw new AlertException("비밀번호가 일치하지 않습니다.");
@@ -44,10 +44,6 @@ public class AuthService {
     public LoginResponse register(RegisterRequest registerRequest) {
         if (userRepository.existsUserByEmail(registerRequest.getEmail())) {
             throw new AlertException("이메일이 중복되었습니다.");
-        }
-
-        if (userRepository.existsUserByUsername(registerRequest.getUsername())) {
-            throw new AlertException("사용자 이름이 중복되었습니다.");
         }
 
         User user = User.builder()
