@@ -5,13 +5,16 @@ import com.codeit.torip.task.dto.request.TaskListRequest;
 import com.codeit.torip.task.dto.response.TaskDetailResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CustomTaskRepository {
 
     List<TaskDetailResponse> selectTaskDetailList(TaskListRequest taskListRequest);
 
-    TaskDetailResponse selectTaskDetail(long taskId);
+    Optional<TaskDetailResponse> selectTaskDetail(long taskId);
 
     List<TaskProceedStatusDto> selectAllTaskDetailList();
+
+    boolean isAuthorizedToModify(long taskId);
 
 }
