@@ -66,7 +66,7 @@ public class TripNoteService {
     public void deleteNote(long tripNoteId) {
         // 권한 체크
         var isDeletable = tripNoteRepository.isAuthorizedToModify(tripNoteId);
-        if (isDeletable) throw new AlertException("여행 노트를 삭제할 권한이 없습니다.");
+        if (!isDeletable) throw new AlertException("여행 노트를 삭제할 권한이 없습니다.");
         // 노트 삭제
         tripNoteRepository.deleteById(tripNoteId);
     }

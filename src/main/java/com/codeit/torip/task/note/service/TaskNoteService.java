@@ -7,6 +7,7 @@ import com.codeit.torip.task.entity.TaskAssignee;
 import com.codeit.torip.task.note.dto.request.TaskNoteListRequest;
 import com.codeit.torip.task.note.dto.request.TaskNoteModRequest;
 import com.codeit.torip.task.note.dto.request.TaskNoteRegRequest;
+import com.codeit.torip.task.note.dto.response.TaskNoteDeletedResponse;
 import com.codeit.torip.task.note.dto.response.TaskNoteDetailResponse;
 import com.codeit.torip.task.note.entity.TaskNote;
 import com.codeit.torip.task.note.repository.TaskNoteRepository;
@@ -66,12 +67,14 @@ public class TaskNoteService {
     }
 
     @Transactional
-    public void deleteTaskNote(long taskNoteId) {
+    public TaskNoteDeletedResponse deleteTaskNote(long taskNoteId) {
         // 권한 체크
         var isDeletable = taskNoteRepository.isAuthorizedToModify(taskNoteId);
-        if (isDeletable) throw new AlertException("할일 노트를 삭제할 권한이 없습니다.");
+        if (!isDeletable) throw new AlertException("할일 노트를 삭제할 권한이 없습니다.");
         // 노트 삭제
+        var deletedTaskNote = taskNoteRepository.deletedTaskNote(taskNoteId);
         taskNoteRepository.deleteById(taskNoteId);
+        return deletedTaskNote;
     }
 
     private Task checkTaskAssignee(long tripId) {

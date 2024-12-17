@@ -56,7 +56,7 @@ public class Trip extends BaseUserEntity {
         this.startDate = Objects.requireNonNull(request.getStartDate());
         this.endDate = Objects.requireNonNull(request.getEndDate());
         this.owner = Objects.requireNonNull(owner);
-        this.lastcreatedUser = owner;
+        this.lastCreatedUser = owner;
         this.lastUpdatedUser = owner;
         this.members.add(new TripMember(this, owner, TripMemberRole.OWNER));
 

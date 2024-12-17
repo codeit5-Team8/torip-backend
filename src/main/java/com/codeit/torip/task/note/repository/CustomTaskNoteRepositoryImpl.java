@@ -2,6 +2,7 @@ package com.codeit.torip.task.note.repository;
 
 import com.codeit.torip.auth.util.AuthUtil;
 import com.codeit.torip.task.note.dto.request.TaskNoteListRequest;
+import com.codeit.torip.task.note.dto.response.TaskNoteDeletedResponse;
 import com.codeit.torip.task.note.dto.response.TaskNoteDetailResponse;
 import com.codeit.torip.user.entity.QUser;
 import com.querydsl.core.types.Projections;
@@ -16,7 +17,6 @@ import static com.codeit.torip.task.entity.QTask.task;
 import static com.codeit.torip.task.entity.QTaskAssignee.taskAssignee;
 import static com.codeit.torip.task.note.entity.QTaskNote.taskNote;
 import static com.codeit.torip.trip.entity.QTrip.trip;
-import static com.codeit.torip.trip.note.entity.QTripNote.tripNote;
 
 @RequiredArgsConstructor
 public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
@@ -33,18 +33,18 @@ public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
         // 쿼리 조건 생성
         BooleanExpression condition = getCondition(assignee);
         condition = condition.and(task.id.eq(taskId));
-        condition = condition.and(taskNote.id.lt(seq));
+        if (seq != 0) condition = condition.and(taskNote.id.lt(seq));
         return factory.select(
                         Projections.constructor(TaskNoteDetailResponse.class,
                                 taskNote.id, trip.name, task.title, task.status, taskNote.title, taskNote.content,
-                                taskNote.lastcreatedUser.username, taskNote.createdAt,
+                                taskNote.lastCreatedUser.username, taskNote.createdAt,
                                 taskNote.lastUpdatedUser.username, taskNote.updatedAt
                         )
                 ).from(trip).join(trip.tasks, task)
                 .join(task.assignees, taskAssignee)
                 .join(taskAssignee.assignee, assignee)
                 .join(task.notes, taskNote)
-                .join(taskNote.lastcreatedUser, createdBy)
+                .join(taskNote.lastCreatedUser, createdBy)
                 .join(taskNote.lastUpdatedUser, modifiedBy)
                 .where(condition)
                 .orderBy(taskNote.id.desc())
@@ -63,7 +63,7 @@ public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
         return factory.select(
                         Projections.constructor(TaskNoteDetailResponse.class,
                                 taskNote.id, trip.name, task.title, task.status, taskNote.title, taskNote.content,
-                                taskNote.lastcreatedUser.username, taskNote.createdAt,
+                                taskNote.lastCreatedUser.username, taskNote.createdAt,
                                 taskNote.lastUpdatedUser.username, taskNote.updatedAt
                         )
                 ).from(trip)
@@ -71,7 +71,7 @@ public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
                 .join(task.assignees, taskAssignee)
                 .join(taskAssignee.assignee, assignee)
                 .join(task.notes, taskNote)
-                .join(taskNote.lastcreatedUser, createdBy)
+                .join(taskNote.lastCreatedUser, createdBy)
                 .join(taskNote.lastUpdatedUser, modifiedBy)
                 .where(condition)
                 .fetchOne();
@@ -86,17 +86,32 @@ public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
         var email = AuthUtil.getEmail();
         var condition = taskNote.id.eq(taskNoteId);
         condition = condition.and(owner.email.eq(email)
-                .or(createdBy.email.eq(email))).or(writer.email.eq(email));
+                .or(createdBy.email.eq(email)).or(writer.email.eq(email)));
         // 수정 가능 여부 판단
         return factory.selectOne()
                 .from(taskNote)
                 .join(taskNote.task, task)
-                .join(task.lastcreatedUser, writer)
+                .join(task.lastCreatedUser, createdBy)
                 .join(task.trip, trip)
                 .join(trip.owner, owner)
-                .join(tripNote.lastcreatedUser, createdBy)
+                .join(taskNote.lastCreatedUser, writer)
                 .where(condition)
                 .fetchFirst() != null;
+    }
+
+    @Override
+    public TaskNoteDeletedResponse deletedTaskNote(long taskNoteId) {
+        // 쿼리 조건 생성
+        BooleanExpression condition = taskNote.id.eq(taskNoteId);
+        return factory.select(
+                        Projections.constructor(TaskNoteDeletedResponse.class,
+                                trip.id, taskNote.title, taskNote.content
+                        )
+                ).from(trip)
+                .join(trip.tasks, task)
+                .join(task.notes, taskNote)
+                .where(condition)
+                .fetchOne();
     }
 
     private BooleanExpression getCondition(QUser assignee) {

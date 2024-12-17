@@ -4,6 +4,7 @@ import com.codeit.torip.common.dto.CommonResponse;
 import com.codeit.torip.task.note.dto.request.TaskNoteListRequest;
 import com.codeit.torip.task.note.dto.request.TaskNoteModRequest;
 import com.codeit.torip.task.note.dto.request.TaskNoteRegRequest;
+import com.codeit.torip.task.note.dto.response.TaskNoteDeletedResponse;
 import com.codeit.torip.task.note.dto.response.TaskNoteDetailResponse;
 import com.codeit.torip.task.note.service.TaskNoteService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -72,9 +73,9 @@ public class TaskNoteController {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<?> deleteTaskNote(@PathVariable("taskNoteId") long taskNoteId) {
-        taskNoteService.deleteTaskNote(taskNoteId);
-        return new CommonResponse<>().success(null);
+    public CommonResponse<TaskNoteDeletedResponse> deleteTaskNote(@PathVariable("taskNoteId") long taskNoteId) {
+        var deletedTaskNote = taskNoteService.deleteTaskNote(taskNoteId);
+        return new CommonResponse<TaskNoteDeletedResponse>().success(deletedTaskNote);
     }
 
 }

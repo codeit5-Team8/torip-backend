@@ -130,7 +130,7 @@ public class TaskService {
     public void deleteTask(long taskId) {
         // 권한 체크
         var isDeletable = taskRepository.isAuthorizedToModify(taskId);
-        if (isDeletable) throw new AlertException("할일을 삭제할 권한이 없습니다.");
+        if (!isDeletable) throw new AlertException("할일을 삭제할 권한이 없습니다.");
         // 할일 삭제
         taskRepository.deleteById(taskId);
     }

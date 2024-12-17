@@ -50,14 +50,14 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
                                 TaskDetailResponse.class,
                                 task.id, trip.name, task.title, task.filePath, task.status,
                                 task.taskDDay, task.scope, task.completionDate,
-                                task.lastcreatedUser.username, task.createdAt, task.lastUpdatedUser.username, task.updatedAt
+                                task.lastCreatedUser.username, task.createdAt, task.lastUpdatedUser.username, task.updatedAt
                         ))
                 .from(task)
                 .join(task.trip, trip)
                 .join(trip.owner, owner)
                 .join(task.assignees, taskAssignee)
                 .join(taskAssignee.assignee, assignee)
-                .join(task.lastcreatedUser, createdBy)
+                .join(task.lastCreatedUser, createdBy)
                 .join(task.lastUpdatedUser, modifiedBy)
                 .where(condition)
                 .orderBy(task.id.desc())
@@ -80,14 +80,14 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
                                 TaskDetailResponse.class,
                                 task.id, trip.name, task.title, task.filePath, task.status,
                                 task.taskDDay, task.scope, task.completionDate,
-                                task.lastcreatedUser.username, task.createdAt, task.lastUpdatedUser.username, task.updatedAt
+                                task.lastCreatedUser.username, task.createdAt, task.lastUpdatedUser.username, task.updatedAt
                         ))
                 .from(task)
                 .join(task.trip, trip)
                 .join(trip.owner, owner)
                 .join(task.assignees, taskAssignee)
                 .join(taskAssignee.assignee, assignee)
-                .join(task.lastcreatedUser, createdBy)
+                .join(task.lastCreatedUser, createdBy)
                 .join(task.lastUpdatedUser, modifiedBy)
                 .where(condition)
                 .fetchOne();
@@ -112,7 +112,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
                 .join(trip.owner, owner)
                 .join(task.assignees, taskAssignee)
                 .join(taskAssignee.assignee, assignee)
-                .join(task.lastcreatedUser, createdBy)
+                .join(task.lastCreatedUser, createdBy)
                 .where(condition)
                 .fetch();
     }
@@ -124,13 +124,13 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
         // 쿼리 조건 생성
         var email = AuthUtil.getEmail();
         var condition = task.id.eq(taskId);
-        condition = condition.and(trip.owner.email.eq(email).or(task.lastcreatedUser.email.eq(email)));
+        condition = condition.and(trip.owner.email.eq(email).or(task.lastCreatedUser.email.eq(email)));
         // 수정 가능 여부 판단
         return factory.selectOne()
                 .from(task)
                 .join(task.trip, trip)
                 .join(trip.owner, owner)
-                .join(task.lastcreatedUser, createdBy)
+                .join(task.lastCreatedUser, createdBy)
                 .where(condition)
                 .fetchFirst() != null;
     }
@@ -138,7 +138,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
     private BooleanExpression getCommonCondition(QUser assignee) {
         var email = AuthUtil.getEmail();
         // 오너이거나 작성자이거나 담당자인경우
-        return trip.owner.email.eq(email).or(task.lastcreatedUser.email.eq(email)).or(assignee.email.eq(email));
+        return trip.owner.email.eq(email).or(task.lastCreatedUser.email.eq(email)).or(assignee.email.eq(email));
     }
 
 }
