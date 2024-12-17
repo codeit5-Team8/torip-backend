@@ -46,7 +46,7 @@ public class Task extends BaseUserEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TripStatus status;
+    private TaskStatus taskStatus;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -61,21 +61,21 @@ public class Task extends BaseUserEntity {
         return Task.builder()
                 .taskDDay(taskRegRequest.getTaskDDay())
                 .title(taskRegRequest.getTaskTitle())
-                .filePath(taskRegRequest.getFilePath())
+                .filePath(taskRegRequest.getTaskFilePath())
                 .taskDDay(taskRegRequest.getTaskDDay())
-                .status(taskRegRequest.getTripStatus())
-                .scope(taskRegRequest.getScope())
-                .completionDate(taskRegRequest.getCompletionDate())
+                .taskStatus(taskRegRequest.getTaskStatus())
+                .scope(taskRegRequest.getTaskScope())
+                .completionDate(taskRegRequest.getTaskCompletionDate())
                 .build();
     }
 
     public void modifyTo(TaskModRequest taskModRequest) {
         this.title = taskModRequest.getTaskTitle();
-        this.filePath = taskModRequest.getFilePath();
-        this.status = taskModRequest.getTripStatus();
+        this.filePath = taskModRequest.getTaskFilePath();
+        this.taskStatus = taskModRequest.getTaskStatus();
         this.taskDDay = taskModRequest.getTaskDDay();
-        this.scope = taskModRequest.getScope();
-        this.completionDate = taskModRequest.getCompletionDate();
+        this.scope = taskModRequest.getTaskScope();
+        this.completionDate = taskModRequest.getTaskCompletionDate();
     }
 
 }

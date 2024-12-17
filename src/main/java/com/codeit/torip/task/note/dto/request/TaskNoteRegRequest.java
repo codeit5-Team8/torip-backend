@@ -21,9 +21,9 @@ public class TaskNoteRegRequest {
     @NotBlank
     @Max(value = 30, message = "노트 제목은 30자를 초과하실 수 없습니다")
     @Schema(description = "할일 노트 제목", example = "할일 노트 제목", nullable = false)
-    private String title;
+    private String taskNoteTitle;
     @NotBlank
     @Schema(description = "할일 노트 내용", example = "할일 노트 내용", nullable = false)
-    private String content;
+    private String taskNoteContent;
 
 }

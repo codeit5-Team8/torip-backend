@@ -76,8 +76,8 @@ public class Trip extends BaseUserEntity {
     public void addTask(Task newTask) {
 
         Objects.requireNonNull(newTask);
-        var status = newTask.getStatus().name();
-        if (tasks.stream().map((task) -> task.getStatus().name().equals(status)).count() > TASK_LIMIT_PER_TRIP_STATUS) {
+        var status = newTask.getTaskStatus().name();
+        if (tasks.stream().map((task) -> task.getTaskStatus().name().equals(status)).count() > TASK_LIMIT_PER_TRIP_STATUS) {
             throw new IllegalArgumentException("여행 상태 별 할일은 최대 60개까지 생성하실 수 있습니다.");
         }
         if (tasks.stream().anyMatch(task -> task.equals(newTask))) {

@@ -27,7 +27,7 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
         // 쿼리 조건 생성
-        var seq = tripNoteListRequest.getSeq();
+        var seq = tripNoteListRequest.getTripNoteSeq();
         var condition = trip.id.eq(tripNoteListRequest.getTripId());
         if (seq != 0) condition = condition.and(tripNote.id.lt(seq));
         condition = condition.and(getCommonCondition());

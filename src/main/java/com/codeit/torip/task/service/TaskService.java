@@ -44,7 +44,7 @@ public class TaskService {
             var taskId = taskDetail.getTaskId();
             for (var assignee : assigneeList) {
                 if (taskId.equals(assignee.getTaskId())) {
-                    taskDetail.getAssignees().add(assignee);
+                    taskDetail.getTaskAssignees().add(assignee);
                 }
             }
         }
@@ -57,7 +57,7 @@ public class TaskService {
                 .orElseThrow(() -> new AlertException("할일을 조회할 수 없습니다."));
         // 담당자 정보 불러오기
         var assigneeList = taskAssigneeRepository.selectTaskAssignee(taskId);
-        if (taskDetail != null) taskDetail.getAssignees().addAll(assigneeList);
+        if (taskDetail != null) taskDetail.getTaskAssignees().addAll(assigneeList);
         return taskDetail;
     }
 
@@ -83,7 +83,7 @@ public class TaskService {
         tripEntity.addTask(taskEntity);
         var assignees = taskEntity.getAssignees();
         // 담당자 추가
-        for (var assignee : taskRegRequest.getAssignees()) {
+        for (var assignee : taskRegRequest.getTaskAssignees()) {
             var userEntity = userRepository.findUserByEmail(assignee)
                     .orElseThrow(() -> new AlertException("담당자가 존재하지 않습니다."));
             var taskAssigneeEntity = TaskAssignee.builder().task(taskEntity).assignee(userEntity).build();
@@ -100,7 +100,7 @@ public class TaskService {
         var isModifiable = taskRepository.isAuthorizedToModify(taskModRequest.getTaskId());
         if (isModifiable) throw new AlertException("할일을 수정할 권한이 없습니다.");
         // 할일 수정
-        var assignees = taskModRequest.getAssignees();
+        var assignees = taskModRequest.getTaskAssignees();
         var taskEntity = taskRepository.findById(taskModRequest.getTaskId())
                 .orElseThrow(() -> new AlertException("할일이 존재하지 않습니다."));
         taskEntity.modifyTo(taskModRequest);

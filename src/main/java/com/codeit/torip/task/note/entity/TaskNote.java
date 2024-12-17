@@ -1,9 +1,9 @@
 package com.codeit.torip.task.note.entity;
 
 import com.codeit.torip.common.entity.BaseUserEntity;
+import com.codeit.torip.task.entity.Task;
 import com.codeit.torip.task.note.dto.request.TaskNoteModRequest;
 import com.codeit.torip.task.note.dto.request.TaskNoteRegRequest;
-import com.codeit.torip.task.entity.Task;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -34,13 +34,13 @@ public class TaskNote extends BaseUserEntity {
 
     public static TaskNote from(TaskNoteRegRequest taskNoteRegRequest) {
         return TaskNote.builder()
-                .title(taskNoteRegRequest.getTitle())
-                .content(taskNoteRegRequest.getContent())
+                .title(taskNoteRegRequest.getTaskNoteTitle())
+                .content(taskNoteRegRequest.getTaskNoteContent())
                 .build();
     }
 
     public void modifyTo(TaskNoteModRequest taskNoteModRequest) {
-        this.title = taskNoteModRequest.getTitle();
-        this.content = taskNoteModRequest.getContent();
+        this.title = taskNoteModRequest.getTaskNoteTitle();
+        this.content = taskNoteModRequest.getTaskNoteContent();
     }
 }

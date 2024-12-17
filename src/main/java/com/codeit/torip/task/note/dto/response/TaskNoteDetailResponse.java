@@ -1,6 +1,6 @@
 package com.codeit.torip.task.note.dto.response;
 
-import com.codeit.torip.task.entity.TripStatus;
+import com.codeit.torip.task.entity.TaskStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -17,10 +17,10 @@ public class TaskNoteDetailResponse {
     private Long taskNoteId;
     @Schema(description = "여행 제목", example = "여행 제목")
     private String tripTitle;
+    @Schema(description = "할일 여행 단계", example = "BEFORE_TRIP")
+    private TaskStatus taskStatus;
     @Schema(description = "할일 제목", example = "할일 제목")
     private String taskTitle;
-    @Schema(description = "할일 여행 단계", example = "BEFORE_TRIP")
-    private TripStatus tripStatus;
     @Schema(description = "할일 노트 제목", example = "할일 노트 제목")
     private String taskNoteTitle;
     @Schema(description = "할일 노트 내용", example = "할일 노트 내용")

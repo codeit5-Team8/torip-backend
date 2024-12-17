@@ -33,22 +33,22 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
         // 쿼리 조건 생성
         BooleanExpression condition = trip.id.eq(taskListRequest.getTripId());
         condition = condition.and(getCommonCondition(assignee));
-        var seq = taskListRequest.getSeq();
+        var seq = taskListRequest.getTaskSeq();
         if (seq != 0) condition = condition.and(task.id.lt(seq));
-        var status = taskListRequest.getTripStatus();
+        var status = taskListRequest.getTaskStatus();
         if (status != null) {
-            condition = condition.and(task.status.eq(status));
+            condition = condition.and(task.taskStatus.eq(status));
         }
-        var scope = taskListRequest.getScope();
+        var scope = taskListRequest.getTaskScope();
         if (scope != null) {
-            condition = condition.and(task.status.eq(status));
+            condition = condition.and(task.scope.eq(scope));
         }
         var pageSize = taskListRequest.getAll() ? TASK_LIMIT : PAGE_SIZE;
         // 할일 목록 불러오기
         return factory.select(
                         Projections.constructor(
                                 TaskDetailResponse.class,
-                                task.id, trip.name, task.title, task.filePath, task.status,
+                                task.id, trip.name, task.title, task.filePath, task.taskStatus,
                                 task.taskDDay, task.scope, task.completionDate,
                                 task.lastCreatedUser.username, task.createdAt, task.lastUpdatedUser.username, task.updatedAt
                         ))
@@ -78,7 +78,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
         var taskDetail = factory.select(
                         Projections.constructor(
                                 TaskDetailResponse.class,
-                                task.id, trip.name, task.title, task.filePath, task.status,
+                                task.id, trip.name, task.title, task.filePath, task.taskStatus,
                                 task.taskDDay, task.scope, task.completionDate,
                                 task.lastCreatedUser.username, task.createdAt, task.lastUpdatedUser.username, task.updatedAt
                         ))

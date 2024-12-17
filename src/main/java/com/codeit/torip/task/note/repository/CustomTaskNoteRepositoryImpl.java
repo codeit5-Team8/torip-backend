@@ -29,14 +29,14 @@ public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
         var taskId = taskNoteListRequest.getTaskId();
-        var seq = taskNoteListRequest.getSeq();
+        var seq = taskNoteListRequest.getTaskNoteSeq();
         // 쿼리 조건 생성
         BooleanExpression condition = getCondition(assignee);
         condition = condition.and(task.id.eq(taskId));
         if (seq != 0) condition = condition.and(taskNote.id.lt(seq));
         return factory.select(
                         Projections.constructor(TaskNoteDetailResponse.class,
-                                taskNote.id, trip.name, task.title, task.status, taskNote.title, taskNote.content,
+                                taskNote.id, trip.name, task.taskStatus, task.title, taskNote.title, taskNote.content,
                                 taskNote.lastCreatedUser.username, taskNote.createdAt,
                                 taskNote.lastUpdatedUser.username, taskNote.updatedAt
                         )
@@ -62,7 +62,7 @@ public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
         condition.and(taskNote.id.eq(taskNoteId));
         return factory.select(
                         Projections.constructor(TaskNoteDetailResponse.class,
-                                taskNote.id, trip.name, task.title, task.status, taskNote.title, taskNote.content,
+                                taskNote.id, trip.name, task.taskStatus, task.title, taskNote.title, taskNote.content,
                                 taskNote.lastCreatedUser.username, taskNote.createdAt,
                                 taskNote.lastUpdatedUser.username, taskNote.updatedAt
                         )
