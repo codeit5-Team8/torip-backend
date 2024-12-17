@@ -1,9 +1,10 @@
 package com.codeit.torip.task.controller;
 
 import com.codeit.torip.common.dto.CommonResponse;
-import com.codeit.torip.task.dto.response.TaskDetailResponse;
-import com.codeit.torip.task.dto.request.TaskRequest;
 import com.codeit.torip.task.dto.request.TaskListRequest;
+import com.codeit.torip.task.dto.request.TaskModRequest;
+import com.codeit.torip.task.dto.request.TaskRegRequest;
+import com.codeit.torip.task.dto.response.TaskDetailResponse;
 import com.codeit.torip.task.dto.response.TaskProceedStatusResponse;
 import com.codeit.torip.task.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,8 +29,8 @@ public class TaskController {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<Long> registerTask(@RequestBody TaskRequest taskRequest) {
-        var taskId = taskService.registerTask(taskRequest);
+    public CommonResponse<Long> registerTask(@RequestBody TaskRegRequest taskRegRequest) {
+        var taskId = taskService.registerTask(taskRegRequest);
         return new CommonResponse<Long>().success(taskId);
     }
 
@@ -61,8 +62,8 @@ public class TaskController {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<Long> modifyTask(@RequestBody TaskRequest taskRequest) {
-        var result = taskService.modifyTask(taskRequest);
+    public CommonResponse<Long> modifyTask(@RequestBody TaskModRequest taskModRequest) {
+        var result = taskService.modifyTask(taskModRequest);
         return new CommonResponse<Long>().success(result);
     }
 

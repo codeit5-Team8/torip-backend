@@ -18,15 +18,13 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskRequest {
+public class TaskRegRequest {
 
     @NotNull
-    @Schema(description = "여행 고유키", example = "1", nullable = false)
+    @Schema(description = "여행 고유키", example = "1")
     private Long tripId;
-    @Schema(description = "할일 고유키", example = "1", nullable = false)
-    private Long taskId;
     @NotBlank
-    @Schema(description = "할일 제목", example = "1", nullable = false)
+    @Schema(description = "할일 제목", example = "1")
     private String taskTitle;
     @Schema(description = "할일 파일 경로", example = "/home/image/sample.jpg")
     private String filePath;
@@ -38,7 +36,7 @@ public class TaskRequest {
     @NotNull
     @Schema(description = "할일 공유 범위", example = "PUBLIC / PRIVATE")
     private TaskScope scope;
-    @Schema(description = "할일 완료일", example = "2024-10-11 15:21:00")
+    @Schema(description = "할일 완료일", example = "2024-10-11 15:21:00", nullable = true)
     private LocalDateTime completionDate;
     @Schema(description = "할일 담당자 목록", example = "[demo@gmail.com]")
     private Set<String> assignees = new HashSet<>();
