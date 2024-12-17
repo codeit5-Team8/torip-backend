@@ -1,6 +1,7 @@
 package com.codeit.torip.common.service;
 
-import com.codeit.torip.common.dto.S3UrlResponse;
+import com.codeit.torip.common.dto.S3DownloadLinkResponse;
+import com.codeit.torip.common.dto.S3UploadLinkResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public S3UrlResponse generateS3UploadUrl(String fileName) {
+    public S3UploadLinkResponse generateS3UploadUrl(String fileName) {
         try {
             // 현재 날짜 기준 디렉토리 경로 생성
             LocalDate now = LocalDate.now();
@@ -48,7 +49,7 @@ public class S3Service {
                     req -> req.putObjectRequest(putObjectRequest)
                             .signatureDuration(Duration.ofMinutes(1))
             );
-            return S3UrlResponse.builder()
+            return S3UploadLinkResponse.builder()
                     .signedUrl(presignRequest.url().toExternalForm())
                     .filePath(uniqueFileName)
                     .build();
@@ -57,7 +58,7 @@ public class S3Service {
         }
     }
 
-    public S3UrlResponse generateS3DownloadUrl(String filePath) {
+    public S3DownloadLinkResponse generateS3DownloadUrl(String filePath) {
         try {
             GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                     .bucket(bucket)
@@ -68,9 +69,8 @@ public class S3Service {
                     req -> req.getObjectRequest(getObjectRequest)
                             .signatureDuration(Duration.ofMinutes(10))
             );
-            return S3UrlResponse.builder()
+            return S3DownloadLinkResponse.builder()
                     .signedUrl(presignedGetObjectRequest.url().toExternalForm())
-                    .filePath(filePath)
                     .build();
         } catch (Exception e) {
             throw new RuntimeException("Signed GET URL 생성에 실패하였습니다.", e);
