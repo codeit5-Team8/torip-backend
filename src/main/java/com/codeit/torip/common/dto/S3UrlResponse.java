@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 public class S3UrlResponse {
 
-    @Schema(description = "파일 이름", example = "https://torip.s3.ap-northeast-2.amazonaws.com/c79dffc9...")
+    @Schema(description = "미리 서명된 S3 링크", example = "https://torip.s3.ap-northeast-2.amazonaws.com/c79dffc9...")
     private String signedUrl;
 
     @Schema(description = "저장된 파일 경로", example = "2024/01/11/uuid-filename.jpg")
