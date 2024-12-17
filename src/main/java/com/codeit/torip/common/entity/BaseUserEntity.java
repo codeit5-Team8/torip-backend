@@ -20,5 +20,5 @@ public class BaseUserEntity extends BaseEntity {
     @CreatedBy
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "last_created_user_id")
-    protected User lastcreatedUser;
+    protected User lastCreatedUser;
 }

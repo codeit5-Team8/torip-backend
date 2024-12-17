@@ -1,8 +1,9 @@
 package com.codeit.torip.task.entity;
 
 import com.codeit.torip.common.entity.BaseUserEntity;
-import com.codeit.torip.note.entity.Note;
-import com.codeit.torip.task.dto.request.TaskRequest;
+import com.codeit.torip.task.dto.request.TaskModRequest;
+import com.codeit.torip.task.dto.request.TaskRegRequest;
+import com.codeit.torip.task.note.entity.TaskNote;
 import com.codeit.torip.trip.entity.Trip;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,10 +16,10 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = false)
-@Builder()
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "task", indexes = {@Index(name = "idx_scope", columnList = "scope")})
 public class Task extends BaseUserEntity {
@@ -32,7 +33,7 @@ public class Task extends BaseUserEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Note> notes = new ArrayList<>();
+    private List<TaskNote> notes = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -45,7 +46,7 @@ public class Task extends BaseUserEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TripStatus status;
+    private TaskStatus taskStatus;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -56,25 +57,25 @@ public class Task extends BaseUserEntity {
 
     private LocalDateTime completionDate;
 
-    public static Task from(TaskRequest taskRequest) {
+    public static Task from(TaskRegRequest taskRegRequest) {
         return Task.builder()
-                .taskDDay(taskRequest.getTaskDDay())
-                .title(taskRequest.getTaskTitle())
-                .filePath(taskRequest.getFilePath())
-                .taskDDay(taskRequest.getTaskDDay())
-                .status(taskRequest.getTripStatus())
-                .scope(taskRequest.getScope())
-                .completionDate(taskRequest.getCompletionDate())
+                .taskDDay(taskRegRequest.getTaskDDay())
+                .title(taskRegRequest.getTaskTitle())
+                .filePath(taskRegRequest.getTaskFilePath())
+                .taskDDay(taskRegRequest.getTaskDDay())
+                .taskStatus(taskRegRequest.getTaskStatus())
+                .scope(taskRegRequest.getTaskScope())
+                .completionDate(taskRegRequest.getTaskCompletionDate())
                 .build();
     }
 
-    public void modifyTo(TaskRequest taskRequest) {
-        this.title = taskRequest.getTaskTitle();
-        this.filePath = taskRequest.getFilePath();
-        this.status = taskRequest.getTripStatus();
-        this.taskDDay = taskRequest.getTaskDDay();
-        this.scope = taskRequest.getScope();
-        this.completionDate = taskRequest.getCompletionDate();
+    public void modifyTo(TaskModRequest taskModRequest) {
+        this.title = taskModRequest.getTaskTitle();
+        this.filePath = taskModRequest.getTaskFilePath();
+        this.taskStatus = taskModRequest.getTaskStatus();
+        this.taskDDay = taskModRequest.getTaskDDay();
+        this.scope = taskModRequest.getTaskScope();
+        this.completionDate = taskModRequest.getTaskCompletionDate();
     }
 
 }
