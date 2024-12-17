@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/torip/task/note")
-@Tag(name = "Note", description = "노트 관련 API")
+@Tag(name = "Task Note", description = "할일 노트 관련 API")
 public class TaskNoteController {
 
     private final TaskNoteService taskNoteService;
