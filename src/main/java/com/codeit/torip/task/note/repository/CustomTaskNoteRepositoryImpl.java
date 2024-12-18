@@ -34,8 +34,8 @@ public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
         // 쿼리 조건 생성
         BooleanExpression condition = getCondition(assignee);
         condition = condition.and(task.id.eq(taskId));
-        if (seq != 0) condition = condition.and(taskNote.id.lt(seq));
-        return factory.select(
+        if (seq != null && seq != 0) condition = condition.and(taskNote.id.lt(seq));
+        return factory.selectDistinct(
                         Projections.constructor(TaskNoteDetailDto.class,
                                 taskNote.id, task.taskStatus, task.title, taskNote.title, taskNote.content,
                                 taskNote.lastCreatedUser.username, taskNote.createdAt,
@@ -61,7 +61,7 @@ public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
         // 쿼리 조건 생성
         BooleanExpression condition = getCondition(assignee);
         condition.and(taskNote.id.eq(taskNoteId));
-        return factory.select(
+        return factory.selectDistinct(
                         Projections.constructor(TaskNoteDetailResponse.class,
                                 taskNote.id, trip.name, task.taskStatus, task.title, taskNote.title, taskNote.content,
                                 taskNote.lastCreatedUser.username, taskNote.createdAt,

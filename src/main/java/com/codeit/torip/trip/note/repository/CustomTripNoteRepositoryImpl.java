@@ -30,10 +30,10 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
         // 쿼리 조건 생성
         var seq = tripNoteListRequest.getTripNoteSeq();
         var condition = trip.id.eq(tripNoteListRequest.getTripId());
-        if (seq != 0) condition = condition.and(tripNote.id.lt(seq));
+        if (seq != null && seq != 0) condition = condition.and(tripNote.id.lt(seq));
         condition = condition.and(getCommonCondition());
         // 노트 목록 불러오기
-        return factory.select(
+        return factory.selectDistinct(
                         Projections.constructor(TripNoteDetailDto.class,
                                 tripNote.id, tripNote.title, tripNote.content,
                                 tripNote.lastCreatedUser.username, tripNote.createdAt,
@@ -60,7 +60,7 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
         var condition = tripNote.id.eq(tripNoteId);
         condition = condition.and(getCommonCondition());
         // 노트 상세 불러오기
-        return factory.select(
+        return factory.selectDistinct(
                         Projections.constructor(TripNoteDetailResponse.class,
                                 tripNote.id, trip.name, tripNote.title, tripNote.content,
                                 tripNote.lastCreatedUser.username, tripNote.createdAt,
