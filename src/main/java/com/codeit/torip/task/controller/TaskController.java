@@ -10,6 +10,7 @@ import com.codeit.torip.task.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +30,7 @@ public class TaskController {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<Long> registerTask(@RequestBody TaskRegRequest taskRegRequest) {
+    public CommonResponse<Long> registerTask(@RequestBody @Valid TaskRegRequest taskRegRequest) {
         var taskId = taskService.registerTask(taskRegRequest);
         return new CommonResponse<Long>().success(taskId);
     }
@@ -62,7 +63,7 @@ public class TaskController {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<Long> modifyTask(@RequestBody TaskModRequest taskModRequest) {
+    public CommonResponse<Long> modifyTask(@RequestBody @Valid TaskModRequest taskModRequest) {
         var result = taskService.modifyTask(taskModRequest);
         return new CommonResponse<Long>().success(result);
     }

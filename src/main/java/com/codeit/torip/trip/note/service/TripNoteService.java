@@ -6,6 +6,7 @@ import com.codeit.torip.trip.entity.Trip;
 import com.codeit.torip.trip.note.dto.request.TripNoteListRequest;
 import com.codeit.torip.trip.note.dto.request.TripNoteModRequest;
 import com.codeit.torip.trip.note.dto.request.TripNoteRegRequest;
+import com.codeit.torip.trip.note.dto.response.TripNoteDetailListResponse;
 import com.codeit.torip.trip.note.dto.response.TripNoteDetailResponse;
 import com.codeit.torip.trip.note.entity.TripNote;
 import com.codeit.torip.trip.note.repository.TripNoteRepository;
@@ -15,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -25,9 +24,14 @@ public class TripNoteService {
     private final TripNoteRepository tripNoteRepository;
     private final TripRepository tripRepository;
 
-    public List<TripNoteDetailResponse> getNoteList(TripNoteListRequest tripNoteListRequest) {
+    public TripNoteDetailListResponse getNoteList(TripNoteListRequest tripNoteListRequest) {
+        var tripEntity = checkTripMember(tripNoteListRequest.getTripId());
+        var tripNoteList = tripNoteRepository.selectTripNoteDetailList(tripNoteListRequest);
         // 노트 목록 조회
-        return tripNoteRepository.selectTripNoteDetailList(tripNoteListRequest);
+        return TripNoteDetailListResponse.builder()
+                .tripTitle(tripEntity.getName())
+                .details(tripNoteList)
+                .build();
     }
 
     public TripNoteDetailResponse getNoteDetail(long tripNoteId) {

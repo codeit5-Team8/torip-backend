@@ -8,6 +8,7 @@ import com.codeit.torip.task.note.dto.request.TaskNoteListRequest;
 import com.codeit.torip.task.note.dto.request.TaskNoteModRequest;
 import com.codeit.torip.task.note.dto.request.TaskNoteRegRequest;
 import com.codeit.torip.task.note.dto.response.TaskNoteDeletedResponse;
+import com.codeit.torip.task.note.dto.response.TaskNoteDetailListResponse;
 import com.codeit.torip.task.note.dto.response.TaskNoteDetailResponse;
 import com.codeit.torip.task.note.entity.TaskNote;
 import com.codeit.torip.task.note.repository.TaskNoteRepository;
@@ -18,8 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -28,16 +27,20 @@ public class TaskNoteService {
     private final TaskNoteRepository taskNoteRepository;
     private final TaskRepository taskRepository;
 
-    public List<TaskNoteDetailResponse> getTaskNoteList(TaskNoteListRequest taskNoteListRequest) {
+    public TaskNoteDetailListResponse getTaskNoteList(TaskNoteListRequest taskNoteListRequest) {
+        var taskEntity = checkTaskAssignee(taskNoteListRequest.getTaskId());
+        var taskNoteList = taskNoteRepository.selectTaskNoteDetailList(taskNoteListRequest);
         // 노트 목록 조회
-        return taskNoteRepository.selectTaskNoteDetailList(taskNoteListRequest);
+        return TaskNoteDetailListResponse.builder()
+                .tripTitle(taskEntity.getTrip().getName())
+                .details(taskNoteList)
+                .build();
     }
 
     public TaskNoteDetailResponse getTaskNoteDetail(long noteId) {
         // 노트 상세 조회
         return taskNoteRepository.selectTaskNoteDetail(noteId);
     }
-
 
     @Transactional
     public Long registerTaskNote(TaskNoteRegRequest taskNoteRegRequest) {
@@ -77,9 +80,9 @@ public class TaskNoteService {
         return deletedTaskNote;
     }
 
-    private Task checkTaskAssignee(long tripId) {
+    private Task checkTaskAssignee(long taskId) {
         var email = AuthUtil.getEmail();
-        var taskEntity = taskRepository.findByIdWithAssignees(tripId)
+        var taskEntity = taskRepository.findByIdWithAssignees(taskId)
                 .orElseThrow(() -> new AlertException("할일이 존재하지 않습니다."));
         var isAssignee = taskEntity.getAssignees().stream().map(TaskAssignee::getAssignee)
                 .map(User::getEmail).anyMatch((e) -> e.equals(email));

@@ -1,21 +1,13 @@
-package com.codeit.torip.trip.note.dto.response;
+package com.codeit.torip.trip.note.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class TripNoteDetailResponse {
+public class TripNoteDetailDto {
 
     @Schema(description = "여행 노트 고유키", example = "1")
     private Long tripNoteId;
-    @Schema(description = "여행 제목", example = "여행 제목")
-    private String tripTitle;
     @Schema(description = "여행 노트 제목", example = "여행 노트 제목")
     private String tripNoteTitle;
     @Schema(description = "여행 노트 내용", example = "여행 노트 내용")

@@ -1,6 +1,7 @@
 package com.codeit.torip.task.note.repository;
 
 import com.codeit.torip.auth.util.AuthUtil;
+import com.codeit.torip.task.note.dto.TaskNoteDetailDto;
 import com.codeit.torip.task.note.dto.request.TaskNoteListRequest;
 import com.codeit.torip.task.note.dto.response.TaskNoteDeletedResponse;
 import com.codeit.torip.task.note.dto.response.TaskNoteDetailResponse;
@@ -24,7 +25,7 @@ public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
     private final JPAQueryFactory factory;
 
     @Override
-    public List<TaskNoteDetailResponse> selectTaskNoteDetailList(TaskNoteListRequest taskNoteListRequest) {
+    public List<TaskNoteDetailDto> selectTaskNoteDetailList(TaskNoteListRequest taskNoteListRequest) {
         var assignee = new QUser("assignee");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
@@ -35,8 +36,8 @@ public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
         condition = condition.and(task.id.eq(taskId));
         if (seq != 0) condition = condition.and(taskNote.id.lt(seq));
         return factory.select(
-                        Projections.constructor(TaskNoteDetailResponse.class,
-                                taskNote.id, trip.name, task.taskStatus, task.title, taskNote.title, taskNote.content,
+                        Projections.constructor(TaskNoteDetailDto.class,
+                                taskNote.id, task.taskStatus, task.title, taskNote.title, taskNote.content,
                                 taskNote.lastCreatedUser.username, taskNote.createdAt,
                                 taskNote.lastUpdatedUser.username, taskNote.updatedAt
                         )

@@ -1,6 +1,7 @@
 package com.codeit.torip.trip.note.repository;
 
 import com.codeit.torip.auth.util.AuthUtil;
+import com.codeit.torip.trip.note.dto.TripNoteDetailDto;
 import com.codeit.torip.trip.note.dto.request.TripNoteListRequest;
 import com.codeit.torip.trip.note.dto.response.TripNoteDetailResponse;
 import com.codeit.torip.user.entity.QUser;
@@ -22,7 +23,7 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
     private final JPAQueryFactory factory;
 
     @Override
-    public List<TripNoteDetailResponse> selectTripNoteDetailList(TripNoteListRequest tripNoteListRequest) {
+    public List<TripNoteDetailDto> selectTripNoteDetailList(TripNoteListRequest tripNoteListRequest) {
         var owner = new QUser("owner");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
@@ -33,8 +34,8 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
         condition = condition.and(getCommonCondition());
         // 노트 목록 불러오기
         return factory.select(
-                        Projections.constructor(TripNoteDetailResponse.class,
-                                tripNote.id, trip.name, tripNote.title, tripNote.content,
+                        Projections.constructor(TripNoteDetailDto.class,
+                                tripNote.id, tripNote.title, tripNote.content,
                                 tripNote.lastCreatedUser.username, tripNote.createdAt,
                                 tripNote.lastUpdatedUser.username, tripNote.updatedAt
                         )

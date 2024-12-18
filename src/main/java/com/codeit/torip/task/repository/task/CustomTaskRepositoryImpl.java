@@ -31,8 +31,9 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
         // 쿼리 조건 생성
-        BooleanExpression condition = trip.id.eq(taskListRequest.getTripId());
-        condition = condition.and(getCommonCondition(assignee));
+        var condition = getCommonCondition(assignee);
+        var tripId = taskListRequest.getTripId();
+        if (tripId != 0) condition = condition.and(trip.id.eq(taskListRequest.getTripId()));
         var seq = taskListRequest.getTaskSeq();
         if (seq != 0) condition = condition.and(task.id.lt(seq));
         var status = taskListRequest.getTaskStatus();

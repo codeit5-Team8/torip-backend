@@ -6,10 +6,13 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.net.BindException;
 
 import static com.codeit.torip.common.contant.ToripConstants.HttpConstant.CLIENT_FAIL_CODE;
 import static com.codeit.torip.common.contant.ToripConstants.HttpConstant.SERVER_FAIL_CODE;
@@ -35,7 +38,7 @@ public class GlobalExceptionHandler {
         log.warn("AlertException", e);
         return new CommonResponse<>().fail(CLIENT_FAIL_CODE, e.getMessage());
     }
-    
+
     @ExceptionHandler(ExpiredJwtException.class)
     public CommonResponse<?> expiredJwtExceptionHandler(ExpiredJwtException e) {
         log.warn("ExpiredJwtException", e);
@@ -45,7 +48,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public CommonResponse<?> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
         log.warn("MethodArgumentNotValidException", e);
-        return new CommonResponse<>().fail(CLIENT_FAIL_CODE, e.getMessage());
+        String errorMessage = e.getBindingResult().getFieldErrors().stream()
+                .map(FieldError::getDefaultMessage).findFirst().orElse("유효성 검사 오류 발생");
+        return new CommonResponse<>().fail(CLIENT_FAIL_CODE, errorMessage);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -69,6 +74,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public CommonResponse<?> httpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException e) {
         log.warn("HttpRequestMethodNotSupportedException", e);
+        return new CommonResponse<>().fail(CLIENT_FAIL_CODE, e.getMessage());
+    }
+
+    @ExceptionHandler(BindException.class)
+    public CommonResponse<?> bindExceptionHandler(BindException e) {
         return new CommonResponse<>().fail(CLIENT_FAIL_CODE, e.getMessage());
     }
 
