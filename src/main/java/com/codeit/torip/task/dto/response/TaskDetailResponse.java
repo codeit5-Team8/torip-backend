@@ -35,11 +35,11 @@ public class TaskDetailResponse {
     private TaskScope taskScope;
     @Schema(description = "할일 완료일", example = "2024-10-11 15:21:00")
     private LocalDateTime taskCompletionDate;
-    @Schema(description = "할일 등록자", example = "demo@gmail.com")
+    @Schema(description = "할일 등록자", example = "홍길동")
     private String createdBy;
     @Schema(description = "할일 등록일", example = "2024-10-11 15:21:00")
     private LocalDateTime createdAt;
-    @Schema(description = "할일 수정자", example = "demo@gmail.com")
+    @Schema(description = "할일 수정자", example = "홍길동")
     private String modifiedBy;
     @Schema(description = "할일 수정일", example = "2024-10-11 15:21:00")
     private LocalDateTime modifiedAt;

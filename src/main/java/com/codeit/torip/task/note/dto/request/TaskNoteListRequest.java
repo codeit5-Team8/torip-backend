@@ -13,11 +13,11 @@ import lombok.Setter;
 @AllArgsConstructor
 public class TaskNoteListRequest {
 
-    @NotNull
-    @Schema(description = "할일 고유키", example = "1", nullable = false)
+    @NotNull(message = "할일 고유키는 필수 값입니다..")
+    @Schema(description = "할일 고유키", example = "1")
     private Long taskId;
-    @NotNull
-    @Schema(description = "현재 페이지에서 가장 작은 할일 노트 고유키 [ 최초 조회시 0으로 요청 ]", example = "1", nullable = false)
-    private Long taskNoteSeq;
+    @NotNull(message = "할일 노트 시퀀스는 필수 값입니다.")
+    @Schema(description = "현재 페이지에서 가장 작은 할일 노트 고유키", example = "1", defaultValue = "0")
+    private Long taskNoteSeq = 0L;
 
 }
