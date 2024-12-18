@@ -20,7 +20,7 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
 
 jwt:
-  expiredAccessTokenMs: 600000
+  expiredAccessTokenMs: 60000
   expiredRefreshTokenMs: 86400000
   secretKey: ENC(N+AnyaBk0MGt58SHgUFDn6QLWvhUSU5MVpWMcigoNUDnDjwxqheFtpNBV9IO8EnG)
 

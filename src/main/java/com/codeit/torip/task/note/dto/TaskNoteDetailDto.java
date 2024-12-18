@@ -1,4 +1,4 @@
-package com.codeit.torip.task.note.dto.response;
+package com.codeit.torip.task.note.dto;
 
 import com.codeit.torip.task.entity.TaskStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,12 +11,9 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TaskNoteDetailResponse {
-
+public class TaskNoteDetailDto {
     @Schema(description = "할일 노트 고유키", example = "1")
     private Long taskNoteId;
-    @Schema(description = "여행 제목", example = "여행 제목")
-    private String tripTitle;
     @Schema(description = "할일 여행 단계", example = "BEFORE_TRIP")
     private TaskStatus taskStatus;
     @Schema(description = "할일 제목", example = "할일 제목")
@@ -33,5 +30,4 @@ public class TaskNoteDetailResponse {
     private String modifiedBy;
     @Schema(description = "할일 노트 수정일", example = "2024-10-11 15:21:00")
     private LocalDateTime modifiedAt;
-
 }

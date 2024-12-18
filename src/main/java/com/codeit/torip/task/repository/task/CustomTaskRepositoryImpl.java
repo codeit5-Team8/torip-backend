@@ -31,10 +31,11 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
         // 쿼리 조건 생성
-        BooleanExpression condition = trip.id.eq(taskListRequest.getTripId());
-        condition = condition.and(getCommonCondition(assignee));
+        var condition = getCommonCondition(assignee);
+        var tripId = taskListRequest.getTripId();
+        if (tripId != null && tripId != 0) condition = condition.and(trip.id.eq(taskListRequest.getTripId()));
         var seq = taskListRequest.getTaskSeq();
-        if (seq != 0) condition = condition.and(task.id.lt(seq));
+        if (seq != null && seq != 0) condition = condition.and(task.id.lt(seq));
         var status = taskListRequest.getTaskStatus();
         if (status != null) {
             condition = condition.and(task.taskStatus.eq(status));
@@ -45,7 +46,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
         }
         var pageSize = taskListRequest.getAll() ? TASK_LIMIT : PAGE_SIZE;
         // 할일 목록 불러오기
-        return factory.select(
+        return factory.selectDistinct(
                         Projections.constructor(
                                 TaskDetailResponse.class,
                                 task.id, trip.name, task.title, task.filePath, task.taskStatus,
@@ -75,7 +76,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
         BooleanExpression condition = task.id.eq(taskId);
         condition = condition.and(getCommonCondition(assignee));
         // 할일 상세 불러오기
-        var taskDetail = factory.select(
+        var taskDetail = factory.selectDistinct(
                         Projections.constructor(
                                 TaskDetailResponse.class,
                                 task.id, trip.name, task.title, task.filePath, task.taskStatus,
@@ -102,7 +103,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
         // 쿼리 조건 생성
         BooleanExpression condition = getCommonCondition(assignee);
         // 할일 완료도 불러오기
-        return factory.select(
+        return factory.selectDistinct(
                         Projections.constructor(
                                 TaskProceedStatusDto.class,
                                 task.scope, task.completionDate

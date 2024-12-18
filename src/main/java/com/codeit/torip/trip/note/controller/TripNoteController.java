@@ -4,15 +4,15 @@ import com.codeit.torip.common.dto.CommonResponse;
 import com.codeit.torip.trip.note.dto.request.TripNoteListRequest;
 import com.codeit.torip.trip.note.dto.request.TripNoteModRequest;
 import com.codeit.torip.trip.note.dto.request.TripNoteRegRequest;
+import com.codeit.torip.trip.note.dto.response.TripNoteDetailListResponse;
 import com.codeit.torip.trip.note.dto.response.TripNoteDetailResponse;
 import com.codeit.torip.trip.note.service.TripNoteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,26 +22,26 @@ public class TripNoteController {
 
     private final TripNoteService tripNoteService;
 
+    @GetMapping
+    @Operation(summary = "여행별 노트 모아보기 API", description = "여행에 대한 노트 목록을 조회합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공")
+            }
+    )
+    public CommonResponse<TripNoteDetailListResponse> getTripNoteList(@ModelAttribute @Valid TripNoteListRequest tripNoteListRequest) {
+        var tripNoteDetailList = tripNoteService.getNoteList(tripNoteListRequest);
+        return new CommonResponse<TripNoteDetailListResponse>().success(tripNoteDetailList);
+    }
+
     @PostMapping
     @Operation(summary = "여행 노트 등록 API", description = "여행에 대한 노트를 등록합니다",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<Long> registerTripNote(@RequestBody TripNoteRegRequest tripNoteRegRequest) {
+    public CommonResponse<Long> registerTripNote(@RequestBody @Valid TripNoteRegRequest tripNoteRegRequest) {
         var tripNoteId = tripNoteService.registerNode(tripNoteRegRequest);
         return new CommonResponse<Long>().success(tripNoteId);
-    }
-
-    @GetMapping
-    @Operation(summary = "여행 노트 목록 조회 API", description = "여행에 대한 노트 목록을 조회합니다",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "성공")
-            }
-    )
-    public CommonResponse<List<TripNoteDetailResponse>> getTripNoteList(@ModelAttribute TripNoteListRequest tripNoteListRequest) {
-        var tripNoteDetailList = tripNoteService.getNoteList(tripNoteListRequest);
-        return new CommonResponse<List<TripNoteDetailResponse>>().success(tripNoteDetailList);
     }
 
     @GetMapping("/{tripNoteId}")
@@ -61,7 +61,7 @@ public class TripNoteController {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<Long> modifyTripNote(@RequestBody TripNoteModRequest tripNoteModRequest) {
+    public CommonResponse<Long> modifyTripNote(@RequestBody @Valid TripNoteModRequest tripNoteModRequest) {
         var tripNoteId = tripNoteService.modifyNote(tripNoteModRequest);
         return new CommonResponse<Long>().success(tripNoteId);
     }

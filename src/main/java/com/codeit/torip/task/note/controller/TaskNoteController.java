@@ -5,15 +5,15 @@ import com.codeit.torip.task.note.dto.request.TaskNoteListRequest;
 import com.codeit.torip.task.note.dto.request.TaskNoteModRequest;
 import com.codeit.torip.task.note.dto.request.TaskNoteRegRequest;
 import com.codeit.torip.task.note.dto.response.TaskNoteDeletedResponse;
+import com.codeit.torip.task.note.dto.response.TaskNoteDetailListResponse;
 import com.codeit.torip.task.note.dto.response.TaskNoteDetailResponse;
 import com.codeit.torip.task.note.service.TaskNoteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,26 +23,26 @@ public class TaskNoteController {
 
     private final TaskNoteService taskNoteService;
 
+    @GetMapping
+    @Operation(summary = "할일별 노트 모아보기 API", description = "할일에 대한 노트 목록을 조회합니다",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "성공")
+            }
+    )
+    public CommonResponse<TaskNoteDetailListResponse> getTaskNoteList(@ModelAttribute @Valid TaskNoteListRequest taskNoteListRequest) {
+        var taskNoteDetailList = taskNoteService.getTaskNoteList(taskNoteListRequest);
+        return new CommonResponse<TaskNoteDetailListResponse>().success(taskNoteDetailList);
+    }
+
     @PostMapping
     @Operation(summary = "할일 노트 등록 API", description = "할일에 대한 노트를 등록합니다",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<Long> registerTaskNote(@RequestBody TaskNoteRegRequest taskNoteRegRequest) {
+    public CommonResponse<Long> registerTaskNote(@RequestBody @Valid TaskNoteRegRequest taskNoteRegRequest) {
         var taskNoteId = taskNoteService.registerTaskNote(taskNoteRegRequest);
         return new CommonResponse<Long>().success(taskNoteId);
-    }
-
-    @GetMapping
-    @Operation(summary = "할일 노트 목록 조회 API", description = "할일에 대한 노트 목록을 조회합니다",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "성공")
-            }
-    )
-    public CommonResponse<List<TaskNoteDetailResponse>> getTaskNoteList(@ModelAttribute TaskNoteListRequest taskNoteListRequest) {
-        var taskNoteDetailList = taskNoteService.getTaskNoteList(taskNoteListRequest);
-        return new CommonResponse<List<TaskNoteDetailResponse>>().success(taskNoteDetailList);
     }
 
     @GetMapping("/{taskNoteId}")
@@ -62,7 +62,7 @@ public class TaskNoteController {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<Long> modifyTaskNote(@RequestBody TaskNoteModRequest taskNoteModRequest) {
+    public CommonResponse<Long> modifyTaskNote(@RequestBody @Valid TaskNoteModRequest taskNoteModRequest) {
         var taskNoteId = taskNoteService.modifyTaskNote(taskNoteModRequest);
         return new CommonResponse<Long>().success(taskNoteId);
     }

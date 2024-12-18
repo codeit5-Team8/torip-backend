@@ -13,11 +13,10 @@ import lombok.Setter;
 @AllArgsConstructor
 public class TripNoteListRequest {
 
-    @NotNull
-    @Schema(description = "여행 고유키", example = "1", nullable = false)
+    @NotNull(message = "여행 고유키는 필수 값입니다.")
+    @Schema(description = "여행 고유키", example = "1")
     private Long tripId;
-    @NotNull
-    @Schema(description = "현재 페이지에서 가장 작은 여행 노트 고유키 [ 최초 조회시 0으로 요청 ]", example = "1", nullable = false)
-    private Long tripNoteSeq;
+    @Schema(description = "현재 페이지에서 가장 작은 여행 노트 고유키", example = "1", defaultValue = "0")
+    private Long tripNoteSeq = 0L;
 
 }
