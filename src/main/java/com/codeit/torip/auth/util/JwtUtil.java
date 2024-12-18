@@ -43,9 +43,15 @@ public class JwtUtil {
                 .claim("loginId", loginId)
                 .claim("type", "access")
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expiredAccessTokenMs))
+                .expiration(getAccessTokenExpiredAt())
                 .signWith(secretKey)
                 .compact();
+    }
+
+    public Date getAccessTokenExpiredAt() {
+        System.out.println("expiredAccessTokenMs = " + expiredAccessTokenMs);
+        System.out.println("System.currentTimeMillis() = " + System.currentTimeMillis());
+        return new Date(System.currentTimeMillis() + expiredAccessTokenMs);
     }
 
     public String createRefreshToken(String loginId) {

@@ -2,6 +2,7 @@ package com.codeit.torip.auth.controller;
 
 import com.codeit.torip.auth.dto.request.LoginRequest;
 import com.codeit.torip.auth.dto.request.RegisterRequest;
+import com.codeit.torip.auth.dto.request.TokenRequest;
 import com.codeit.torip.auth.dto.response.EmailCheckResponse;
 import com.codeit.torip.auth.dto.response.LoginResponse;
 import com.codeit.torip.auth.dto.response.TokenResponse;
@@ -50,8 +51,8 @@ public class AuthController {
                     @ApiResponse(responseCode = "400", description = "토큰 갱신 실패")
             }
     )
-    public CommonResponse<TokenResponse> refresh(@RequestBody String refreshToken) {
-        return new CommonResponse<TokenResponse>().success(authService.refresh(refreshToken));
+    public CommonResponse<TokenResponse> refresh(@RequestBody TokenRequest refreshToken) {
+        return new CommonResponse<TokenResponse>().success(authService.refresh(refreshToken.getRefreshToken()));
     }
 
     @GetMapping("/register/username/exists")
