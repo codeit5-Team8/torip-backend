@@ -2,8 +2,6 @@ package com.codeit.torip.task.note.service;
 
 import com.codeit.torip.auth.util.AuthUtil;
 import com.codeit.torip.common.exception.AlertException;
-import com.codeit.torip.task.entity.Task;
-import com.codeit.torip.task.entity.TaskAssignee;
 import com.codeit.torip.task.note.dto.request.TaskNoteListRequest;
 import com.codeit.torip.task.note.dto.request.TaskNoteModRequest;
 import com.codeit.torip.task.note.dto.request.TaskNoteRegRequest;
@@ -13,7 +11,8 @@ import com.codeit.torip.task.note.dto.response.TaskNoteDetailResponse;
 import com.codeit.torip.task.note.entity.TaskNote;
 import com.codeit.torip.task.note.repository.TaskNoteRepository;
 import com.codeit.torip.task.repository.task.TaskRepository;
-import com.codeit.torip.user.entity.User;
+import com.codeit.torip.trip.entity.Trip;
+import com.codeit.torip.trip.repository.TripRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -26,9 +25,11 @@ public class TaskNoteService {
 
     private final TaskNoteRepository taskNoteRepository;
     private final TaskRepository taskRepository;
+    private final TripRepository tripRepository;
 
     public TaskNoteDetailListResponse getTaskNoteList(TaskNoteListRequest taskNoteListRequest) {
-        var taskEntity = checkTaskAssignee(taskNoteListRequest.getTaskId());
+        var taskEntity = taskRepository.findByIdWithTrip(taskNoteListRequest.getTaskId())
+                .orElseThrow(() -> new AlertException("할일이 존재하지 않습니다."));
         var taskNoteList = taskNoteRepository.selectTaskNoteDetailList(taskNoteListRequest);
         // 노트 목록 조회
         return TaskNoteDetailListResponse.builder()
@@ -37,15 +38,18 @@ public class TaskNoteService {
                 .build();
     }
 
-    public TaskNoteDetailResponse getTaskNoteDetail(long noteId) {
+    public TaskNoteDetailResponse getTaskNoteDetail(long taskNoteId) {
         // 노트 상세 조회
-        return taskNoteRepository.selectTaskNoteDetail(noteId);
+        return taskNoteRepository.selectTaskNoteDetail(taskNoteId)
+                .orElseThrow(() -> new AlertException("할일 노트를 조회하실 수 없습니다."));
     }
 
     @Transactional
     public Long registerTaskNote(TaskNoteRegRequest taskNoteRegRequest) {
+        var taskEntity = taskRepository.findByIdWithTrip(taskNoteRegRequest.getTaskId())
+                .orElseThrow(() -> new AlertException("할일이 존재하지 않습니다."));
         // 권한 체크
-        var taskEntity = checkTaskAssignee(taskNoteRegRequest.getTaskId());
+        checkTripMember(taskEntity.getTrip().getId());
         // 노트 세팅
         var taskNoteEntity = TaskNote.from(taskNoteRegRequest);
         taskNoteEntity.setTask(taskEntity);
@@ -56,9 +60,8 @@ public class TaskNoteService {
 
     @Transactional
     public Long modifyTaskNote(TaskNoteModRequest taskNoteModRequest) {
-        var taskNoteId = taskNoteModRequest.getTaskNoteId();
         // 권한 체크
-        var isModifiable = taskNoteRepository.isAuthorizedToModify(taskNoteId);
+        var isModifiable = taskNoteRepository.isAuthorizedToModify(taskNoteModRequest.getTaskNoteId());
         if (isModifiable) throw new AlertException("할일 노트를 수정할 권한이 없습니다.");
         // 노트 조회
         var noteEntity = taskNoteRepository.findById(taskNoteModRequest.getTaskNoteId())
@@ -80,14 +83,11 @@ public class TaskNoteService {
         return deletedTaskNote;
     }
 
-    private Task checkTaskAssignee(long taskId) {
-        var email = AuthUtil.getEmail();
-        var taskEntity = taskRepository.findByIdWithAssignees(taskId)
-                .orElseThrow(() -> new AlertException("할일이 존재하지 않습니다."));
-        var isAssignee = taskEntity.getAssignees().stream().map(TaskAssignee::getAssignee)
-                .map(User::getEmail).anyMatch((e) -> e.equals(email));
-        if (!isAssignee) throw new AlertException("할일의 담당자가 아닙니다.");
-        return taskEntity;
+    private Trip checkTripMember(long tripId) {
+        var tripEntity = tripRepository.findByIdWithMembers(tripId)
+                .orElseThrow(() -> new AlertException("여행이 존재하지 않습니다."));
+        tripEntity.checkMemberExists(AuthUtil.getUserInfo());
+        return tripEntity;
     }
 
 }

@@ -5,12 +5,13 @@ import com.codeit.torip.trip.note.dto.TripNoteDetailDto;
 import com.codeit.torip.trip.note.dto.request.TripNoteListRequest;
 import com.codeit.torip.trip.note.dto.response.TripNoteDetailResponse;
 import com.codeit.torip.user.entity.QUser;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.codeit.torip.common.contant.ToripConstants.Note.PAGE_SIZE;
 import static com.codeit.torip.trip.entity.QTrip.trip;
@@ -24,13 +25,15 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
 
     @Override
     public List<TripNoteDetailDto> selectTripNoteDetailList(TripNoteListRequest tripNoteListRequest) {
-        var owner = new QUser("owner");
+        var member = new QUser("member");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
         // 쿼리 조건 생성
         var seq = tripNoteListRequest.getTripNoteSeq();
-        var condition = trip.id.eq(tripNoteListRequest.getTripId());
-        if (seq != null && seq != 0) condition = condition.and(tripNote.id.lt(seq));
+
+        var condition = getCommonCondition();
+        condition.and(trip.id.eq(tripNoteListRequest.getTripId()));
+        if (seq != null && seq != 0) condition.and(tripNote.id.lt(seq));
         // 노트 목록 불러오기
         return factory.selectDistinct(
                         Projections.constructor(TripNoteDetailDto.class,
@@ -39,7 +42,8 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
                                 tripNote.lastUpdatedUser.username, tripNote.updatedAt
                         )
                 ).from(trip)
-                .join(trip.owner, owner)
+                .join(trip.members, tripMember)
+                .join(tripMember.user, member)
                 .join(trip.notes, tripNote)
                 .join(tripNote.lastCreatedUser, createdBy)
                 .join(tripNote.lastUpdatedUser, modifiedBy)
@@ -50,23 +54,21 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
     }
 
     @Override
-    public TripNoteDetailResponse selectTripNoteDetail(long tripNoteId) {
-        var owner = new QUser("owner");
+    public Optional<TripNoteDetailResponse> selectTripNoteDetail(long tripNoteId) {
         var member = new QUser("tripMember");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
         // 쿼리 조건 생성
-        var condition = tripNote.id.eq(tripNoteId);
-        condition = condition.and(getCommonCondition());
+        var condition = getCommonCondition();
+        condition.and(tripNote.id.eq(tripNoteId));
         // 노트 상세 불러오기
-        return factory.selectDistinct(
+        var tripNoteDetail = factory.selectDistinct(
                         Projections.constructor(TripNoteDetailResponse.class,
                                 tripNote.id, trip.name, tripNote.title, tripNote.content,
                                 tripNote.lastCreatedUser.username, tripNote.createdAt,
                                 tripNote.lastUpdatedUser.username, tripNote.updatedAt
                         )
                 ).from(trip)
-                .join(trip.owner, owner)
                 .join(trip.notes, tripNote)
                 .join(trip.members, tripMember)
                 .join(tripMember.user, member)
@@ -74,6 +76,7 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
                 .join(tripNote.lastUpdatedUser, modifiedBy)
                 .where(condition)
                 .fetchOne();
+        return Optional.ofNullable(tripNoteDetail);
     }
 
     @Override
@@ -82,8 +85,9 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
         var createdBy = new QUser("createdBy");
         // 쿼리 조건 생성
         var email = AuthUtil.getEmail();
-        var condition = tripNote.id.eq(tripNoteId);
-        condition = condition.and(trip.owner.email.eq(email).or(tripNote.lastCreatedUser.email.eq(email)));
+        var condition = new BooleanBuilder();
+        condition.and(tripNote.id.eq(tripNoteId));
+        condition.and(trip.owner.email.eq(email).or(tripNote.lastCreatedUser.email.eq(email)));
         // 수정 가능 여부 판단
         return factory.selectOne()
                 .from(tripNote)
@@ -94,9 +98,10 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
                 .fetchFirst() != null;
     }
 
-    private BooleanExpression getCommonCondition() {
+    private BooleanBuilder getCommonCondition() {
         var email = AuthUtil.getEmail();
-        return trip.owner.email.eq(email).or(tripMember.user.email.eq(email));
+        var condition = new BooleanBuilder();
+        return condition.and(tripMember.user.email.eq(email));
     }
 
 }

@@ -29,7 +29,9 @@ public class TripNoteService {
     private final TripRepository tripRepository;
 
     public TripNoteDetailListResponse getNoteList(TripNoteListRequest tripNoteListRequest) {
+        // 권한 체크
         var tripEntity = checkTripMember(tripNoteListRequest.getTripId());
+        // 노트 조회
         var tripNoteList = tripNoteRepository.selectTripNoteDetailList(tripNoteListRequest);
         var taskNoteList = taskNoteRepository.selectTaskNoteDetailListFromTripId(tripNoteListRequest);
         // 전체 5개에서 각 리스트의 비율 계산
@@ -59,11 +61,12 @@ public class TripNoteService {
 
     public TripNoteDetailResponse getNoteDetail(long tripNoteId) {
         // 노트 상세 조회
-        return tripNoteRepository.selectTripNoteDetail(tripNoteId);
+        return tripNoteRepository.selectTripNoteDetail(tripNoteId)
+                .orElseThrow(() -> new AlertException("여행 노트를 조회하실 수 없습니다."));
     }
 
     @Transactional
-    public Long registerNode(TripNoteRegRequest tripNoteRegRequest) {
+    public Long registerNote(TripNoteRegRequest tripNoteRegRequest) {
         // 권한 체크
         var tripEntity = checkTripMember(tripNoteRegRequest.getTripId());
         // 노트 세팅
