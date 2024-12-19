@@ -2,6 +2,7 @@ package com.codeit.torip.trip.note.service;
 
 import com.codeit.torip.auth.util.AuthUtil;
 import com.codeit.torip.common.exception.AlertException;
+import com.codeit.torip.task.note.repository.TaskNoteRepository;
 import com.codeit.torip.trip.entity.Trip;
 import com.codeit.torip.trip.note.dto.request.TripNoteListRequest;
 import com.codeit.torip.trip.note.dto.request.TripNoteModRequest;
@@ -16,21 +17,43 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.codeit.torip.common.contant.ToripConstants.Note.PAGE_SIZE;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class TripNoteService {
 
     private final TripNoteRepository tripNoteRepository;
+    private final TaskNoteRepository taskNoteRepository;
     private final TripRepository tripRepository;
 
     public TripNoteDetailListResponse getNoteList(TripNoteListRequest tripNoteListRequest) {
         var tripEntity = checkTripMember(tripNoteListRequest.getTripId());
         var tripNoteList = tripNoteRepository.selectTripNoteDetailList(tripNoteListRequest);
+        var taskNoteList = taskNoteRepository.selectTaskNoteDetailListFromTripId(tripNoteListRequest);
+        // 전체 5개에서 각 리스트의 비율 계산
+        int tripCount = 0;
+        int taskCount = 0;
+        for (int i = 0; i < PAGE_SIZE; i++) {
+            if (tripNoteList.size() > tripCount) {
+                var tripNote = tripNoteList.get(tripCount);
+                if (taskNoteList.size() > taskCount) {
+                    var taskNote = taskNoteList.get(taskCount);
+                    if (tripNote.getCreatedAt().isAfter(taskNote.getCreatedAt())) tripCount++;
+                    else taskCount++;
+                } else {
+                    tripCount++;
+                }
+            } else if (taskNoteList.size() > taskCount) {
+                taskCount++;
+            }
+        }
         // 노트 목록 조회
         return TripNoteDetailListResponse.builder()
                 .tripTitle(tripEntity.getName())
-                .details(tripNoteList)
+                .tripNoteDetails(tripNoteList.subList(0, tripCount))
+                .taskNoteDetails(taskNoteList.subList(0, taskCount))
                 .build();
     }
 

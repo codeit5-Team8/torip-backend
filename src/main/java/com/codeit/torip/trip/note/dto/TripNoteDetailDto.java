@@ -1,9 +1,15 @@
 package com.codeit.torip.trip.note.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TripNoteDetailDto {
 
     @Schema(description = "여행 노트 고유키", example = "1")

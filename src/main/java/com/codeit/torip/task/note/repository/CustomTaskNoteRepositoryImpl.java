@@ -5,6 +5,7 @@ import com.codeit.torip.task.note.dto.TaskNoteDetailDto;
 import com.codeit.torip.task.note.dto.request.TaskNoteListRequest;
 import com.codeit.torip.task.note.dto.response.TaskNoteDeletedResponse;
 import com.codeit.torip.task.note.dto.response.TaskNoteDetailResponse;
+import com.codeit.torip.trip.note.dto.request.TripNoteListRequest;
 import com.codeit.torip.user.entity.QUser;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -113,6 +114,34 @@ public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
                 .join(task.notes, taskNote)
                 .where(condition)
                 .fetchOne();
+    }
+
+    @Override
+    public List<TaskNoteDetailDto> selectTaskNoteDetailListFromTripId(TripNoteListRequest tripNoteListRequest) {
+        var assignee = new QUser("assignee");
+        var createdBy = new QUser("createdBy");
+        var modifiedBy = new QUser("modifiedBy");
+        // 쿼리 조건 생성
+        BooleanExpression condition = getCondition(assignee);
+        condition = condition.and(trip.id.eq(tripNoteListRequest.getTripId()));
+        var seq = tripNoteListRequest.getTaskNoteSeq();
+        if (seq != null && seq != 0) condition = condition.and(taskNote.id.lt(seq));
+        return factory.selectDistinct(
+                        Projections.constructor(TaskNoteDetailDto.class,
+                                taskNote.id, task.taskStatus, task.title, taskNote.title, taskNote.content,
+                                taskNote.lastCreatedUser.username, taskNote.createdAt,
+                                taskNote.lastUpdatedUser.username, taskNote.updatedAt
+                        )
+                ).from(trip).join(trip.tasks, task)
+                .join(task.assignees, taskAssignee)
+                .join(taskAssignee.assignee, assignee)
+                .join(task.notes, taskNote)
+                .join(taskNote.lastCreatedUser, createdBy)
+                .join(taskNote.lastUpdatedUser, modifiedBy)
+                .where(condition)
+                .orderBy(taskNote.id.desc())
+                .limit(PAGE_SIZE)
+                .fetch();
     }
 
     private BooleanExpression getCondition(QUser assignee) {

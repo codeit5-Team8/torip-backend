@@ -4,6 +4,7 @@ import com.codeit.torip.task.note.dto.TaskNoteDetailDto;
 import com.codeit.torip.task.note.dto.request.TaskNoteListRequest;
 import com.codeit.torip.task.note.dto.response.TaskNoteDeletedResponse;
 import com.codeit.torip.task.note.dto.response.TaskNoteDetailResponse;
+import com.codeit.torip.trip.note.dto.request.TripNoteListRequest;
 
 import java.util.List;
 
@@ -16,5 +17,7 @@ public interface CustomTaskNoteRepository {
     boolean isAuthorizedToModify(long taskNoteId);
 
     TaskNoteDeletedResponse deletedTaskNote(long taskNoteId);
+
+    List<TaskNoteDetailDto> selectTaskNoteDetailListFromTripId(TripNoteListRequest tripNoteListRequest);
 
 }
