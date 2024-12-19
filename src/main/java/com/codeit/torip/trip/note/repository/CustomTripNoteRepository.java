@@ -5,12 +5,13 @@ import com.codeit.torip.trip.note.dto.request.TripNoteListRequest;
 import com.codeit.torip.trip.note.dto.response.TripNoteDetailResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CustomTripNoteRepository {
 
     List<TripNoteDetailDto> selectTripNoteDetailList(TripNoteListRequest tripNoteListRequest);
 
-    TripNoteDetailResponse selectTripNoteDetail(long tripNoteId);
+    Optional<TripNoteDetailResponse> selectTripNoteDetail(long tripNoteId);
 
     boolean isAuthorizedToModify(long tripNoteId);
 

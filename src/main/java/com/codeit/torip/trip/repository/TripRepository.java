@@ -19,7 +19,7 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
     Optional<Trip> findTripById(Long id);
 
     @EntityGraph(attributePaths = "members")
-    @Query("SELECT t FROM Trip t WHERE t.id = :id")
-    Optional<Trip> findByIdWithMembers(@Param("id") Long id);
+    @Query("SELECT t FROM Trip t WHERE t.id = :tripId")
+    Optional<Trip> findByIdWithMembers(@Param("tripId") Long tripId);
 
 }
