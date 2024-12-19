@@ -18,5 +18,7 @@ public class TripNoteListRequest {
     private Long tripId;
     @Schema(description = "현재 페이지에서 가장 작은 여행 노트 고유키", example = "1", defaultValue = "0")
     private Long tripNoteSeq = 0L;
+    @Schema(description = "현재 페이지에서 가장 작은 할일 노트 고유키", example = "1", defaultValue = "0")
+    private Long taskNoteSeq = 0L;
 
 }

@@ -40,7 +40,7 @@ public class TripNoteController {
             }
     )
     public CommonResponse<Long> registerTripNote(@RequestBody @Valid TripNoteRegRequest tripNoteRegRequest) {
-        var tripNoteId = tripNoteService.registerNode(tripNoteRegRequest);
+        var tripNoteId = tripNoteService.registerNote(tripNoteRegRequest);
         return new CommonResponse<Long>().success(tripNoteId);
     }
 

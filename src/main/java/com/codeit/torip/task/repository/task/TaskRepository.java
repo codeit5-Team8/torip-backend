@@ -10,8 +10,8 @@ import java.util.Optional;
 
 public interface TaskRepository extends JpaRepository<Task, Long>, CustomTaskRepository {
 
-    @EntityGraph(attributePaths = "assignees")
+    @EntityGraph(attributePaths = "trip")
     @Query("SELECT t FROM Task t WHERE t.id = :taskId")
-    Optional<Task> findByIdWithAssignees(@Param("taskId") Long taskId);
+    Optional<Task> findByIdWithTrip(@Param("taskId") Long taskId);
 
 }
