@@ -16,9 +16,9 @@ public class TripNoteDetailListResponse {
 
     @Schema(description = "여행 제목", example = "여행 제목")
     private String tripTitle;
-    @Schema(description = "여행 노트 상세", example = "1")
+    @Schema(description = "여행 노트 상세")
     private List<TripNoteDetailDto> tripNoteDetails;
-    @Schema(description = "할일 노트 상세", example = "1")
+    @Schema(description = "할일 노트 상세")
     private List<TaskNoteDetailDto> taskNoteDetails;
 
 }
