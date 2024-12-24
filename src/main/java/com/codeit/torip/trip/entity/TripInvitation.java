@@ -38,6 +38,7 @@ public class TripInvitation extends BaseEntity {
 
     public TripInvitationResponse toResponse() {
         return TripInvitationResponse.builder()
+                .id(id)
                 .tripName(trip.getName())
                 .invitee(invitee.toResponse())
                 .createdAt(createdAt)

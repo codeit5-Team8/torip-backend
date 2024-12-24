@@ -38,8 +38,6 @@ public class TripService {
         Trip trip = new Trip(createTripRequest, userInfo);
         tripRepository.save(trip);
 
-        // TODO 할일에 대한 작성자 또한 할일에 대한 맴버로 등록이 되어있어야한다고 생각하는데, 어떻게 생각하시는지??!
-
         return trip.toResponse();
     }
 
