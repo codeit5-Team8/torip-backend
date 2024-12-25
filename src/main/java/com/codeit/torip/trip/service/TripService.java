@@ -106,7 +106,7 @@ public class TripService {
         Trip trip = tripRepository.findById(id).orElseThrow(() -> new AlertException("여행이 존재하지 않습니다."));
         trip.checkMemberNotExists(userInfo);
 
-        if (tripInvitationRepository.existsByInviteeIdAndTripId(id, userInfo.getId())) {
+        if (tripInvitationRepository.existsByInviteeIdAndTripId(userInfo.getId(), id)) {
             throw new AlertException("이미 참가 요청을 보냈습니다.");
         }
 
