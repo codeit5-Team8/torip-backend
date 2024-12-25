@@ -4,6 +4,7 @@ import com.codeit.torip.auth.util.AuthUtil;
 import com.codeit.torip.task.dto.TaskProceedStatusDto;
 import com.codeit.torip.task.dto.request.TaskListRequest;
 import com.codeit.torip.task.dto.response.TaskDetailResponse;
+import com.codeit.torip.user.dto.UserResponse;
 import com.codeit.torip.user.entity.QUser;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
@@ -51,7 +52,9 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
                                 TaskDetailResponse.class,
                                 task.id, trip.name, task.title, task.filePath, task.taskStatus,
                                 task.taskDDay, task.scope, task.completionDate,
-                                task.lastCreatedUser.username, task.createdAt, task.lastUpdatedUser.username, task.updatedAt
+                                Projections.constructor(UserResponse.class, task.lastCreatedUser.id, task.lastCreatedUser.username, task.lastCreatedUser.email),
+                                task.createdAt,
+                                Projections.constructor(UserResponse.class, task.lastUpdatedUser.id, task.lastUpdatedUser.username, task.lastUpdatedUser.email), task.updatedAt
                         ))
                 .from(task)
                 .join(task.trip, trip)
@@ -79,7 +82,9 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
                                 TaskDetailResponse.class,
                                 task.id, trip.name, task.title, task.filePath, task.taskStatus,
                                 task.taskDDay, task.scope, task.completionDate,
-                                task.lastCreatedUser.username, task.createdAt, task.lastUpdatedUser.username, task.updatedAt
+                                Projections.constructor(UserResponse.class, task.lastCreatedUser.id, task.lastCreatedUser.username, task.lastCreatedUser.email),
+                                task.createdAt,
+                                Projections.constructor(UserResponse.class, task.lastUpdatedUser.id, task.lastUpdatedUser.username, task.lastUpdatedUser.email), task.updatedAt
                         ))
                 .from(task)
                 .join(task.trip, trip)
