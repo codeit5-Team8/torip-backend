@@ -34,13 +34,13 @@ public class TaskNote extends BaseUserEntity {
 
     public static TaskNote from(TaskNoteRegRequest taskNoteRegRequest) {
         return TaskNote.builder()
-                .title(taskNoteRegRequest.getTaskNoteTitle())
-                .content(taskNoteRegRequest.getTaskNoteContent())
+                .title(taskNoteRegRequest.getNoteTitle())
+                .content(taskNoteRegRequest.getNoteContent())
                 .build();
     }
 
     public void modifyTo(TaskNoteModRequest taskNoteModRequest) {
-        this.title = taskNoteModRequest.getTaskNoteTitle();
-        this.content = taskNoteModRequest.getTaskNoteContent();
+        this.title = taskNoteModRequest.getNoteTitle();
+        this.content = taskNoteModRequest.getNoteContent();
     }
 }

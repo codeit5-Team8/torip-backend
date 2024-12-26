@@ -44,13 +44,13 @@ public class TripNoteController {
         return new CommonResponse<Long>().success(tripNoteId);
     }
 
-    @GetMapping("/{tripNoteId}")
+    @GetMapping("/{noteId}")
     @Operation(summary = "여행 노트 상세 조회 API", description = "여행에 대한 노트 상세 조회를 합니다",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<TripNoteDetailResponse> getTripNoteDetail(@PathVariable(name = "tripNoteId") long tripNoteId) {
+    public CommonResponse<TripNoteDetailResponse> getTripNoteDetail(@PathVariable(name = "noteId") long tripNoteId) {
         var tripNoteDetail = tripNoteService.getNoteDetail(tripNoteId);
         return new CommonResponse<TripNoteDetailResponse>().success(tripNoteDetail);
     }
@@ -66,13 +66,13 @@ public class TripNoteController {
         return new CommonResponse<Long>().success(tripNoteId);
     }
 
-    @DeleteMapping("/{tripNoteId}")
+    @DeleteMapping("/{noteId}")
     @Operation(summary = "여행 노트 삭제 API", description = "여행에 대한 노트를 삭제합니다",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<?> deleteTripNote(@PathVariable("tripNoteId") long tripNoteId) {
+    public CommonResponse<?> deleteTripNote(@PathVariable("noteId") long tripNoteId) {
         tripNoteService.deleteNote(tripNoteId);
         return new CommonResponse<>().success(null);
     }

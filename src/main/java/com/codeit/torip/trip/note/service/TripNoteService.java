@@ -30,7 +30,7 @@ public class TripNoteService {
 
     public TripNoteDetailListResponse getNoteList(TripNoteListRequest tripNoteListRequest) {
         // 권한 체크
-        var tripEntity = checkTripMember(tripNoteListRequest.getTripId());
+        var tripEntity = checkTripMember(tripNoteListRequest.getId());
         // 노트 조회
         var tripNoteList = tripNoteRepository.selectTripNoteDetailList(tripNoteListRequest);
         var taskNoteList = taskNoteRepository.selectTaskNoteDetailListFromTripId(tripNoteListRequest);
@@ -51,11 +51,12 @@ public class TripNoteService {
                 taskCount++;
             }
         }
+        var resultList = tripNoteList.subList(0, tripCount);
+        resultList.addAll(taskNoteList.subList(0, taskCount));
         // 노트 목록 조회
         return TripNoteDetailListResponse.builder()
-                .tripTitle(tripEntity.getName())
-                .tripNoteDetails(tripNoteList.subList(0, tripCount))
-                .taskNoteDetails(taskNoteList.subList(0, taskCount))
+                .title(tripEntity.getName())
+                .noteDetails(resultList)
                 .build();
     }
 
@@ -68,7 +69,7 @@ public class TripNoteService {
     @Transactional
     public Long registerNote(TripNoteRegRequest tripNoteRegRequest) {
         // 권한 체크
-        var tripEntity = checkTripMember(tripNoteRegRequest.getTripId());
+        var tripEntity = checkTripMember(tripNoteRegRequest.getId());
         // 노트 세팅
         var tripNoteEntity = TripNote.from(tripNoteRegRequest);
         tripNoteEntity.setTrip(tripEntity);
@@ -79,7 +80,7 @@ public class TripNoteService {
 
     @Transactional
     public Long modifyNote(TripNoteModRequest tripNoteModRequest) {
-        var tripNoteId = tripNoteModRequest.getTripNoteId();
+        var tripNoteId = tripNoteModRequest.getNoteId();
         // 권한 체크
         var isModifiable = tripNoteRepository.isAuthorizedToModify(tripNoteId);
         if (isModifiable) throw new AlertException("여행 노트를 수정할 권한이 없습니다.");

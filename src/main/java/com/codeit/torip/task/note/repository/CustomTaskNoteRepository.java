@@ -1,6 +1,6 @@
 package com.codeit.torip.task.note.repository;
 
-import com.codeit.torip.task.note.dto.TaskNoteDetailDto;
+import com.codeit.torip.task.note.dto.NoteDetailDto;
 import com.codeit.torip.task.note.dto.request.TaskNoteListRequest;
 import com.codeit.torip.task.note.dto.response.TaskNoteDeletedResponse;
 import com.codeit.torip.task.note.dto.response.TaskNoteDetailResponse;
@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface CustomTaskNoteRepository {
 
-    List<TaskNoteDetailDto> selectTaskNoteDetailList(TaskNoteListRequest taskNoteListRequest);
+    List<NoteDetailDto> selectTaskNoteDetailList(TaskNoteListRequest taskNoteListRequest);
 
     Optional<TaskNoteDetailResponse> selectTaskNoteDetail(long taskNoteId);
 
@@ -19,6 +19,6 @@ public interface CustomTaskNoteRepository {
 
     TaskNoteDeletedResponse deletedTaskNote(long taskNoteId);
 
-    List<TaskNoteDetailDto> selectTaskNoteDetailListFromTripId(TripNoteListRequest tripNoteListRequest);
+    List<NoteDetailDto> selectTaskNoteDetailListFromTripId(TripNoteListRequest tripNoteListRequest);
 
 }
