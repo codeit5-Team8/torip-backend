@@ -28,7 +28,7 @@ public class TaskNoteService {
     private final TripRepository tripRepository;
 
     public TaskNoteDetailListResponse getTaskNoteList(TaskNoteListRequest taskNoteListRequest) {
-        var taskEntity = taskRepository.findByIdWithTrip(taskNoteListRequest.getTaskId())
+        var taskEntity = taskRepository.findByIdWithTrip(taskNoteListRequest.getId())
                 .orElseThrow(() -> new AlertException("할일이 존재하지 않습니다."));
         var taskNoteList = taskNoteRepository.selectTaskNoteDetailList(taskNoteListRequest);
         // 노트 목록 조회
@@ -46,7 +46,7 @@ public class TaskNoteService {
 
     @Transactional
     public Long registerTaskNote(TaskNoteRegRequest taskNoteRegRequest) {
-        var taskEntity = taskRepository.findByIdWithTrip(taskNoteRegRequest.getTaskId())
+        var taskEntity = taskRepository.findByIdWithTrip(taskNoteRegRequest.getId())
                 .orElseThrow(() -> new AlertException("할일이 존재하지 않습니다."));
         // 권한 체크
         checkTripMember(taskEntity.getTrip().getId());
@@ -61,10 +61,10 @@ public class TaskNoteService {
     @Transactional
     public Long modifyTaskNote(TaskNoteModRequest taskNoteModRequest) {
         // 권한 체크
-        var isModifiable = taskNoteRepository.isAuthorizedToModify(taskNoteModRequest.getTaskNoteId());
+        var isModifiable = taskNoteRepository.isAuthorizedToModify(taskNoteModRequest.getNoteId());
         if (isModifiable) throw new AlertException("할일 노트를 수정할 권한이 없습니다.");
         // 노트 조회
-        var noteEntity = taskNoteRepository.findById(taskNoteModRequest.getTaskNoteId())
+        var noteEntity = taskNoteRepository.findById(taskNoteModRequest.getNoteId())
                 .orElseThrow(() -> new AlertException("할일 노트 정보가 존재하지 않습니다"));
         // 노트 수정
         noteEntity.modifyTo(taskNoteModRequest);

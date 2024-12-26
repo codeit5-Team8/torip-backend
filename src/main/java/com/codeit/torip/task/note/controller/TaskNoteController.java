@@ -45,13 +45,13 @@ public class TaskNoteController {
         return new CommonResponse<Long>().success(taskNoteId);
     }
 
-    @GetMapping("/{taskNoteId}")
+    @GetMapping("/{noteId}")
     @Operation(summary = "할일 노트 상세 조회 API", description = "할일에 대한 노트 상세 조회를 합니다",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<TaskNoteDetailResponse> getTaskNoteDetail(@PathVariable(name = "taskNoteId") long taskNoteId) {
+    public CommonResponse<TaskNoteDetailResponse> getTaskNoteDetail(@PathVariable(name = "noteId") long taskNoteId) {
         var taskNoteDetail = taskNoteService.getTaskNoteDetail(taskNoteId);
         return new CommonResponse<TaskNoteDetailResponse>().success(taskNoteDetail);
     }
@@ -67,13 +67,13 @@ public class TaskNoteController {
         return new CommonResponse<Long>().success(taskNoteId);
     }
 
-    @DeleteMapping("/{taskNoteId}")
+    @DeleteMapping("/{noteId}")
     @Operation(summary = "할일 노트 삭제 API", description = "할일에 대한 노트를 삭제합니다",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<TaskNoteDeletedResponse> deleteTaskNote(@PathVariable("taskNoteId") long taskNoteId) {
+    public CommonResponse<TaskNoteDeletedResponse> deleteTaskNote(@PathVariable("noteId") long taskNoteId) {
         var deletedTaskNote = taskNoteService.deleteTaskNote(taskNoteId);
         return new CommonResponse<TaskNoteDeletedResponse>().success(deletedTaskNote);
     }

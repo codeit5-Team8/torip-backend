@@ -13,13 +13,13 @@ import java.time.LocalDateTime;
 public class TripNoteDetailResponse {
 
     @Schema(description = "여행 노트 고유키", example = "1")
-    private Long tripNoteId;
+    private Long noteId;
     @Schema(description = "여행 제목", example = "여행 제목")
-    private String tripTitle;
+    private String title;
     @Schema(description = "여행 노트 제목", example = "여행 노트 제목")
-    private String tripNoteTitle;
+    private String noteTitle;
     @Schema(description = "여행 노트 내용", example = "여행 노트 내용")
-    private String tripNoteContent;
+    private String noteContent;
     @Schema(description = "여행 노트 등록자", example = "홍길동")
     private String createdBy;
     @Schema(description = "여행 노트 등록일", example = "2024-10-11 15:21:00")

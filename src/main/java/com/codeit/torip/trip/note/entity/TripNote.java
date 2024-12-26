@@ -34,13 +34,13 @@ public class TripNote extends BaseUserEntity {
 
     public static TripNote from(TripNoteRegRequest tripNoteRegRequest) {
         return TripNote.builder()
-                .title(tripNoteRegRequest.getTaskNoteTitle())
-                .content(tripNoteRegRequest.getTaskNoteContent())
+                .title(tripNoteRegRequest.getNoteTitle())
+                .content(tripNoteRegRequest.getNoteContent())
                 .build();
     }
 
     public void modifyTo(TripNoteModRequest tripNoteModRequest) {
-        this.title = tripNoteModRequest.getTripNoteTitle();
-        this.content = tripNoteModRequest.getTripNoteContent();
+        this.title = tripNoteModRequest.getNoteTitle();
+        this.content = tripNoteModRequest.getNoteContent();
     }
 }

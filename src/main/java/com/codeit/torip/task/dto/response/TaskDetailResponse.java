@@ -35,6 +35,8 @@ public class TaskDetailResponse {
     private TaskScope taskScope;
     @Schema(description = "할일 완료일", example = "2024-10-11 15:21:00")
     private LocalDateTime taskCompletionDate;
+    @Schema(description = "할일 등록자 아이디", example = "1")
+    private String registrantId;
     @Schema(description = "할일 등록자", example = "홍길동")
     private String createdBy;
     @Schema(description = "할일 등록일", example = "2024-10-11 15:21:00")

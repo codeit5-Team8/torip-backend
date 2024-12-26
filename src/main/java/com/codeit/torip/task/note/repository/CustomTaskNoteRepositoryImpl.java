@@ -1,7 +1,7 @@
 package com.codeit.torip.task.note.repository;
 
 import com.codeit.torip.auth.util.AuthUtil;
-import com.codeit.torip.task.note.dto.TaskNoteDetailDto;
+import com.codeit.torip.task.note.dto.NoteDetailDto;
 import com.codeit.torip.task.note.dto.request.TaskNoteListRequest;
 import com.codeit.torip.task.note.dto.response.TaskNoteDeletedResponse;
 import com.codeit.torip.task.note.dto.response.TaskNoteDetailResponse;
@@ -28,18 +28,18 @@ public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
     private final JPAQueryFactory factory;
 
     @Override
-    public List<TaskNoteDetailDto> selectTaskNoteDetailList(TaskNoteListRequest taskNoteListRequest) {
+    public List<NoteDetailDto> selectTaskNoteDetailList(TaskNoteListRequest taskNoteListRequest) {
         var member = new QUser("member");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
-        var taskId = taskNoteListRequest.getTaskId();
-        var seq = taskNoteListRequest.getTaskNoteSeq();
+        var taskId = taskNoteListRequest.getId();
+        var seq = taskNoteListRequest.getNoteSeq();
         // 쿼리 조건 생성
         var condition = getCommonCondition();
         condition.and(task.id.eq(taskId));
         if (seq != null && seq != 0) condition.and(taskNote.id.lt(seq));
         return factory.selectDistinct(
-                        Projections.constructor(TaskNoteDetailDto.class,
+                        Projections.constructor(NoteDetailDto.class,
                                 taskNote.id, task.taskStatus, task.title, taskNote.title, taskNote.content,
                                 taskNote.lastCreatedUser.username, taskNote.createdAt,
                                 taskNote.lastUpdatedUser.username, taskNote.updatedAt
@@ -121,17 +121,17 @@ public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
     }
 
     @Override
-    public List<TaskNoteDetailDto> selectTaskNoteDetailListFromTripId(TripNoteListRequest tripNoteListRequest) {
+    public List<NoteDetailDto> selectTaskNoteDetailListFromTripId(TripNoteListRequest tripNoteListRequest) {
         var member = new QUser("member");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
         // 쿼리 조건 생성
         var condition = getCommonCondition();
-        condition.and(trip.id.eq(tripNoteListRequest.getTripId()));
+        condition.and(trip.id.eq(tripNoteListRequest.getId()));
         var seq = tripNoteListRequest.getTaskNoteSeq();
         if (seq != null && seq != 0) condition.and(taskNote.id.lt(seq));
         return factory.selectDistinct(
-                        Projections.constructor(TaskNoteDetailDto.class,
+                        Projections.constructor(NoteDetailDto.class,
                                 taskNote.id, task.taskStatus, task.title, taskNote.title, taskNote.content,
                                 taskNote.lastCreatedUser.username, taskNote.createdAt,
                                 taskNote.lastUpdatedUser.username, taskNote.updatedAt
