@@ -15,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -38,6 +40,8 @@ public class AuthService {
                 .email(user.getEmail())
                 .accessToken(jwtUtil.createAccessToken(loginRequest.getEmail()))
                 .refreshToken(jwtUtil.createRefreshToken(loginRequest.getEmail()))
+                .expiredAt(jwtUtil.getAccessTokenExpiredAt()
+                        .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                 .build();
     }
 
@@ -54,12 +58,15 @@ public class AuthService {
 
         userRepository.save(user);
 
+
         return LoginResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .accessToken(jwtUtil.createAccessToken(registerRequest.getEmail()))
                 .refreshToken(jwtUtil.createRefreshToken(registerRequest.getEmail()))
+                .expiredAt(jwtUtil.getAccessTokenExpiredAt()
+                        .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                 .build();
     }
 
@@ -70,6 +77,8 @@ public class AuthService {
         return TokenResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .expiredAt(jwtUtil.getAccessTokenExpiredAt()
+                        .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                 .build();
     }
 
