@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.codeit.torip.task.entity.TaskScope.PUBLIC;
@@ -71,6 +72,16 @@ public class TaskService {
             else proceedStatus.setPersonalTask(taskProceedStatus.getTaskCompletionDate());
         }
         return proceedStatus;
+    }
+
+    @Transactional
+    public void completeTask(Long taskId) {
+        // 권한 체크
+        var isModifiable = taskRepository.isAuthorizedToModify(taskId);
+        if (isModifiable) throw new AlertException("할일을 수정할 권한이 없습니다.");
+        var taskEntity = taskRepository.findById(taskId)
+                .orElseThrow(() -> new AlertException("할일이 존재하지 않습니다."));
+        taskEntity.setCompletionDate(LocalDateTime.now());
     }
 
     @Transactional

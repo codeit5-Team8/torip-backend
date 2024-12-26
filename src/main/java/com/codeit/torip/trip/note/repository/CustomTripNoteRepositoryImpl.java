@@ -1,7 +1,7 @@
 package com.codeit.torip.trip.note.repository;
 
 import com.codeit.torip.auth.util.AuthUtil;
-import com.codeit.torip.trip.note.dto.TripNoteDetailDto;
+import com.codeit.torip.task.note.dto.NoteDetailDto;
 import com.codeit.torip.trip.note.dto.request.TripNoteListRequest;
 import com.codeit.torip.trip.note.dto.response.TripNoteDetailResponse;
 import com.codeit.torip.user.entity.QUser;
@@ -24,7 +24,7 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
     private final JPAQueryFactory factory;
 
     @Override
-    public List<TripNoteDetailDto> selectTripNoteDetailList(TripNoteListRequest tripNoteListRequest) {
+    public List<NoteDetailDto> selectTripNoteDetailList(TripNoteListRequest tripNoteListRequest) {
         var member = new QUser("member");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
@@ -32,12 +32,12 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
         var seq = tripNoteListRequest.getTripNoteSeq();
 
         var condition = getCommonCondition();
-        condition.and(trip.id.eq(tripNoteListRequest.getTripId()));
+        condition.and(trip.id.eq(tripNoteListRequest.getId()));
         if (seq != null && seq != 0) condition.and(tripNote.id.lt(seq));
         // 노트 목록 불러오기
         return factory.selectDistinct(
-                        Projections.constructor(TripNoteDetailDto.class,
-                                tripNote.id, tripNote.title, tripNote.content,
+                        Projections.constructor(NoteDetailDto.class,
+                                tripNote.id, null, null, tripNote.title, tripNote.content,
                                 tripNote.lastCreatedUser.username, tripNote.createdAt,
                                 tripNote.lastUpdatedUser.username, tripNote.updatedAt
                         )

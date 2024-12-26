@@ -13,8 +13,8 @@ public class TaskNoteDeletedResponse {
     @Schema(description = "여행 고유키", example = "1")
     private Long tripId;
     @Schema(description = "할일 노트 제목", example = "할일 노트 제목")
-    private String taskNoteTitle;
+    private String noteTitle;
     @Schema(description = "할일 노트 내용", example = "할일 노트 내용")
-    private String taskNoteContent;
+    private String noteContent;
 
 }
