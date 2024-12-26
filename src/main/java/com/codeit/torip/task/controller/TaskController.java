@@ -90,7 +90,7 @@ public class TaskController {
         return new CommonResponse<TaskProceedStatusResponse>().success(taskProceedStatusDto);
     }
 
-    @GetMapping("/{taskId}")
+    @PutMapping("/{taskId}")
     @Operation(summary = "할일 완료 API", description = "할일 완료 처리",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공")
