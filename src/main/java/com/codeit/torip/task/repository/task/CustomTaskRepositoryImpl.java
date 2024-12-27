@@ -57,7 +57,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
                         Projections.constructor(
                                 TaskDetailResponse.class,
                                 task.id, trip.name, task.title, task.filePath, task.taskStatus,
-                                task.taskDDay, task.scope, task.completionDate,
+                                task.taskDDay, task.scope, task.completionDate, task.lastCreatedUser.id,
                                 task.lastCreatedUser.username, task.createdAt, task.lastUpdatedUser.username, task.updatedAt
                         ))
                 .from(task)
