@@ -77,10 +77,10 @@ public class TaskService {
     @Transactional
     public void completeTask(Long taskId) {
         // 권한 체크
-        var isModifiable = taskRepository.isAuthorizedToModify(taskId);
-        if (isModifiable) throw new AlertException("할일을 수정할 권한이 없습니다.");
         var taskEntity = taskRepository.findById(taskId)
                 .orElseThrow(() -> new AlertException("할일이 존재하지 않습니다."));
+        var tripEntity = taskEntity.getTrip();
+        tripEntity.checkMemberExists(AuthUtil.getUserInfo());
         taskEntity.setCompletionDate(LocalDateTime.now());
     }
 

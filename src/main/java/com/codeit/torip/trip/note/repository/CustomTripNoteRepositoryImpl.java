@@ -28,6 +28,7 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
         var member = new QUser("member");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
+        var owner = new QUser("owner");
         // 쿼리 조건 생성
         var seq = tripNoteListRequest.getTripNoteSeq();
 
@@ -37,7 +38,8 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
         // 노트 목록 불러오기
         return factory.selectDistinct(
                         Projections.constructor(NoteDetailDto.class,
-                                tripNote.id, null, null, tripNote.title, tripNote.content,
+                                tripNote.id, trip.owner.id, tripNote.title, tripNote.content,
+                                tripNote.lastCreatedUser.id,
                                 tripNote.lastCreatedUser.username, tripNote.createdAt,
                                 tripNote.lastUpdatedUser.username, tripNote.updatedAt
                         )
@@ -45,6 +47,7 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
                 .join(trip.members, tripMember)
                 .join(tripMember.user, member)
                 .join(trip.notes, tripNote)
+                .join(trip.owner, owner)
                 .join(tripNote.lastCreatedUser, createdBy)
                 .join(tripNote.lastUpdatedUser, modifiedBy)
                 .where(condition)
@@ -58,13 +61,15 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
         var member = new QUser("tripMember");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
+        var owner = new QUser("owner");
         // 쿼리 조건 생성
         var condition = getCommonCondition();
         condition.and(tripNote.id.eq(tripNoteId));
         // 노트 상세 불러오기
         var tripNoteDetail = factory.selectDistinct(
                         Projections.constructor(TripNoteDetailResponse.class,
-                                tripNote.id, trip.name, tripNote.title, tripNote.content,
+                                tripNote.id, trip.owner.id, trip.name, tripNote.title, tripNote.content,
+                                tripNote.lastCreatedUser.id,
                                 tripNote.lastCreatedUser.username, tripNote.createdAt,
                                 tripNote.lastUpdatedUser.username, tripNote.updatedAt
                         )
@@ -72,6 +77,7 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
                 .join(trip.notes, tripNote)
                 .join(trip.members, tripMember)
                 .join(tripMember.user, member)
+                .join(trip.owner, owner)
                 .join(tripNote.lastCreatedUser, createdBy)
                 .join(tripNote.lastUpdatedUser, modifiedBy)
                 .where(condition)

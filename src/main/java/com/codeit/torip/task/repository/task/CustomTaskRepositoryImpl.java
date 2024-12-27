@@ -17,6 +17,7 @@ import static com.codeit.torip.common.contant.ToripConstants.Task.PAGE_SIZE;
 import static com.codeit.torip.common.contant.ToripConstants.Task.TASK_LIMIT;
 import static com.codeit.torip.task.entity.QTask.task;
 import static com.codeit.torip.task.entity.QTaskAssignee.taskAssignee;
+import static com.codeit.torip.task.entity.TaskScope.PUBLIC;
 import static com.codeit.torip.trip.entity.QTrip.trip;
 import static com.codeit.torip.trip.entity.QTripMember.tripMember;
 
@@ -32,9 +33,6 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
         var modifiedBy = new QUser("modifiedBy");
         // 쿼리 조건 생성
         var condition = getCommonCondition();
-        // 여행 아이디 필터링
-        var tripId = taskListRequest.getTripId();
-        if (tripId != null && tripId != 0) condition.and(trip.id.eq(taskListRequest.getTripId()));
         // 할일 시퀀스 필터링
         var seq = taskListRequest.getTaskSeq();
         if (seq != null && seq != 0) condition.and(task.id.lt(seq));
@@ -45,12 +43,21 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
         var scope = taskListRequest.getTaskScope();
         if (scope != null) condition.and(task.scope.eq(scope));
         var pageSize = taskListRequest.getAll() ? TASK_LIMIT : PAGE_SIZE;
+        // 여행 아이디 필터링
+        var tripId = taskListRequest.getTripId();
+        if (tripId != null && tripId != 0) condition.and(trip.id.eq(taskListRequest.getTripId()));
+        if (scope == null) {
+            condition.or(task.scope.eq(PUBLIC));
+            if (seq != null && seq != 0) condition.and(task.id.lt(seq));
+            if (status != null) condition.and(task.taskStatus.eq(status));
+            if (tripId != null && tripId != 0) condition.and(trip.id.eq(taskListRequest.getTripId()));
+        }
         // 할일 목록 불러오기
         return factory.selectDistinct(
                         Projections.constructor(
                                 TaskDetailResponse.class,
                                 task.id, trip.name, task.title, task.filePath, task.taskStatus,
-                                task.taskDDay, task.scope, task.completionDate,
+                                task.taskDDay, task.scope, task.completionDate, task.lastCreatedUser.id,
                                 task.lastCreatedUser.username, task.createdAt, task.lastUpdatedUser.username, task.updatedAt
                         ))
                 .from(task)
