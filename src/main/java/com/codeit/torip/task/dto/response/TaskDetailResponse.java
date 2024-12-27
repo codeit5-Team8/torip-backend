@@ -3,7 +3,6 @@ package com.codeit.torip.task.dto.response;
 import com.codeit.torip.task.dto.TaskAssigneeDto;
 import com.codeit.torip.task.entity.TaskScope;
 import com.codeit.torip.task.entity.TaskStatus;
-import com.codeit.torip.user.dto.UserResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,20 +36,22 @@ public class TaskDetailResponse {
     @Schema(description = "할일 완료일", example = "2024-10-11 15:21:00")
     private LocalDateTime taskCompletionDate;
     @Schema(description = "할일 등록자 아이디", example = "1")
-    private String registrantId;
+    private Long registrantId;
     @Schema(description = "할일 등록자", example = "홍길동")
-    private UserResponse createdBy;
+    private String createdBy;
     @Schema(description = "할일 등록일", example = "2024-10-11 15:21:00")
     private LocalDateTime createdAt;
     @Schema(description = "할일 수정자", example = "홍길동")
-    private UserResponse modifiedBy;
+    private String modifiedBy;
     @Schema(description = "할일 수정일", example = "2024-10-11 15:21:00")
     private LocalDateTime modifiedAt;
 
     @Schema(description = "할일 담당자 목록", example = "[demo@gmail.com]")
     private List<TaskAssigneeDto> taskAssignees = new ArrayList<>();
 
-    public TaskDetailResponse(Long taskId, String tripName, String taskTitle, String taskFilePath, TaskStatus taskStatus, LocalDateTime taskDDay, TaskScope taskScope, LocalDateTime taskCompletionDate, UserResponse createdBy, LocalDateTime createdAt, UserResponse modifiedBy, LocalDateTime modifiedAt) {
+    public TaskDetailResponse(Long taskId, String tripName, String taskTitle, String taskFilePath, TaskStatus taskStatus,
+                              LocalDateTime taskDDay, TaskScope taskScope, LocalDateTime taskCompletionDate, Long registrantId,
+                              String createdBy, LocalDateTime createdAt, String modifiedBy, LocalDateTime modifiedAt) {
         this.taskId = taskId;
         this.tripName = tripName;
         this.taskTitle = taskTitle;
@@ -59,6 +60,7 @@ public class TaskDetailResponse {
         this.taskDDay = taskDDay;
         this.taskScope = taskScope;
         this.taskCompletionDate = taskCompletionDate;
+        this.registrantId = registrantId;
         this.createdBy = createdBy;
         this.createdAt = createdAt;
         this.modifiedBy = modifiedBy;

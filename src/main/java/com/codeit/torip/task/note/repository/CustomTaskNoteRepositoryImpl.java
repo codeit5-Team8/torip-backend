@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import static com.codeit.torip.common.contant.ToripConstants.Note.PAGE_SIZE;
 import static com.codeit.torip.task.entity.QTask.task;
+import static com.codeit.torip.task.entity.TaskScope.PUBLIC;
 import static com.codeit.torip.task.note.entity.QTaskNote.taskNote;
 import static com.codeit.torip.trip.entity.QTrip.trip;
 import static com.codeit.torip.trip.entity.QTripMember.tripMember;
@@ -32,16 +33,19 @@ public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
         var member = new QUser("member");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
+        var owner = new QUser("owner");
         var taskId = taskNoteListRequest.getId();
         var seq = taskNoteListRequest.getNoteSeq();
         // 쿼리 조건 생성
         var condition = getCommonCondition();
         condition.and(task.id.eq(taskId));
         if (seq != null && seq != 0) condition.and(taskNote.id.lt(seq));
+        condition.or(task.scope.eq(PUBLIC).and(task.id.eq(taskId)));
+        if (seq != null && seq != 0) condition.and(taskNote.id.lt(seq));
         return factory.selectDistinct(
                         Projections.constructor(NoteDetailDto.class,
-                                taskNote.id, task.taskStatus, task.title, taskNote.title, taskNote.content,
-                                taskNote.lastCreatedUser.username, taskNote.createdAt,
+                                taskNote.id, trip.owner.id, task.taskStatus, task.title, taskNote.title, taskNote.content,
+                                taskNote.lastCreatedUser.id, taskNote.lastCreatedUser.username, taskNote.createdAt,
                                 taskNote.lastUpdatedUser.username, taskNote.updatedAt
                         )
                 ).from(trip)
@@ -49,6 +53,7 @@ public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
                 .join(tripMember.user, member)
                 .join(trip.tasks, task)
                 .join(task.notes, taskNote)
+                .join(trip.owner, owner)
                 .join(taskNote.lastCreatedUser, createdBy)
                 .join(taskNote.lastUpdatedUser, modifiedBy)
                 .where(condition)
@@ -62,13 +67,14 @@ public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
         var member = new QUser("member");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
+        var owner = new QUser("owner");
         // 쿼리 조건 생성
         var condition = getCommonCondition();
         condition.and(taskNote.id.eq(taskNoteId));
         var taskNoteDetail = factory.selectDistinct(
                         Projections.constructor(TaskNoteDetailResponse.class,
-                                taskNote.id, trip.name, task.taskStatus, task.title, taskNote.title, taskNote.content,
-                                taskNote.lastCreatedUser.username, taskNote.createdAt,
+                                taskNote.id, trip.owner.id, trip.name, task.taskStatus, task.title, taskNote.title, taskNote.content,
+                                taskNote.lastCreatedUser.id, taskNote.lastCreatedUser.username, taskNote.createdAt,
                                 taskNote.lastUpdatedUser.username, taskNote.updatedAt
                         )
                 ).from(trip)
@@ -76,6 +82,7 @@ public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
                 .join(tripMember.user, member)
                 .join(trip.tasks, task)
                 .join(task.notes, taskNote)
+                .join(trip.owner, owner)
                 .join(taskNote.lastCreatedUser, createdBy)
                 .join(taskNote.lastUpdatedUser, modifiedBy)
                 .where(condition)
@@ -125,14 +132,19 @@ public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
         var member = new QUser("member");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
+        var owner = new QUser("owner");
         // 쿼리 조건 생성
         var condition = getCommonCondition();
-        condition.and(trip.id.eq(tripNoteListRequest.getId()));
+        var tripId = tripNoteListRequest.getId();
+        condition.and(trip.id.eq(tripId));
         var seq = tripNoteListRequest.getTaskNoteSeq();
+        if (seq != null && seq != 0) condition.and(taskNote.id.lt(seq));
+        condition.or(task.scope.eq(PUBLIC).and(trip.id.eq(tripId)));
         if (seq != null && seq != 0) condition.and(taskNote.id.lt(seq));
         return factory.selectDistinct(
                         Projections.constructor(NoteDetailDto.class,
-                                taskNote.id, task.taskStatus, task.title, taskNote.title, taskNote.content,
+                                taskNote.id, trip.owner.id, task.taskStatus, task.title, taskNote.title, taskNote.content,
+                                taskNote.lastCreatedUser.id,
                                 taskNote.lastCreatedUser.username, taskNote.createdAt,
                                 taskNote.lastUpdatedUser.username, taskNote.updatedAt
                         )
@@ -141,6 +153,7 @@ public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
                 .join(tripMember.user, member)
                 .join(trip.tasks, task)
                 .join(task.notes, taskNote)
+                .join(trip.owner, owner)
                 .join(taskNote.lastCreatedUser, createdBy)
                 .join(taskNote.lastUpdatedUser, modifiedBy)
                 .where(condition)
