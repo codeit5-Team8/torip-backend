@@ -41,3 +41,8 @@ cloud:
       static: ENC(x6/uuqcHpKqcLwYSWMfOZtRPHXBGSejO)
     s3:
       bucket: ENC(5RyziorhkYWj9Zxqxt3Ykg==)
+
+kakao:
+  client-id: ENC(yBziwGkcxTxz8FMVfw7kn+gR+y20Uf/4KWuUdwADGIijIJghUO1MHu1Y2VpR7z4u)
+  client-secret: ENC(3p3M18Q5t1NL7+AiKa3AOpTrYV/OjKMyMMcKM8VzMFL82YOOHW0b1f7x2Yp9Ged+)
+  redirect-uri: http://localhost:8080/api/v1/torip/auth/kakao/token

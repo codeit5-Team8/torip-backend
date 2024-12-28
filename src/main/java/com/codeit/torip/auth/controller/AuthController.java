@@ -1,5 +1,6 @@
 package com.codeit.torip.auth.controller;
 
+import com.codeit.torip.auth.dto.request.KaKaoRequest;
 import com.codeit.torip.auth.dto.request.LoginRequest;
 import com.codeit.torip.auth.dto.request.RegisterRequest;
 import com.codeit.torip.auth.dto.request.TokenRequest;
@@ -7,6 +8,7 @@ import com.codeit.torip.auth.dto.response.EmailCheckResponse;
 import com.codeit.torip.auth.dto.response.LoginResponse;
 import com.codeit.torip.auth.dto.response.TokenResponse;
 import com.codeit.torip.auth.service.AuthService;
+import com.codeit.torip.auth.service.KaKaoLoginService;
 import com.codeit.torip.common.dto.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final KaKaoLoginService kaKaoLoginService;
 
     @PostMapping("/login")
     @Operation(summary = "로그인 API", description = "이메일과 비밀번호를 받아 토큰을 생성합니다.",
@@ -66,5 +69,16 @@ public class AuthController {
     )
     public CommonResponse<EmailCheckResponse> checkEmailExists(@RequestParam String email) {
         return new CommonResponse<EmailCheckResponse>().success(authService.checkEmailExists(email));
+    }
+
+    @PostMapping("/kakao/token")
+    @Operation(summary = "카카오 로그인 API", description = "카카오 토큰을 이용한 로그인을 진행합니다.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "카카오 로그인 성공"),
+                    @ApiResponse(responseCode = "400", description = "카카오 로그인 실패")
+            }
+    )
+    public CommonResponse<LoginResponse> kakaoLogin(@RequestBody KaKaoRequest kaKaoRequest) {
+        return new CommonResponse<LoginResponse>().success(kaKaoLoginService.login(kaKaoRequest.getCode()));
     }
 }
