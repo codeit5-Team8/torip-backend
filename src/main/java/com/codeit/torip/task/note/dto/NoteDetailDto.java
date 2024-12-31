@@ -12,14 +12,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NoteDetailDto {
+
     @Schema(description = "노트 고유키", example = "1")
     private Long noteId;
     @Schema(description = "여행 오너 아이디", example = "1")
     private Long ownerId;
-    @Schema(description = "여행 단계", example = "BEFORE_TRIP")
-    private TaskStatus status;
-    @Schema(description = "제목", example = "할일 제목")
-    private String title;
+    @Schema(description = "할일 여행 단계", example = "BEFORE_TRIP")
+    private TaskStatus taskStatus;
+    @Schema(description = "할일 제목", example = "할일 제목")
+    private String taskTitle;
     @Schema(description = "노트 제목", example = "할일 노트 제목")
     private String noteTitle;
     @Schema(description = "노트 내용", example = "할일 노트 내용")
