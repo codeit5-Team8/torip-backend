@@ -15,6 +15,6 @@ public interface CustomTaskRepository {
 
     List<TaskProceedStatusDto> selectAllTaskDetailList();
 
-    boolean isAuthorizedToModify(long taskId);
+    Long isAuthorizedToModify(long taskId);
 
 }

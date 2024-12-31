@@ -108,8 +108,8 @@ public class TaskService {
     @Transactional
     public Long modifyTask(TaskModRequest taskModRequest) {
         // 권한 체크
-        var isModifiable = taskRepository.isAuthorizedToModify(taskModRequest.getTaskId());
-        if (isModifiable) throw new AlertException("할일을 수정할 권한이 없습니다.");
+        var tripId = taskRepository.isAuthorizedToModify(taskModRequest.getTaskId());
+        if (tripId == null) throw new AlertException("할일을 수정할 권한이 없습니다.");
         // 할일 수정
         var assignees = taskModRequest.getTaskAssignees();
         var taskEntity = taskRepository.findById(taskModRequest.getTaskId())
@@ -139,12 +139,13 @@ public class TaskService {
     }
 
     @Transactional
-    public void deleteTask(long taskId) {
+    public Long deleteTask(long taskId) {
         // 권한 체크
-        var isDeletable = taskRepository.isAuthorizedToModify(taskId);
-        if (!isDeletable) throw new AlertException("할일을 삭제할 권한이 없습니다.");
+        var tripId = taskRepository.isAuthorizedToModify(taskId);
+        if (tripId == null) throw new AlertException("할일을 삭제할 권한이 없습니다.");
         // 할일 삭제
         taskRepository.deleteById(taskId);
+        return tripId;
     }
 
     private Trip checkTripMember(long tripId) {

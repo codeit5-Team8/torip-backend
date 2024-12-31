@@ -116,7 +116,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
     }
 
     @Override
-    public boolean isAuthorizedToModify(long taskId) {
+    public Long isAuthorizedToModify(long taskId) {
         var owner = new QUser("owner");
         var createdBy = new QUser("createdBy");
         // 쿼리 조건 생성
@@ -125,13 +125,13 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
         condition.and(task.id.eq(taskId));
         condition.and(trip.owner.email.eq(email).or(task.lastCreatedUser.email.eq(email)));
         // 수정 가능 여부 판단
-        return factory.selectOne()
+        return factory.select(trip.id)
                 .from(task)
                 .join(task.trip, trip)
                 .join(trip.owner, owner)
                 .join(task.lastCreatedUser, createdBy)
                 .where(condition)
-                .fetchFirst() != null;
+                .fetchFirst();
     }
 
     private BooleanBuilder getCommonCondition() {
