@@ -39,6 +39,7 @@ public class TripInvitation extends BaseEntity {
     public TripInvitationResponse toResponse() {
         return TripInvitationResponse.builder()
                 .id(id)
+                .tripId(trip.getId())
                 .tripName(trip.getName())
                 .invitee(invitee.toResponse())
                 .createdAt(createdAt)
@@ -54,6 +55,10 @@ public class TripInvitation extends BaseEntity {
 
     public void reject() {
         this.status = TripInvitationStatus.Rejected;
+    }
+
+    public void reapply() {
+        this.status = TripInvitationStatus.Pending;
     }
 
 }
