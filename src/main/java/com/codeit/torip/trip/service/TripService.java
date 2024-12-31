@@ -107,7 +107,7 @@ public class TripService {
         trip.checkMemberNotExists(userInfo);
 
         if (tripInvitationRepository.existsByInviteeIdAndTripId(userInfo.getId(), id)) {
-            throw new AlertException("이미 참가 요청을 보냈습니다.");
+            return reapplyForTripInvitation(id, userInfo);
         }
 
         TripInvitation tripInvitation = new TripInvitation(trip, userInfo);
@@ -115,6 +115,21 @@ public class TripService {
 
         return tripInvitation.toResponse();
     }
+
+    private TripInvitationResponse reapplyForTripInvitation(Long id, User userInfo) {
+        TripInvitation tripInvitation = tripInvitationRepository.findByInviteeIdAndTripId(userInfo.getId(), id);
+        if (tripInvitation.getStatus() == TripInvitationStatus.Pending) {
+            throw new AlertException("이미 참가 요청을 보냈습니다.");
+        }
+
+        if(tripInvitation.getStatus() == TripInvitationStatus.Accepted) {
+            throw new AlertException("이미 참가 요청이 수락되었습니다.");
+        }
+
+        tripInvitation.reapply();
+        return tripInvitation.toResponse();
+    }
+
 
     public TripInvitationResponse acceptTripParticipation(Long id) {
         User userInfo = AuthUtil.getUserInfo();
