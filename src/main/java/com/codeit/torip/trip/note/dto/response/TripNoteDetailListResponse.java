@@ -14,7 +14,7 @@ import java.util.List;
 public class TripNoteDetailListResponse {
 
     @Schema(description = "여행 제목", example = "여행 제목")
-    private String title;
+    private String tripTitle;
     @Schema(description = "노트 상세")
     private List<NoteDetailDto> noteDetails;
 
