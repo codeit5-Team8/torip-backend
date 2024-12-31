@@ -50,7 +50,7 @@ public class TripNoteController {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<TripNoteDetailResponse> getTripNoteDetail(@PathVariable(name = "noteId") long tripNoteId) {
+    public CommonResponse<TripNoteDetailResponse> getTripNoteDetail(@PathVariable(name = "noteId") Long tripNoteId) {
         var tripNoteDetail = tripNoteService.getNoteDetail(tripNoteId);
         return new CommonResponse<TripNoteDetailResponse>().success(tripNoteDetail);
     }
@@ -72,7 +72,7 @@ public class TripNoteController {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<?> deleteTripNote(@PathVariable("noteId") long tripNoteId) {
+    public CommonResponse<?> deleteTripNote(@PathVariable("noteId") Long tripNoteId) {
         tripNoteService.deleteNote(tripNoteId);
         return new CommonResponse<>().success(null);
     }
