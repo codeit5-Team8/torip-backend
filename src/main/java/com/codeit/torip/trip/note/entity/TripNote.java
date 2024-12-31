@@ -29,7 +29,7 @@ public class TripNote extends BaseUserEntity {
     @Column(nullable = false, length = 30)
     private String title;
 
-    @Column(nullable = false, length = 500)
+    @Column(nullable = false, length = 3000)
     private String content;
 
     public static TripNote from(TripNoteRegRequest tripNoteRegRequest) {
