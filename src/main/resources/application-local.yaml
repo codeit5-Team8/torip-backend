@@ -43,6 +43,5 @@ cloud:
       bucket: ENC(5RyziorhkYWj9Zxqxt3Ykg==)
 
 kakao:
-  client-id: ENC(yBziwGkcxTxz8FMVfw7kn+gR+y20Uf/4KWuUdwADGIijIJghUO1MHu1Y2VpR7z4u)
-  client-secret: ENC(3p3M18Q5t1NL7+AiKa3AOpTrYV/OjKMyMMcKM8VzMFL82YOOHW0b1f7x2Yp9Ged+)
-  redirect-uri: http://localhost:8080/api/v1/torip/auth/kakao/token
+  client-id: ENC(lb+ijDoAn4pk8tE3t+Kj+JgwV4puWKFQZalN3QdmRUdcxEg18VObEy5IJQlj9FOJ)
+  client-secret: ENC(UL6uVUZehMa5WBQgh6B3xPwF6c7FgBot2lMW7hf2RFfaZwO7o9iDOpuUMJEnt0Sx)

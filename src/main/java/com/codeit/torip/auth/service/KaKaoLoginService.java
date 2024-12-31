@@ -2,6 +2,7 @@ package com.codeit.torip.auth.service;
 
 import com.codeit.torip.auth.dto.response.LoginResponse;
 import com.codeit.torip.auth.util.JwtUtil;
+import com.codeit.torip.common.exception.AlertException;
 import com.codeit.torip.user.entity.OauthPlatform;
 import com.codeit.torip.user.entity.User;
 import com.codeit.torip.user.repository.UserRepository;
@@ -35,22 +36,31 @@ public class KaKaoLoginService {
 
     @Value("${kakao.client-id}")
     String clientId;
-    @Value("${kakao.redirect-uri}")
-    String redirectUri;
     @Value("${kakao.client-secret}")
     String clientSecret;
 
     @Transactional
-    public LoginResponse login(String code) {
+    public LoginResponse loginOrRegister(String code) {
         String token = getToken(code);
         String email = getEmail(token);
 
-        if (!userRepository.existsUserByEmail(email)) {
-            return register(email);
+        if(isUserRegister(email)){
+            return login(email);
         }
+        return register(email);
+    }
 
+    public boolean isUserRegister(String email){
+        return userRepository.existsUserByEmail(email);
+    }
+
+    public LoginResponse login(String email) {
         User user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("가입되지 않은 이메일입니다."));
+
+        if(!user.getOauthPlatform().equals(OauthPlatform.KAKAO)){
+            throw new AlertException("카카오 로그인이 아닙니다.");
+        }
 
         return LoginResponse.builder()
                 .id(user.getId())
@@ -98,17 +108,17 @@ public class KaKaoLoginService {
                 String.class);
 
         if (response.getStatusCode() != HttpStatus.OK) {
-            throw new RuntimeException("카카오 로그인 중 에러가 발생하였습니다.");
+            throw new AlertException("카카오 로그인 중 에러가 발생하였습니다.");
         }
 
         String responseBody = Optional.ofNullable(response.getBody())
-                .orElseThrow(() -> new RuntimeException("카카오 로그인 중 응답이 없습니다."));
+                .orElseThrow(() -> new AlertException("카카오 로그인 중 응답이 없습니다."));
 
         try {
             JsonNode jsonNode = objectMapper.readTree(responseBody);
             return jsonNode.get("access_token").asText();
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("카카오 로그인 중 에러가 발생하였습니다.");
+            throw new AlertException("카카오 로그인 중 에러가 발생하였습니다.");
         }
     }
 
@@ -122,16 +132,16 @@ public class KaKaoLoginService {
                 String.class);
 
         if (response.getStatusCode() != HttpStatus.OK) {
-            throw new RuntimeException("카카오 로그인 중 에러가 발생하였습니다.");
+            throw new AlertException("카카오 로그인 중 에러가 발생하였습니다.");
         }
 
         String responseBody = Optional.ofNullable(response.getBody())
-                .orElseThrow(() -> new RuntimeException("카카오 로그인 중 응답이 없습니다."));
+                .orElseThrow(() -> new AlertException("카카오 로그인 중 응답이 없습니다."));
         try {
             JsonNode jsonNode = objectMapper.readTree(responseBody);
             return jsonNode.get("kakao_account").get("email").asText();
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("카카오 로그인 중 에러가 발생하였습니다.");
+            throw new AlertException("카카오 로그인 중 에러가 발생하였습니다.");
         }
     }
 }

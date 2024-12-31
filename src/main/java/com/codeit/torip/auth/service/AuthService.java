@@ -7,6 +7,7 @@ import com.codeit.torip.auth.dto.response.LoginResponse;
 import com.codeit.torip.auth.dto.response.TokenResponse;
 import com.codeit.torip.auth.util.JwtUtil;
 import com.codeit.torip.common.exception.AlertException;
+import com.codeit.torip.user.entity.OauthPlatform;
 import com.codeit.torip.user.entity.User;
 import com.codeit.torip.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZoneId;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class AuthService {
 
@@ -30,6 +30,10 @@ public class AuthService {
     public LoginResponse login(LoginRequest loginRequest) {
         User user = userRepository.findUserByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("가입되지 않은 이메일입니다."));
+
+        if(!user.getOauthPlatform().equals(OauthPlatform.NONE)){
+            throw new AlertException("소셜 로그인으로 가입된 계정입니다.");
+        }
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword()))
             throw new AlertException("비밀번호가 일치하지 않습니다.");
@@ -45,6 +49,7 @@ public class AuthService {
                 .build();
     }
 
+    @Transactional
     public LoginResponse register(RegisterRequest registerRequest) {
         if (userRepository.existsUserByEmail(registerRequest.getEmail())) {
             throw new AlertException("이메일이 중복되었습니다.");
@@ -54,6 +59,7 @@ public class AuthService {
                 .username(registerRequest.getUsername())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .email(registerRequest.getEmail())
+                .oauthPlatform(OauthPlatform.NONE)
                 .build();
 
         userRepository.save(user);

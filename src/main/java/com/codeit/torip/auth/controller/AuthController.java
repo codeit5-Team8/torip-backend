@@ -79,6 +79,6 @@ public class AuthController {
             }
     )
     public CommonResponse<LoginResponse> kakaoLogin(@RequestBody KaKaoRequest kaKaoRequest) {
-        return new CommonResponse<LoginResponse>().success(kaKaoLoginService.login(kaKaoRequest.getCode()));
+        return new CommonResponse<LoginResponse>().success(kaKaoLoginService.loginOrRegister(kaKaoRequest.getCode()));
     }
 }
