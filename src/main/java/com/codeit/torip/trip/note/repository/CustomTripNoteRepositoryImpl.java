@@ -58,7 +58,7 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
 
     @Override
     public Optional<TripNoteDetailResponse> selectTripNoteDetail(long tripNoteId) {
-        var member = new QUser("tripMember");
+        var tripUser = new QUser("tripUser");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
         var owner = new QUser("owner");
@@ -76,7 +76,7 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
                 ).from(trip)
                 .join(trip.notes, tripNote)
                 .join(trip.members, tripMember)
-                .join(tripMember.user, member)
+                .join(tripMember.user, tripUser)
                 .join(trip.owner, owner)
                 .join(tripNote.lastCreatedUser, createdBy)
                 .join(tripNote.lastUpdatedUser, modifiedBy)
