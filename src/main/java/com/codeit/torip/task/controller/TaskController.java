@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -74,9 +75,9 @@ public class TaskController {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<Long> deleteTask(@PathVariable("taskId") long taskId) {
-        taskService.deleteTask(taskId);
-        return new CommonResponse<Long>().success(taskId);
+    public CommonResponse<Map<String, Long>> deleteTask(@PathVariable("taskId") long taskId) {
+        var tripId = taskService.deleteTask(taskId);
+        return new CommonResponse<Map<String, Long>>().success(Map.of("tripId", tripId));
     }
 
     @GetMapping("/progress")
