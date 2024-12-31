@@ -1,11 +1,13 @@
 package com.codeit.torip.auth.dto.response;
 
+import com.codeit.torip.user.entity.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @AllArgsConstructor
 @Builder
