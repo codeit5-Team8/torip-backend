@@ -1,5 +1,6 @@
 package com.codeit.torip.trip.repository;
 
+import com.codeit.torip.trip.entity.Trip;
 import com.codeit.torip.trip.entity.TripInvitation;
 import com.codeit.torip.trip.entity.TripInvitationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +14,8 @@ public interface TripInvitationRepository extends JpaRepository<TripInvitation, 
     List<TripInvitation> findAllByTripIdAndStatusOrderByCreatedAt(Long tripId, TripInvitationStatus status);
 
     Boolean existsByInviteeIdAndTripId(Long tripId, Long inviteeId);
+
+    TripInvitation findByInviteeIdAndTripId(Long inviteeId, Long tripId);
 
     void deleteAllByTripId(Long tripId);
 }

@@ -90,15 +90,15 @@ public class TripController {
         return new CommonResponse<>().success("여행이 삭제되었습니다.");
     }
 
-    @PostMapping("/{tripId}/request")
+    @PostMapping("/{id}/request")
     @Operation(summary = "여행 참가 요청 API", description = "여행에 참가를 요청합니다",
             responses = {
                     @ApiResponse(responseCode = "200", description = "성공"),
                     @ApiResponse(responseCode = "400", description = "실패")
             }
     )
-    public CommonResponse<TripInvitationResponse> requestTripParticipation(@PathVariable Long tripId) {
-        var TripInvitationResponse = tripService.requestTripParticipation(tripId);
+    public CommonResponse<TripInvitationResponse> requestTripParticipation(@PathVariable Long id) {
+        var TripInvitationResponse = tripService.requestTripParticipation(id);
         // 여행 참가 로직
         return new CommonResponse<TripInvitationResponse>().success(TripInvitationResponse);
     }
