@@ -40,8 +40,6 @@ public class TaskModRequest {
     @NotNull(message = "할일 공유 범위는 필수 값입니다.")
     @Schema(description = "할일 공유 범위", example = "PUBLIC / PRIVATE")
     private TaskScope taskScope;
-    @Schema(description = "할일 완료일", example = "2024-10-11 15:21:00", nullable = true)
-    private LocalDateTime taskCompletionDate;
     @Schema(description = "할일 담당자 목록", example = "[demo@gmail.com]")
     private Set<String> taskAssignees = new HashSet<>();
 

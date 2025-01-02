@@ -5,6 +5,7 @@ import com.codeit.torip.common.exception.AlertException;
 import com.codeit.torip.task.dto.request.TaskListRequest;
 import com.codeit.torip.task.dto.request.TaskModRequest;
 import com.codeit.torip.task.dto.request.TaskRegRequest;
+import com.codeit.torip.task.dto.response.TaskCompletionResponse;
 import com.codeit.torip.task.dto.response.TaskDetailResponse;
 import com.codeit.torip.task.dto.response.TaskProceedStatusResponse;
 import com.codeit.torip.task.entity.Task;
@@ -20,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.codeit.torip.task.entity.TaskScope.PUBLIC;
@@ -75,13 +75,17 @@ public class TaskService {
     }
 
     @Transactional
-    public void completeTask(Long taskId) {
+    public TaskCompletionResponse completeTask(Long taskId, boolean isCompleted) {
         // 권한 체크
         var taskEntity = taskRepository.findById(taskId)
                 .orElseThrow(() -> new AlertException("할일이 존재하지 않습니다."));
         var tripEntity = taskEntity.getTrip();
         tripEntity.checkMemberExists(AuthUtil.getUserInfo());
-        taskEntity.setCompletionDate(LocalDateTime.now());
+        taskEntity.processCompletion(isCompleted);
+        return TaskCompletionResponse.builder()
+                .tripId(tripEntity.getId())
+                .taskId(taskEntity.getId())
+                .build();
     }
 
     @Transactional

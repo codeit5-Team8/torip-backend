@@ -33,6 +33,8 @@ public class TaskDetailResponse {
     private LocalDateTime taskDDay;
     @Schema(description = "할일 공유 범위", example = "PUBLIC / PRIVATE")
     private TaskScope taskScope;
+    @Schema(description = "할일 완료 여부", example = "true")
+    private Boolean isCompleted;
     @Schema(description = "할일 완료일", example = "2024-10-11 15:21:00")
     private LocalDateTime taskCompletionDate;
     @Schema(description = "할일 등록자 아이디", example = "1")
@@ -50,7 +52,7 @@ public class TaskDetailResponse {
     private List<TaskAssigneeDto> taskAssignees = new ArrayList<>();
 
     public TaskDetailResponse(Long taskId, String tripName, String taskTitle, String taskFilePath, TaskStatus taskStatus,
-                              LocalDateTime taskDDay, TaskScope taskScope, LocalDateTime taskCompletionDate, Long registrantId,
+                              LocalDateTime taskDDay, TaskScope taskScope, Boolean isCompleted, LocalDateTime taskCompletionDate, Long registrantId,
                               String createdBy, LocalDateTime createdAt, String modifiedBy, LocalDateTime modifiedAt) {
         this.taskId = taskId;
         this.tripName = tripName;
@@ -59,6 +61,7 @@ public class TaskDetailResponse {
         this.taskStatus = taskStatus;
         this.taskDDay = taskDDay;
         this.taskScope = taskScope;
+        this.isCompleted = isCompleted;
         this.taskCompletionDate = taskCompletionDate;
         this.registrantId = registrantId;
         this.createdBy = createdBy;
