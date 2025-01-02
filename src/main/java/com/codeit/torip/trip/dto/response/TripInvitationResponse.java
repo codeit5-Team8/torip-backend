@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 public class TripInvitationResponse {
     @Schema(description = "여행 초대 id", example = "1")
     private Long id;
+    @Schema(description = "여행 id", example = "1")
+    private Long tripId;
     @Schema(description = "여행 여행 이름", example = "제주도 여행")
     private String tripName;
     @Schema(description = "초대한 사람", example = """
