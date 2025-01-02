@@ -23,7 +23,7 @@ public class CustomTaskAssigneeRepositoryImpl implements CustomTaskAssigneeRepos
         return factory.select(
                         Projections.constructor(
                                 TaskAssigneeDto.class,
-                                task.id, user.id, user.email, user.username
+                                task.id, user.id, user.username, user.email
                         )
                 )
                 .from(task)
@@ -39,7 +39,7 @@ public class CustomTaskAssigneeRepositoryImpl implements CustomTaskAssigneeRepos
         return factory.select(
                         Projections.constructor(
                                 TaskAssigneeDto.class,
-                                task.id, user.id, user.email, user.username
+                                task.id, user.id, user.username, user.email
                         )
                 )
                 .from(task)
