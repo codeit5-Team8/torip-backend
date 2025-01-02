@@ -48,6 +48,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
         if (tripId != null && tripId != 0) condition.and(trip.id.eq(taskListRequest.getTripId()));
         if (scope == null) {
             condition.or(task.scope.eq(PUBLIC));
+            condition.and(tripMember.user.email.eq(AuthUtil.getEmail()));
             if (seq != null && seq != 0) condition.and(task.id.lt(seq));
             if (status != null) condition.and(task.taskStatus.eq(status));
             if (tripId != null && tripId != 0) condition.and(trip.id.eq(taskListRequest.getTripId()));
@@ -57,7 +58,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
                         Projections.constructor(
                                 TaskDetailResponse.class,
                                 task.id, trip.name, task.title, task.filePath, task.taskStatus,
-                                task.taskDDay, task.scope, task.completionDate, task.lastCreatedUser.id,
+                                task.taskDDay, task.scope, task.isCompleted, task.completionDate, task.lastCreatedUser.id,
                                 task.lastCreatedUser.username, task.createdAt, task.lastUpdatedUser.username, task.updatedAt
                         ))
                 .from(task)
@@ -85,7 +86,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
                         Projections.constructor(
                                 TaskDetailResponse.class,
                                 task.id, trip.name, task.title, task.filePath, task.taskStatus,
-                                task.taskDDay, task.scope, task.completionDate, task.lastCreatedUser.id,
+                                task.taskDDay, task.scope, task.isCompleted, task.completionDate, task.lastCreatedUser.id,
                                 task.lastCreatedUser.username, task.createdAt, task.lastUpdatedUser.username, task.updatedAt
                         ))
                 .from(task)
@@ -137,7 +138,8 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
     private BooleanBuilder getCommonCondition() {
         var email = AuthUtil.getEmail();
         var condition = new BooleanBuilder();
-        return condition.and(tripMember.user.email.eq(email));
+        condition.and(tripMember.user.email.eq(email));
+        return condition;
     }
 
 }

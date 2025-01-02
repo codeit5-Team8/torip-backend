@@ -107,7 +107,8 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
     private BooleanBuilder getCommonCondition() {
         var email = AuthUtil.getEmail();
         var condition = new BooleanBuilder();
-        return condition.and(tripMember.user.email.eq(email));
+        condition.and(tripMember.user.email.eq(email));
+        return condition;
     }
 
 }

@@ -55,6 +55,7 @@ public class Task extends BaseUserEntity {
     @Column(nullable = false)
     private LocalDateTime taskDDay;
 
+    private Boolean isCompleted;
     private LocalDateTime completionDate;
 
     public static Task from(TaskRegRequest taskRegRequest) {
@@ -65,7 +66,7 @@ public class Task extends BaseUserEntity {
                 .taskDDay(taskRegRequest.getTaskDDay())
                 .taskStatus(taskRegRequest.getTaskStatus())
                 .scope(taskRegRequest.getTaskScope())
-                .completionDate(taskRegRequest.getTaskCompletionDate())
+                .isCompleted(false)
                 .build();
     }
 
@@ -75,7 +76,12 @@ public class Task extends BaseUserEntity {
         this.taskStatus = taskModRequest.getTaskStatus();
         this.taskDDay = taskModRequest.getTaskDDay();
         this.scope = taskModRequest.getTaskScope();
-        this.completionDate = taskModRequest.getTaskCompletionDate();
+    }
+
+    public void processCompletion(boolean isCompleted) {
+        this.setIsCompleted(isCompleted);
+        if (isCompleted) this.setCompletionDate(LocalDateTime.now());
+        else this.setCompletionDate(null);
     }
 
 }
