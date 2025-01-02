@@ -10,7 +10,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
@@ -34,23 +32,17 @@ public class KaKaoLoginService {
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
-    @Value("${kakao.client-id}")
-    String clientId;
-    @Value("${kakao.client-secret}")
-    String clientSecret;
-
     @Transactional
-    public LoginResponse loginOrRegister(String code) {
-        String token = getToken(code);
+    public LoginResponse loginOrRegister(String token) {
         String email = getEmail(token);
 
-        if(isUserRegister(email)){
+        if (isUserRegister(email)) {
             return login(email);
         }
         return register(email);
     }
 
-    public boolean isUserRegister(String email){
+    public boolean isUserRegister(String email) {
         return userRepository.existsUserByEmail(email);
     }
 
@@ -58,7 +50,7 @@ public class KaKaoLoginService {
         User user = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("가입되지 않은 이메일입니다."));
 
-        if(!user.getOauthPlatform().equals(OauthPlatform.KAKAO)){
+        if (!user.getOauthPlatform().equals(OauthPlatform.KAKAO)) {
             throw new AlertException("카카오 로그인이 아닙니다.");
         }
 
@@ -94,33 +86,6 @@ public class KaKaoLoginService {
                 .build();
     }
 
-    private String getToken(String code) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
-        MultiValueMap<String, String> httpBody = new LinkedMultiValueMap<>();
-        httpBody.add("grant_type", "authorization_code");
-        httpBody.add("client_id", clientId);
-        httpBody.add("code", code);
-        httpBody.add("client_secret", clientSecret);
-
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(httpBody, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity("https://kauth.kakao.com/oauth/token", httpEntity,
-                String.class);
-
-        if (response.getStatusCode() != HttpStatus.OK) {
-            throw new AlertException("카카오 로그인 중 에러가 발생하였습니다.");
-        }
-
-        String responseBody = Optional.ofNullable(response.getBody())
-                .orElseThrow(() -> new AlertException("카카오 로그인 중 응답이 없습니다."));
-
-        try {
-            JsonNode jsonNode = objectMapper.readTree(responseBody);
-            return jsonNode.get("access_token").asText();
-        } catch (JsonProcessingException e) {
-            throw new AlertException("카카오 로그인 중 에러가 발생하였습니다.");
-        }
-    }
 
     private String getEmail(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
