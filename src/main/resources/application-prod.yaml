@@ -42,6 +42,3 @@ cloud:
     s3:
       bucket: ENC(5RyziorhkYWj9Zxqxt3Ykg==)
 
-kakao:
-  client-id: ENC(lb+ijDoAn4pk8tE3t+Kj+JgwV4puWKFQZalN3QdmRUdcxEg18VObEy5IJQlj9FOJ)
-  client-secret: ENC(UL6uVUZehMa5WBQgh6B3xPwF6c7FgBot2lMW7hf2RFfaZwO7o9iDOpuUMJEnt0Sx)
