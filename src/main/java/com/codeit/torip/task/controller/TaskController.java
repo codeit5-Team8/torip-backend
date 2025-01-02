@@ -4,6 +4,7 @@ import com.codeit.torip.common.dto.CommonResponse;
 import com.codeit.torip.task.dto.request.TaskListRequest;
 import com.codeit.torip.task.dto.request.TaskModRequest;
 import com.codeit.torip.task.dto.request.TaskRegRequest;
+import com.codeit.torip.task.dto.response.TaskCompletionResponse;
 import com.codeit.torip.task.dto.response.TaskDetailResponse;
 import com.codeit.torip.task.dto.response.TaskProceedStatusResponse;
 import com.codeit.torip.task.service.TaskService;
@@ -97,9 +98,9 @@ public class TaskController {
                     @ApiResponse(responseCode = "200", description = "성공")
             }
     )
-    public CommonResponse<?> completeTask(@PathVariable("taskId") long taskId, @RequestParam(name = "isCompleted") boolean isCompleted) {
-        taskService.completeTask(taskId, isCompleted);
-        return new CommonResponse<>().success(null);
+    public CommonResponse<TaskCompletionResponse> completeTask(@PathVariable("taskId") long taskId, @RequestParam(name = "isCompleted") boolean isCompleted) {
+        var completionDto = taskService.completeTask(taskId, isCompleted);
+        return new CommonResponse<TaskCompletionResponse>().success(completionDto);
     }
 
 }
