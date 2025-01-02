@@ -35,6 +35,8 @@ public class QTask extends EntityPathBase<Task> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final BooleanPath isCompleted = createBoolean("isCompleted");
+
     // inherited
     public final com.codeit.torip.user.entity.QUser lastCreatedUser;
 
