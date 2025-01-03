@@ -34,6 +34,7 @@ public class TaskNoteService {
         // 노트 목록 조회
         return TaskNoteDetailListResponse.builder()
                 .tripTitle(taskEntity.getTrip().getName())
+                .taskTitle(taskEntity.getTitle())
                 .details(taskNoteList)
                 .build();
     }

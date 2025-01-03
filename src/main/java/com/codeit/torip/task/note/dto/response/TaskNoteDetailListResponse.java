@@ -15,6 +15,8 @@ public class TaskNoteDetailListResponse {
 
     @Schema(description = "여행 제목", example = "여행 제목")
     private String tripTitle;
+    @Schema(description = "할일 제목", example = "할일 제목")
+    private String taskTitle;
     @Schema(description = "할일 모아보기 상세")
     private List<NoteDetailDto> details;
 
