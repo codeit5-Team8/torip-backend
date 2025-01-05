@@ -15,10 +15,14 @@ public class TaskNoteDetailResponse {
 
     @Schema(description = "할일 노트 고유키", example = "1")
     private Long noteId;
+    @Schema(description = "여행 고유키", example = "1")
+    private Long tripId;
     @Schema(description = "여행 오너 아이디", example = "1")
     private Long ownerId;
     @Schema(description = "여행 제목", example = "여행 제목")
     private String tripTitle;
+    @Schema(description = "할일 고유키", example = "1")
+    private Long taskId;
     @Schema(description = "할일 여행 단계", example = "BEFORE_TRIP")
     private TaskStatus taskStatus;
     @Schema(description = "할일 제목", example = "할일 제목")

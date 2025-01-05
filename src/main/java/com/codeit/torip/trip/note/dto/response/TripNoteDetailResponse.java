@@ -14,6 +14,8 @@ public class TripNoteDetailResponse {
 
     @Schema(description = "여행 노트 고유키", example = "1")
     private Long noteId;
+    @Schema(description = "여행 고유키", example = "1")
+    private Long tripId;
     @Schema(description = "여행 오너 아이디", example = "1")
     private Long ownerId;
     @Schema(description = "여행 제목", example = "여행 제목")

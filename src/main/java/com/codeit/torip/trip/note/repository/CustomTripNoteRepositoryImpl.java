@@ -68,7 +68,7 @@ public class CustomTripNoteRepositoryImpl implements CustomTripNoteRepository {
         // 노트 상세 불러오기
         var tripNoteDetail = factory.selectDistinct(
                         Projections.constructor(TripNoteDetailResponse.class,
-                                tripNote.id, trip.owner.id, trip.name, tripNote.title, tripNote.content,
+                                tripNote.id, trip.id, trip.owner.id, trip.name, tripNote.title, tripNote.content,
                                 tripNote.lastCreatedUser.id,
                                 tripNote.lastCreatedUser.username, tripNote.createdAt,
                                 tripNote.lastUpdatedUser.username, tripNote.updatedAt

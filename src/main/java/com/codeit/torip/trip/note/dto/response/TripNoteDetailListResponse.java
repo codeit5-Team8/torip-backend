@@ -13,6 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 public class TripNoteDetailListResponse {
 
+    @Schema(description = "여행 고유키", example = "1")
+    private Long tripId;
     @Schema(description = "여행 제목", example = "여행 제목")
     private String tripTitle;
     @Schema(description = "노트 상세")

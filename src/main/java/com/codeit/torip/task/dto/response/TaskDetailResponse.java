@@ -21,6 +21,8 @@ public class TaskDetailResponse {
 
     @Schema(description = "할일 고유키", example = "1")
     private Long taskId;
+    @Schema(description = "여행 오너 아이디", example = "1")
+    private Long ownerId;
     @Schema(description = "여행 제목", example = "여행 제목")
     private String tripName;
     @Schema(description = "할일 제목", example = "할일 제목")
@@ -51,10 +53,11 @@ public class TaskDetailResponse {
     @Schema(description = "할일 담당자 목록", example = "[demo@gmail.com]")
     private List<TaskAssigneeDto> taskAssignees = new ArrayList<>();
 
-    public TaskDetailResponse(Long taskId, String tripName, String taskTitle, String taskFilePath, TaskStatus taskStatus,
+    public TaskDetailResponse(Long taskId, Long ownerId, String tripName, String taskTitle, String taskFilePath, TaskStatus taskStatus,
                               LocalDateTime taskDDay, TaskScope taskScope, Boolean isCompleted, LocalDateTime taskCompletionDate, Long registrantId,
                               String createdBy, LocalDateTime createdAt, String modifiedBy, LocalDateTime modifiedAt) {
         this.taskId = taskId;
+        this.ownerId = ownerId;
         this.tripName = tripName;
         this.taskTitle = taskTitle;
         this.taskFilePath = taskFilePath;

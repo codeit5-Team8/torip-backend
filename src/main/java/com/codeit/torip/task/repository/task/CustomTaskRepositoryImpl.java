@@ -28,6 +28,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
 
     @Override
     public List<TaskDetailResponse> selectTaskDetailList(TaskListRequest taskListRequest) {
+        var owner = new QUser("owner");
         var member = new QUser("member");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
@@ -57,12 +58,13 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
         return factory.selectDistinct(
                         Projections.constructor(
                                 TaskDetailResponse.class,
-                                task.id, trip.name, task.title, task.filePath, task.taskStatus,
+                                task.id, trip.owner.id, trip.name, task.title, task.filePath, task.taskStatus,
                                 task.taskDDay, task.scope, task.isCompleted, task.completionDate, task.lastCreatedUser.id,
                                 task.lastCreatedUser.username, task.createdAt, task.lastUpdatedUser.username, task.updatedAt
                         ))
                 .from(task)
                 .join(task.trip, trip)
+                .join(trip.owner,owner)
                 .join(trip.members, tripMember)
                 .join(tripMember.user, member)
                 .join(task.lastCreatedUser, createdBy)
@@ -75,6 +77,7 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
 
     @Override
     public Optional<TaskDetailResponse> selectTaskDetail(long taskId) {
+        var owner = new QUser("owner");
         var member = new QUser("member");
         var createdBy = new QUser("createdBy");
         var modifiedBy = new QUser("modifiedBy");
@@ -85,12 +88,13 @@ public class CustomTaskRepositoryImpl implements CustomTaskRepository {
         var taskDetail = factory.selectDistinct(
                         Projections.constructor(
                                 TaskDetailResponse.class,
-                                task.id, trip.name, task.title, task.filePath, task.taskStatus,
+                                task.id, trip.owner.id, trip.name, task.title, task.filePath, task.taskStatus,
                                 task.taskDDay, task.scope, task.isCompleted, task.completionDate, task.lastCreatedUser.id,
                                 task.lastCreatedUser.username, task.createdAt, task.lastUpdatedUser.username, task.updatedAt
                         ))
                 .from(task)
                 .join(task.trip, trip)
+                .join(trip.owner,owner)
                 .join(trip.members, tripMember)
                 .join(tripMember.user, member)
                 .join(task.lastCreatedUser, createdBy)
