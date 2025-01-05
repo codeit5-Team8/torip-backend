@@ -55,6 +55,7 @@ public class TripNoteService {
         resultList.addAll(taskNoteList.subList(0, taskCount));
         // 노트 목록 조회
         return TripNoteDetailListResponse.builder()
+                .tripId(tripEntity.getId())
                 .tripTitle(tripEntity.getName())
                 .noteDetails(resultList)
                 .build();

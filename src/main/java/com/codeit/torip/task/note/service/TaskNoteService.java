@@ -30,10 +30,13 @@ public class TaskNoteService {
     public TaskNoteDetailListResponse getTaskNoteList(TaskNoteListRequest taskNoteListRequest) {
         var taskEntity = taskRepository.findByIdWithTrip(taskNoteListRequest.getId())
                 .orElseThrow(() -> new AlertException("할일이 존재하지 않습니다."));
+        var tripEntity = taskEntity.getTrip();
         var taskNoteList = taskNoteRepository.selectTaskNoteDetailList(taskNoteListRequest);
         // 노트 목록 조회
         return TaskNoteDetailListResponse.builder()
-                .tripTitle(taskEntity.getTrip().getName())
+                .tripId(tripEntity.getId())
+                .tripTitle(tripEntity.getName())
+                .taskId(taskEntity.getId())
                 .taskTitle(taskEntity.getTitle())
                 .details(taskNoteList)
                 .build();

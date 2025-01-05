@@ -73,9 +73,9 @@ public class CustomTaskNoteRepositoryImpl implements CustomTaskNoteRepository {
         condition.and(taskNote.id.eq(taskNoteId));
         var taskNoteDetail = factory.selectDistinct(
                         Projections.constructor(TaskNoteDetailResponse.class,
-                                taskNote.id, trip.owner.id, trip.name, task.taskStatus, task.title, taskNote.title, taskNote.content,
-                                taskNote.lastCreatedUser.id, taskNote.lastCreatedUser.username, taskNote.createdAt,
-                                taskNote.lastUpdatedUser.username, taskNote.updatedAt
+                                taskNote.id, trip.id, trip.owner.id, trip.name, task.id, task.taskStatus, task.title,
+                                taskNote.title, taskNote.content, taskNote.lastCreatedUser.id, taskNote.lastCreatedUser.username,
+                                taskNote.createdAt, taskNote.lastUpdatedUser.username, taskNote.updatedAt
                         )
                 ).from(trip)
                 .join(trip.members, tripMember)
