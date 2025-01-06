@@ -1,5 +1,6 @@
 package com.codeit.torip.auth.service;
 
+import com.codeit.torip.auth.dto.KakaoInfo;
 import com.codeit.torip.auth.dto.response.LoginResponse;
 import com.codeit.torip.auth.util.JwtUtil;
 import com.codeit.torip.common.exception.AlertException;
@@ -34,12 +35,12 @@ public class KaKaoLoginService {
 
     @Transactional
     public LoginResponse loginOrRegister(String token) {
-        String email = getEmail(token);
+        KakaoInfo kakaoInfo = getKakaoInfo(token);
 
-        if (isUserRegister(email)) {
-            return login(email);
+        if (isUserRegister(kakaoInfo.email())) {
+            return login(kakaoInfo.email());
         }
-        return register(email);
+        return register(kakaoInfo);
     }
 
     public boolean isUserRegister(String email) {
@@ -58,17 +59,17 @@ public class KaKaoLoginService {
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .accessToken(jwtUtil.createAccessToken(email))
-                .refreshToken(jwtUtil.createRefreshToken(email))
+                .accessToken(jwtUtil.createAccessToken(user.getEmail()))
+                .refreshToken(jwtUtil.createRefreshToken(user.getEmail()))
                 .expiredAt(jwtUtil.getAccessTokenExpiredAt()
                         .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                 .build();
     }
 
-    public LoginResponse register(String email) {
+    public LoginResponse register(KakaoInfo kakaoInfo) {
         User user = User.builder()
-                .email(email)
-                .username(email)
+                .email(kakaoInfo.email())
+                .username(kakaoInfo.nickname())
                 .password("oauth")
                 .oauthPlatform(OauthPlatform.KAKAO)
                 .build();
@@ -79,15 +80,15 @@ public class KaKaoLoginService {
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .accessToken(jwtUtil.createAccessToken(email))
-                .refreshToken(jwtUtil.createRefreshToken(email))
+                .accessToken(jwtUtil.createAccessToken(user.getEmail()))
+                .refreshToken(jwtUtil.createRefreshToken(user.getEmail()))
                 .expiredAt(jwtUtil.getAccessTokenExpiredAt()
                         .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime())
                 .build();
     }
 
 
-    private String getEmail(String accessToken) {
+    private KakaoInfo getKakaoInfo(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
         headers.add("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
@@ -104,7 +105,8 @@ public class KaKaoLoginService {
                 .orElseThrow(() -> new AlertException("카카오 로그인 중 응답이 없습니다."));
         try {
             JsonNode jsonNode = objectMapper.readTree(responseBody);
-            return jsonNode.get("kakao_account").get("email").asText();
+            return new KakaoInfo(jsonNode.get("kakao_account").get("email").asText(),
+                    jsonNode.get("properties").get("nickname").asText());
         } catch (JsonProcessingException e) {
             throw new AlertException("카카오 로그인 중 에러가 발생하였습니다.");
         }
