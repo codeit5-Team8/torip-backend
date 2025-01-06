@@ -6,7 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static com.codeit.torip.common.contant.ToripConstants.HttpConstant.*;
+import static com.codeit.torip.common.contant.ToripConstants.HttpConstant.SUCCESS_CODE;
+import static com.codeit.torip.common.contant.ToripConstants.HttpConstant.SUCCESS_MESSAGE;
 
 @Getter
 @Builder
@@ -22,6 +23,15 @@ public class CommonResponse<T> {
     private String message;
     @Schema(description = "결과 데이터")
     private T result;
+
+    public static <T> CommonResponse<T> ok(T result) {
+        return CommonResponse.<T>builder()
+                .success(true)
+                .code(SUCCESS_CODE)
+                .message(SUCCESS_MESSAGE)
+                .result(result)
+                .build();
+    }
 
     public CommonResponse<T> success(T result) {
         return CommonResponse.<T>builder()
