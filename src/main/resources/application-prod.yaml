@@ -30,7 +30,12 @@ jasypt:
     key: ${jasypt_key}
 
 server:
+  ssl:
+    key-store-type: PKCS12
+    key-store: classpath:ssl/keystore.p12
+    key-store-password: ${ssl_password}
   shutdown: graceful
+  port: 8080
 
 cloud:
   aws:
